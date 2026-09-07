@@ -19,7 +19,7 @@ export async function GET(_req: NextRequest, ctx: RouteContext<"/api/uploads/[..
   const [doc] = await db.select().from(schema.documents).where(eq(schema.documents.storageKey, storageKey)).limit(1);
   if (!doc || doc.storageDriver !== "local") return new Response("Not found", { status: 404 });
 
-  const full = path.join(LOCAL_UPLOAD_DIR, storageKey);
+  const full = path.join(/*turbopackIgnore: true*/ LOCAL_UPLOAD_DIR, storageKey);
   if (!full.startsWith(LOCAL_UPLOAD_DIR)) return new Response("Not found", { status: 404 });
   let stat: fs.Stats;
   try {

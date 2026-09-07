@@ -29,14 +29,14 @@ export const LOCAL_UPLOAD_DIR = process.env.LOCAL_UPLOAD_DIR?.trim() || path.joi
 const localDriver: StorageDriver = {
   name: "local",
   async put(key, bytes) {
-    const full = path.join(LOCAL_UPLOAD_DIR, key);
+    const full = path.join(/*turbopackIgnore: true*/ LOCAL_UPLOAD_DIR, key);
     if (!full.startsWith(LOCAL_UPLOAD_DIR)) throw new Error("Invalid key");
     await fs.mkdir(path.dirname(full), { recursive: true });
     await fs.writeFile(full, bytes);
     return { driver: "local", key, url: `/api/uploads/${key}` };
   },
   async delete(key) {
-    const full = path.join(LOCAL_UPLOAD_DIR, key);
+    const full = path.join(/*turbopackIgnore: true*/ LOCAL_UPLOAD_DIR, key);
     if (!full.startsWith(LOCAL_UPLOAD_DIR)) throw new Error("Invalid key");
     await fs.rm(full, { force: true });
   },
