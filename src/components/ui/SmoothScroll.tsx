@@ -57,6 +57,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     });
     lenisRef.current = instance;
     lenisStore.set(instance);
+    (window as unknown as { __lenis?: Lenis }).__lenis = instance;
     instance.on("scroll", ScrollTrigger.update);
     const tick = (time: number) => instance.raf(time * 1000);
     gsap.ticker.add(tick);
@@ -66,6 +67,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       instance.destroy();
       lenisRef.current = null;
       lenisStore.set(null);
+      delete (window as unknown as { __lenis?: Lenis }).__lenis;
     };
   }, []);
 

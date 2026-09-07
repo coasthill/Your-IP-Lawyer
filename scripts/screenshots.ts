@@ -57,7 +57,11 @@ async function shoot(browser: Browser, name: keyof typeof VIEWPORTS) {
     const steps = [0, 0.05, 0.15, 0.22, 0.3, 0.36, 0.39, 0.48, 0.6, 0.72, 0.83, 0.94, 1.0];
     for (const p of steps) {
       const y = Math.round(Math.min(total, (stage - vp.height) * p));
-      await page.evaluate((yy) => window.scrollTo({ top: yy, behavior: "instant" as ScrollBehavior }), y);
+      await page.evaluate((yy) => {
+        const w = window as unknown as { __lenis?: { scrollTo: (v: number, o: { immediate: boolean }) => void } };
+        if (w.__lenis) w.__lenis.scrollTo(yy, { immediate: true });
+        else window.scrollTo({ top: yy, behavior: "instant" as ScrollBehavior });
+      }, y);
       await page.waitForTimeout(900);
       await page.screenshot({ path: path.join(dir, `home_scroll_${String(Math.round(p * 100)).padStart(3, "0")}.png`) });
     }

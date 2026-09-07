@@ -47,3 +47,8 @@ export function useProgress(): number {
     () => 0,
   );
 }
+
+// Exposed for QA scripts and debugging (read-only use).
+if (typeof window !== "undefined") {
+  (window as unknown as { __yilProgress?: typeof progressStore }).__yilProgress = progressStore;
+}
