@@ -31,9 +31,9 @@ function buildAdvocate() {
   const cloth = new GownCloth();
   const gown = gownWool();
   const cotton = whiteCotton();
-  const skin = new THREE.MeshStandardMaterial({ color: new THREE.Color("#1d1614"), roughness: 0.74, metalness: 0 });
+  const skin = new THREE.MeshStandardMaterial({ color: new THREE.Color("#171210"), roughness: 0.8, metalness: 0, envMapIntensity: 0.08 });
   const hairMat = new THREE.MeshStandardMaterial({ color: new THREE.Color("#0a0909"), roughness: 0.96, metalness: 0 });
-  const coat = new THREE.MeshStandardMaterial({ color: new THREE.Color("#0a0a0c"), roughness: 0.92, metalness: 0 });
+  const coat = new THREE.MeshStandardMaterial({ color: new THREE.Color("#08080a"), roughness: 0.95, metalness: 0, envMapIntensity: 0.05 });
   const wood = new THREE.MeshStandardMaterial({ color: new THREE.Color("#2a1a10"), roughness: 0.46, metalness: 0.04 });
   const brass = bronze({ roughness: 0.3 });
 
@@ -41,7 +41,8 @@ function buildAdvocate() {
   const hair = new THREE.SphereGeometry(FIGURE.headR * 1.07, 28, 18, 0, Math.PI * 2, 0, Math.PI * 0.56);
   const neck = new THREE.CylinderGeometry(0.062, 0.08, 0.2, 18);
   const collar = new THREE.CylinderGeometry(0.084, 0.09, 0.05, 28, 1, true);
-  const torso = new THREE.CapsuleGeometry(0.22, 0.62, 6, 20);
+  // coat + trousers in shadow: a tall, slightly tapered column from the hem to the collar (no rounded "belly")
+  const torso = new THREE.CylinderGeometry(0.2, 0.16, 1.98, 24, 1, false);
   const bandGeo = new THREE.PlaneGeometry(0.058, 0.25, 1, 4);
   bandGeo.translate(0, -0.125, 0);
   const sleeve = new THREE.CylinderGeometry(0.072, 0.16, FIGURE.armLength * 0.92, 18, 1, true);
@@ -154,11 +155,11 @@ export function Advocate() {
   return (
     <group ref={figureRef} position={[FIGURE.x, FLOOR_Y, FIGURE.zStart]}>
       {/* head, hair, neck — kept in shadow by low albedo; the key light draws only a rim */}
-      <mesh geometry={rig.head} material={rig.skin} position={[0, FIGURE.headY, 0]} scale={[1, 1.12, 1.02]} rotation-x={0.06} />
+      <mesh geometry={rig.head} material={rig.skin} position={[0, FIGURE.headY - 0.01, 0]} scale={[0.94, 1.1, 0.98]} rotation-x={0.06} />
       <mesh geometry={rig.hair} material={rig.hairMat} position={[0, FIGURE.headY + 0.03, -0.02]} scale={[1, 1.06, 1.02]} rotation-x={-0.28} />
       <mesh geometry={rig.neck} material={rig.skin} position={[0, FIGURE.neckY, 0]} />
       {/* black coat under the gown, visible through the front opening */}
-      <mesh geometry={rig.torso} material={rig.coat} position={[0, 1.55, 0]} scale={[1.12, 1, 0.78]} />
+      <mesh geometry={rig.torso} material={rig.coat} position={[0, 1.04, 0]} scale={[1.1, 1, 0.72]} />
       {/* collar and the two white bands */}
       <mesh geometry={rig.collar} material={rig.cotton} position={[0, 2.075, 0.005]} />
       <group ref={bandsRef} position={[0, FIGURE.bandsY, FIGURE.bandsZ]}>

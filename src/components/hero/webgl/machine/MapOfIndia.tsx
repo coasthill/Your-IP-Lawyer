@@ -82,7 +82,7 @@ export function MapOfIndia() {
     const g = root.current;
     const mp = map.current;
     if (!g || !mp) return;
-    const on = inRange(p, ACT.map[0], ACT.map[1]);
+    const on = inRange(p, ACT.map[0], ACT.map[1]) && p < 0.905;
     g.visible = on;
     if (!on) return;
 
@@ -90,7 +90,7 @@ export function MapOfIndia() {
     mp.position.set(0, _pose.y, _pose.z);
     mp.rotation.x = _pose.tilt;
 
-    const vis = window01(p, 0.78, 0.83, 0.885, 0.91);
+    const vis = window01(p, 0.77, 0.815, 0.878, 0.9);
     a.landMat.opacity = vis;
     a.sheetMat.opacity = 0.26 * vis;
     a.coastMat.opacity = 0.85 * vis;
@@ -100,7 +100,7 @@ export function MapOfIndia() {
     a.markerMat.opacity = 0.7 * vis;
 
     // the conceptual marker: a slow pulse, an expanding halo and a thin line rising off the paper
-    const lit = window01(p, 0.815, 0.85, 0.885, 0.905);
+    const lit = window01(p, 0.805, 0.84, 0.878, 0.895);
     const pulse = 0.5 + 0.5 * Math.sin(f.t * 2.2);
     const ring = (f.t * 0.45) % 1;
     a.glowMat.opacity = lit * (0.3 + 0.4 * pulse);

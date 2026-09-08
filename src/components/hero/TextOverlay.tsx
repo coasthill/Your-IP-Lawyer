@@ -57,6 +57,12 @@ function CaptionBlock({ caption, first }: { caption: Caption & { sceneId: string
       )}
       style={{ opacity: first ? 1 : 0 }}
     >
+      {align === "center" ? (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -inset-x-24 -inset-y-16 -z-10 rounded-[50%] bg-[radial-gradient(closest-side,rgba(9,9,11,0.82),rgba(9,9,11,0.55)_55%,transparent)]"
+        />
+      ) : null}
       {caption.eyebrow ? <p className="eyebrow mb-4 text-shadow-soft">{caption.eyebrow}</p> : null}
       {first ? (
         <h1 className="display-xl text-shadow-soft">{caption.title}</h1>

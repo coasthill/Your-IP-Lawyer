@@ -25,7 +25,7 @@ import { INK, graphiteEnamel } from "./surfaces";
 import { ArcText } from "./ArcText";
 
 /** The emblem hangs just in front of the plate it replaces. */
-const EMBLEM_AT = new THREE.Vector3(0, 0.3, 0.55);
+const EMBLEM_AT = new THREE.Vector3(1.05, 0.3, 0.55);
 /** Where the ring lands on the map as a compass rose (map-local, clear of the land's north-west edge). */
 const COMPASS_CORNER = new THREE.Vector3(-1.9, 1.95, 0.07);
 const SPECIMENS = ["Aa", "Rr", "Mm", "Kk", "Qq", "&", "Gg", "§", "Bb"];
@@ -130,7 +130,7 @@ export function TradeMarkEmblem() {
     if (!on) return;
 
     const grow = easeOut((p - 0.675) / 0.04);
-    const toCompass = smoothstep((p - 0.78) / 0.05);
+    const toCompass = smoothstep((p - 0.765) / 0.045);
     const gone = smoothstep((p - 0.885) / 0.02);
 
     // The emblem grows over the plate, then shrinks and travels to the map's corner as the seal dissolves.
@@ -149,13 +149,13 @@ export function TradeMarkEmblem() {
     setTextOpacity(ringText.current, 1 - toCompass);
     if (reg.current) reg.current.fillOpacity = 1 - toCompass;
 
-    const compassIn = smoothstep((p - 0.8) / 0.04);
+    const compassIn = smoothstep((p - 0.79) / 0.035);
     a.compassMat.opacity = 0.85 * compassIn;
     if (compassN.current) compassN.current.fillOpacity = compassIn;
 
     // The ribbon unfurls under the emblem and drops away before the map.
     const unfurl = easeOut((p - 0.7) / 0.045);
-    const drop = smoothstep((p - 0.775) / 0.035);
+    const drop = smoothstep((p - 0.762) / 0.035);
     const rb = ribbon.current;
     if (rb) {
       rb.scale.set(safeScale(unfurl), 1, 1);
@@ -166,20 +166,20 @@ export function TradeMarkEmblem() {
     if (ribbonText.current) ribbonText.current.fillOpacity = unfurl * (1 - drop);
 
     // The specimen wall: in for the emblem, out as the map takes its place.
-    const wallOp = window01(p, 0.672, 0.72, 0.78, 0.82);
+    const wallOp = window01(p, 0.672, 0.72, 0.762, 0.80);
     for (let i = 0; i < a.sheets.length; i++) a.sheets[i].mat.opacity = 0.55 * wallOp * a.sheets[i].alpha;
     a.rulesMat.opacity = 0.45 * wallOp;
     const w = wall.current;
     if (w) {
       setTextOpacity(w, 0.3 * wallOp);
-      w.position.x = -0.1 + (p - 0.67) * 1.4;
+      w.position.x = 0.9 + (p - 0.67) * 1.4;
     }
 
     // Shop-sign frame: a hint, arriving late and retreating into the dark.
     const fr = frame.current;
     if (fr) {
       const fin = easeOut((p - 0.69) / 0.04);
-      const fout = smoothstep((p - 0.78) / 0.03);
+      const fout = smoothstep((p - 0.765) / 0.03);
       fr.scale.setScalar(safeScale(lerp(0.8, 1, fin) * (1 - fout)));
       fr.position.z = -0.7 - fout * 3;
     }
@@ -235,7 +235,7 @@ export function TradeMarkEmblem() {
         </Text>
       </group>
 
-      <group ref={ribbon} position={[0, -1.52, 0.75]} scale={[0.001, 1, 1]}>
+      <group ref={ribbon} position={[1.05, -1.52, 0.75]} scale={[0.001, 1, 1]}>
         <mesh geometry={a.ribbonGeo} material={a.ribbonMat} />
         <Text
           ref={ribbonText}
@@ -253,7 +253,7 @@ export function TradeMarkEmblem() {
         </Text>
       </group>
 
-      <group ref={wall} position={[-0.1, 0, 0]}>
+      <group ref={wall} position={[0.9, 0, 0]}>
         {a.sheets.map((s, i) => (
           <group key={i} position={[s.x, s.y, s.z]} rotation={[0, 0, s.rz]}>
             <mesh geometry={a.sheetGeo} material={s.mat} />
@@ -274,7 +274,7 @@ export function TradeMarkEmblem() {
         ))}
       </group>
 
-      <group ref={frame} position={[0, 0.3, -0.7]} scale={0.001}>
+      <group ref={frame} position={[1.05, 0.3, -0.7]} scale={0.001}>
         <mesh geometry={a.barH} material={a.brass} position={[0, 1.7, 0]} />
         <mesh geometry={a.barH} material={a.brass} position={[0, -1.7, 0]} />
         <mesh geometry={a.barV} material={a.brass} position={[-2.45, 0, 0]} />

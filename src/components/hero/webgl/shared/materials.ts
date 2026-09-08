@@ -32,6 +32,8 @@ export function parchment(opts: { color?: string; opacity?: number; side?: THREE
     metalness: 0,
     transparent: opts.opacity !== undefined,
     opacity: opts.opacity ?? 1,
+    // fading sheets must not write depth, or an invisible sheet still occludes what is behind it
+    depthWrite: opts.opacity === undefined,
     side: opts.side ?? THREE.DoubleSide,
     envMapIntensity: 0.15,
   });

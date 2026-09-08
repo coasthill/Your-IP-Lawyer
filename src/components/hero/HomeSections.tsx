@@ -4,7 +4,18 @@ import { siteConfig } from "@/config/site";
 import { getFeaturedPost, listPublishedPosts, type PostWithMeta } from "@/server/posts";
 import { listThreads } from "@/server/forum";
 import { PostCard } from "@/components/blog/PostCard";
-import { ThreadRow } from "@/components/forum/ThreadRow";
+// TEMP until the forum module lands: swap back to `import { ThreadRow } from "@/components/forum/ThreadRow";`
+import Link2 from "next/link";
+import type { ThreadPublic } from "@/server/forum";
+function ThreadRow({ thread }: { thread: ThreadPublic; compact?: boolean }) {
+  return (
+    <div className="border-b border-bronze/15 py-4">
+      <Link2 href={`/forum/${thread.slug}`} className="font-display text-xl text-ivory">
+        {thread.title}
+      </Link2>
+    </div>
+  );
+}
 import { Arrow, ButtonLink, Eyebrow } from "@/components/ui/primitives";
 
 /**

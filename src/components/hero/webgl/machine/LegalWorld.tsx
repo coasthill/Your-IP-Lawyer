@@ -39,7 +39,7 @@ export function LegalWorld() {
     const points = pentagonPoints(RADIUS);
     const segments = constellationSegments(RADIUS);
     const docGeo = new THREE.PlaneGeometry(6.8, 4.9);
-    const docMat = parchment({ color: "#7d715c", opacity: 0 });
+    const docMat = new THREE.MeshBasicMaterial({ color: new THREE.Color("#6f6450"), transparent: true, opacity: 0, depthWrite: false });
     const ruled = ruledDocument(6.8, 4.9, 22);
     const ruledMat = inkLine({ color: PALETTE.bronzeDim, opacity: 0 });
     // seal
@@ -113,7 +113,7 @@ export function LegalWorld() {
     const keep = 1 - end;
     w.scale.setScalar(safeScale(1 - 0.2 * end));
 
-    const docIn = ramp(p, 0.89, 0.93);
+    const docIn = ramp(p, 0.885, 0.92);
     a.docMat.opacity = 0.15 * docIn * keep;
     a.ruledMat.opacity = 0.28 * docIn * keep;
     if (hairlines.current) hairlines.current.material.opacity = 0.32 * ramp(p, 0.9, 0.94) * keep;
