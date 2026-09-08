@@ -195,8 +195,7 @@ export function PostEditor({
             </div>
 
             <div id={id("panel-preview")} role="tabpanel" aria-labelledby={id("tab-preview")} hidden={tab !== "preview"}>
-              {/* Keep the Markdown in the request even while the textarea is hidden. */}
-              {tab === "preview" ? <input type="hidden" name="bodyMd" value={form.bodyMd} /> : null}
+              {/* The textarea above stays in the form while hidden, so the Markdown is still submitted. */}
               <div className="paper relative grain px-6 py-10 md:px-12 md:py-14">
                 <div className="relative z-10 mx-auto max-w-[var(--measure)]">
                   <p className="eyebrow mb-6">Preview · as it will be published</p>

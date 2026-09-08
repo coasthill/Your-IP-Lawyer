@@ -5,9 +5,10 @@ import { siteConfig } from "@/config/site";
 import { getCurrentAdmin } from "@/lib/auth/session";
 import { countAdminUsers } from "@/server/admin-users";
 import { LoginForm } from "@/components/admin/LoginForm";
+import { FirstAdminForm } from "@/components/admin/FirstAdminForm";
 import { Notice } from "@/components/ui/primitives";
 import { safeAdminPath } from "../_lib/form";
-import { loginAction } from "./actions";
+import { createFirstAdminAction, loginAction } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -38,14 +39,16 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
 
           <div className="mt-8">
             {adminCount === 0 ? (
-              <Notice tone="info" className="space-y-3">
-                <p className="font-display text-lg text-ivory">No admin account exists yet.</p>
-                <p className="text-parchment/85">Create the first one from a terminal in the project folder, then return here:</p>
-                <pre className="overflow-x-auto border border-bronze/25 bg-ink/60 p-3 font-mono text-[0.7rem] leading-relaxed text-parchment">
-                  {`npm run admin:create -- \\\n  --email you@example.com \\\n  --name "Rohit Pradhan" \\\n  --password "at-least-12-characters-1"`}
-                </pre>
-                <p className="text-xs text-bone/70">For the live site, prefix the command with your production DATABASE_URL. Running it again with the same email resets the password.</p>
-              </Notice>
+              <div className="space-y-6">
+                <Notice tone="info" className="space-y-2">
+                  <p className="font-display text-lg text-ivory">No admin account exists yet.</p>
+                  <p className="text-parchment/85">Create the first one below. This form disappears as soon as an account exists.</p>
+                </Notice>
+                <FirstAdminForm action={createFirstAdminAction} />
+                <p className="text-xs text-bone/70">
+                  Prefer the terminal? Run <code className="font-mono">npm run admin:create -- --email you@example.com --name &quot;Your Name&quot; --password &quot;…&quot;</code> in the project folder.
+                </p>
+              </div>
             ) : (
               <LoginForm action={loginAction} next={next} />
             )}

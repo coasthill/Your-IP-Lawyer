@@ -42,3 +42,10 @@ export function formatDateTime(date: Date | string | null | undefined): string {
   if (Number.isNaN(d.getTime())) return "";
   return dateTimeFmt.format(d);
 }
+
+/** True when the date is still ahead of us (a scheduled publish date). Kept out of components so renders stay pure. */
+export function isInFuture(date: Date | string | null | undefined): boolean {
+  if (!date) return false;
+  const d = typeof date === "string" ? new Date(date) : date;
+  return !Number.isNaN(d.getTime()) && d.getTime() > Date.now();
+}

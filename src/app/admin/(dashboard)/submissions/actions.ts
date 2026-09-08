@@ -5,7 +5,7 @@ import { assertAdmin } from "@/lib/auth/guard";
 import { deleteSubmission, getSubmission, updateSubmission } from "@/server/submissions";
 import { revalidateContent } from "@/server/revalidate";
 import type { FormState } from "@/components/admin/form-state";
-import { field, isUuid, oneOf, textField } from "../../_lib/form";
+import { isUuid, oneOf, textField } from "../../_lib/form";
 import { revalidateAdmin } from "../../_lib/revalidate";
 
 const STATUSES = ["new", "reviewing", "accepted", "declined"] as const;
