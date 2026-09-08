@@ -59,6 +59,8 @@ npm run dev          # starts the site
 
 Open **http://localhost:3000** for the website and **http://localhost:3000/admin** for the dashboard.
 
+> **Note for local use:** the embedded database can only be opened by one program at a time. Stop the site (Ctrl+C) before running `npm run db:seed` or `npm run admin:create`, then start it again. (This does not apply when `DATABASE_URL` points at a real Postgres server.)
+
 Other useful commands:
 
 ```bash
@@ -68,6 +70,7 @@ npm run typecheck    # checks the code for type errors
 npm run lint         # checks the code for style problems
 npm test             # runs the automated tests
 npm run screenshots  # takes screenshots of key pages at desktop/tablet/mobile sizes (site must be running)
+npm run e2e          # end-to-end smoke test of the real user journeys (site must be running; ADMIN_EMAIL / ADMIN_PASSWORD env vars)
 ```
 
 ## 3. How to deploy it
@@ -192,7 +195,9 @@ Set `NEXT_PUBLIC_SITE_URL` to the new address (e.g. `https://youriplawyer.in`) i
 
 ## 13. How to create an admin account
 
-From a terminal in the project folder:
+**The easy way:** when no admin account exists yet, `/admin/login` shows a one-time **"Create the first admin account"** form. Fill in your name, email and a password (at least 12 characters with a letter and a number) and you are signed in. The form disappears as soon as an account exists.
+
+**From a terminal** in the project folder:
 
 ```bash
 npm run admin:create -- --email you@example.com --name "Rohit Pradhan" --password "at-least-12-characters-with-a-number-1"
@@ -227,7 +232,7 @@ Passwords are stored as scrypt hashes (never in plain text). Sign-in is rate-lim
 - **"Cannot sign in"** — create an account (section 13). Five wrong attempts pause sign-in for 15 minutes.
 - **Uploads fail on Vercel** — set `STORAGE_DRIVER=vercel-blob` and connect a Blob store; the `local` driver cannot write to Vercel's read-only filesystem.
 - **Images from another site do not display** — add their hostname to `NEXT_PUBLIC_IMAGE_HOSTS` (comma separated).
-- **The homepage shows the 2D version on my laptop** — the site chooses the 3D version only on capable devices; add `?render=webgl` to the address to force it, `?render=canvas` for the 2D version, `?render=static` for the still version.
+- **The homepage shows the 2D version on my laptop** — the site chooses the 3D version only on capable devices; add `?render=webgl` to the address to force it, `?render=canvas` for the 2D version, `?render=static` for the still version. (`&snap` additionally removes the scroll easing, which is useful for screenshots.)
 - **Start over locally** — stop the site, delete the `.data` folder, then run `npm run db:migrate && npm run db:seed` again.
 
 ---
