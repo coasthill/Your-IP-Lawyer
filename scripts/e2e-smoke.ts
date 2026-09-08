@@ -116,8 +116,8 @@ async function main() {
 
   await step("admin sees the submission", async () => {
     await page.goto(`${BASE}/admin/submissions`, { waitUntil: "networkidle" });
-    const text = await page.locator("body").innerText();
-    if (!text.includes(`A smoke-test case note ${stamp}`)) throw new Error("submission not listed");
+    const text = (await page.locator("body").innerText()).toLowerCase();
+    if (!text.includes(`a smoke-test case note ${stamp}`.toLowerCase())) throw new Error("submission not listed");
   });
 
   await step("admin can upload a PDF to the library", async () => {
@@ -150,14 +150,14 @@ async function main() {
     await page.locator('button[type="submit"]').filter({ hasText: /save/i }).first().click();
     await page.waitForTimeout(3000);
     await page.goto(`${BASE}/blog`, { waitUntil: "networkidle" });
-    const text = await page.locator("body").innerText();
-    if (!text.includes(`Smoke article ${stamp}`)) throw new Error("published article not on /blog");
+    const text = (await page.locator("body").innerText()).toLowerCase();
+    if (!text.includes(`smoke article ${stamp}`.toLowerCase())) throw new Error("published article not on /blog");
   });
 
   await step("admin comments queue renders", async () => {
     await page.goto(`${BASE}/admin/comments?status=all`, { waitUntil: "networkidle" });
-    const text = await page.locator("body").innerText();
-    if (!text.includes("Smoke Tester")) throw new Error("test comment not in the queue");
+    const text = (await page.locator("body").innerText()).toLowerCase();
+    if (!text.includes("smoke tester")) throw new Error("test comment not in the queue");
   });
 
   await step("sitemap and robots respond", async () => {

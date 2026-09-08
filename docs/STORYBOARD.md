@@ -17,7 +17,7 @@ All renderers read `progressStore.get().value` each frame (never React state in 
 
 Academic classical painting meets Indian courtroom meets industrial machinery. Tenebrism: almost everything is darkness; light is scarce, warm and directional (a single key light from upper-left, `PALETTE.keyLight`), with a cool faint rim light from the right (`PALETTE.rimLight`). Surfaces: black wool gown, white cotton bands, aged parchment, brushed steel, bronze, red sealing wax, ink. Grain and vignette always present. Never neon, never saturated, never cartoon.
 
-The figure is an **original, generic Indian advocate** — not a likeness of anyone. Face in shadow, form suggested by light on the gown's folds, shoulders and the white bands at the throat: exactly how a tenebrist painter would treat him. This is both the aesthetic and the honest technical choice (no uncanny procedural faces). The system is built so a custom portrait/generated artwork can later replace the figure layer (`hero/webgl/scenes/LawyerScene.tsx` and `hero/canvas` figure drawing both read from one place).
+The figure is an **original, generic Indian advocate** — not a likeness of anyone. Face in shadow, form suggested by light on the gown's folds, shoulders and the white bands at the throat: exactly how a tenebrist painter would treat him. This is both the aesthetic and the honest technical choice (no uncanny procedural faces). The system is built so a custom portrait/generated artwork can later replace the figure layer: on desktop the figure is `hero/webgl/figure/Advocate.tsx` (cloth in `gown.ts`, proportions in `constants.ts`); on phones it is `hero/canvas/scenes/figure.ts`; the still version is `hero/static/StaticStory.tsx`.
 
 ## Scene by scene (progress ranges from story.ts)
 
