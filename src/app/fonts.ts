@@ -18,10 +18,8 @@ export const fontDisplay = localFont({
 });
 
 export const fontBody = localFont({
-  src: [
-    { path: "./fonts/dm-sans-latin-opsz-normal.woff2", style: "normal", weight: "100 1000" },
-    { path: "./fonts/dm-sans-latin-opsz-italic.woff2", style: "italic", weight: "100 1000" },
-  ],
+  // Italic is synthesised by the browser: body italics are rare here and the file would cost ~75 KB on every page.
+  src: [{ path: "./fonts/dm-sans-latin-opsz-normal.woff2", style: "normal", weight: "100 1000" }],
   variable: "--font-body",
   display: "swap",
   fallback: ["system-ui", "Segoe UI", "Helvetica Neue", "Arial", "sans-serif"],
