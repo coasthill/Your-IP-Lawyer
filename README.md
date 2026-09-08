@@ -53,11 +53,10 @@ npm install          # downloads the software the site depends on (first time on
 cp .env.example .env # creates your settings file (on Windows: copy .env.example .env)
 npm run db:migrate   # prepares the database (an embedded one is created in ./.data — no setup needed)
 npm run db:seed      # loads default categories and the demo articles/forum threads
-npm run admin:create -- --email you@example.com --name "Rohit Pradhan" --password "choose-a-long-password"
 npm run dev          # starts the site
 ```
 
-Open **http://localhost:3000** for the website and **http://localhost:3000/admin** for the dashboard.
+Open **http://localhost:3000** for the website and **http://localhost:3000/admin** for the dashboard. The first time, `/admin/login` shows a one-time **Create the first admin account** form; fill it in and you are signed in (section 13 has the terminal alternative).
 
 > **Note for local use:** the embedded database can only be opened by one program at a time. Stop the site (Ctrl+C) before running `npm run db:seed` or `npm run admin:create`, then start it again. (This does not apply when `DATABASE_URL` points at a real Postgres server.)
 
