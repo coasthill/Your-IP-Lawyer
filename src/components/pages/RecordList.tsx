@@ -13,6 +13,7 @@ export function RecordList({
   tone = "ink",
   columns = 1,
   className,
+  bodyClassName,
   as: Tag = "ol",
 }: {
   items: RecordItem[];
@@ -20,6 +21,8 @@ export function RecordList({
   tone?: "ink" | "paper";
   columns?: 1 | 2;
   className?: string;
+  /** Overrides the body type size, e.g. `text-base` for longer entries. */
+  bodyClassName?: string;
   as?: "ol" | "ul";
 }) {
   const paper = tone === "paper";
@@ -52,7 +55,7 @@ export function RecordList({
                 <span className="sr-only">{n}. </span>
                 {item.title}
               </p>
-              {item.body ? <p className={cn("mt-1.5 text-sm leading-relaxed", paper ? "text-ink/70" : "text-bone")}>{item.body}</p> : null}
+              {item.body ? <div className={cn("mt-1.5 text-sm leading-relaxed", paper ? "text-ink/70" : "text-bone", bodyClassName)}>{item.body}</div> : null}
             </div>
           </li>
         );

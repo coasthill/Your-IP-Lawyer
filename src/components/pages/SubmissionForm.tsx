@@ -11,7 +11,8 @@ const initialState: SubmissionFormState = { status: "idle" };
 const ACCEPT = ".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
 function formatMb(bytes: number): string {
-  return `${Math.round(bytes / 1024 / 1024)} MB`;
+  const mb = bytes / 1024 / 1024;
+  return `${mb >= 10 ? Math.round(mb) : Math.round(mb * 10) / 10} MB`;
 }
 
 /**

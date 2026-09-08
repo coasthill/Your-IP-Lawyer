@@ -707,3 +707,53 @@ export function engraved(ctx: CanvasRenderingContext2D, text: string, x: number,
   ctx.fillStyle = dark;
   tracked(ctx, text, x, y, tracking, "center");
 }
+
+/** Drops the glyph-width cache (call once the web fonts finish loading: widths measured on the fallback face are stale). */
+export function clearTextCache(): void {
+  widthCache.clear();
+}
+
+/* ------------------------------------------------------------------ offscreen layers */
+
+export type Layer = { canvas: HTMLCanvasElement; ctx: CanvasRenderingContext2D; w: number; h: number };
+
+/**
+ * An offscreen canvas in CSS pixels at the given device pixel ratio. Draw into `layer.ctx` in CSS
+ * units; blit with `ctx.drawImage(layer.canvas, x, y, layer.w, layer.h)`.
+ */
+export function makeLayer(w: number, h: number, dpr: number): Layer | null {
+  const canvas = document.createElement("canvas");
+  const cw = Math.max(1, Math.round(w * dpr));
+  const ch = Math.max(1, Math.round(h * dpr));
+  canvas.width = cw;
+  canvas.height = ch;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return null;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { canvas, ctx, w: cw / dpr, h: ch / dpr };
+}
+
+/** Rounded rectangle added to the current path (Safari < 16 has no ctx.roundRect). */
+export function rrect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number): void {
+  const rr = Math.min(r, w / 2, h / 2);
+  ctx.moveTo(x + rr, y);
+  ctx.lineTo(x + w - rr, y);
+  ctx.arc(x + w - rr, y + rr, rr, -HALF_PI, 0);
+  ctx.lineTo(x + w, y + h - rr);
+  ctx.arc(x + w - rr, y + h - rr, rr, 0, HALF_PI);
+  ctx.lineTo(x + rr, y + h);
+  ctx.arc(x + rr, y + h - rr, rr, HALF_PI, Math.PI);
+  ctx.lineTo(x, y + rr);
+  ctx.arc(x + rr, y + rr, rr, Math.PI, Math.PI * 1.5);
+  ctx.closePath();
+}
+
+/** Regular polygon (radius R, `n` sides, first vertex at `phase`) added to the current path. */
+export function polygon(ctx: CanvasRenderingContext2D, n: number, R: number, phase = 0): void {
+  for (let i = 0; i < n; i++) {
+    const a = phase + (i / n) * TAU;
+    if (i === 0) ctx.moveTo(Math.cos(a) * R, Math.sin(a) * R);
+    else ctx.lineTo(Math.cos(a) * R, Math.sin(a) * R);
+  }
+  ctx.closePath();
+}

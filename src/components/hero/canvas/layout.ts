@@ -45,6 +45,8 @@ export type Layout = {
   focusShift: number;
   mapC: Pt;
   legalC: Pt;
+  /** offset of the big gear's centre from the machine focus, in gear units */
+  gearAnchor: Pt;
 };
 
 export function makeLayout(w: number, h: number): Layout {
@@ -87,7 +89,8 @@ export function makeLayout(w: number, h: number): Layout {
   const focusY = portrait ? h * 0.36 : h * 0.5;
   const focusShift = portrait ? 0 : w * 0.14;
   const mapC = { x: w * 0.5, y: portrait ? h * 0.38 : h * 0.5 };
-  const legalC = { x: w * 0.5, y: portrait ? h * 0.68 : h * 0.68 };
+  const legalC = { x: w * 0.5, y: portrait ? h * 0.66 : h * 0.6 };
+  const gearAnchor = portrait ? { x: -1.55, y: 0.55 } : { x: -1.05, y: 0.7 };
   return {
     key: `${Math.round(w)}x${Math.round(h)}`,
     w,
@@ -109,6 +112,7 @@ export function makeLayout(w: number, h: number): Layout {
     focusShift,
     mapC,
     legalC,
+    gearAnchor,
   };
 }
 
@@ -127,6 +131,13 @@ export function machineFocus(L: Layout, p: number, out: Pt): void {
   out.y = L.focusY;
 }
 
+/**
+ * The figure act's "camera": a uniform zoom `k` about the pivot plus a small pan. Applied to the
+ * room, the advocate, the floating objects and the strike so a dolly-in and a hint of orbit read
+ * without any per-object maths.
+ */
+export type FigureCamera = { k: number; px: number; py: number; dx: number; dy: number };
+
 /** One mutable frame record shared by every scene; the renderer refreshes it each draw. */
 export type Frame = {
   ctx: CanvasRenderingContext2D;
@@ -136,6 +147,8 @@ export type Frame = {
   w: number;
   h: number;
   s: number;
+  dpr: number;
+  portrait: boolean;
   /** eased progress 0–1 */
   p: number;
   /** wall time, seconds */
@@ -146,4 +159,17 @@ export type Frame = {
   vel: number;
   /** seconds since the gavel struck; −1 while idle */
   strikeAge: number;
+  /** machine focal point for this frame (machineFocus) */
+  focus: Pt;
+  /** figure-act camera for this frame */
+  cam: FigureCamera;
+  /** screen-space point where the gavel landed (L.strike through `cam`) */
+  strikeScreen: Pt;
 };
+
+/** Maps a room-space point through the figure camera into screen space. */
+export function camToScreen(cam: FigureCamera, x: number, y: number, out: Pt): Pt {
+  out.x = cam.px + (x - cam.px) * cam.k + cam.dx;
+  out.y = cam.py + (y - cam.py) * cam.k + cam.dy;
+  return out;
+}

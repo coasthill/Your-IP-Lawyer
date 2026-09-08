@@ -6,7 +6,16 @@ import { cn } from "@/lib/utils";
  * the upper left and a faint cool rim from the right — in the manner of the homepage artwork.
  * Nobody in particular is depicted.
  */
-export function AdvocatePlate({ className, caption = "Fig. 01 — An advocate, in the manner of the homepage. Not a photograph; nobody in particular." }: { className?: string; caption?: string }) {
+export function AdvocatePlate({
+  className,
+  caption = "Fig. 01 — An advocate, in the manner of the homepage. Not a photograph; nobody in particular.",
+  tone = "ink",
+}: {
+  className?: string;
+  caption?: string;
+  /** Caption colour: `paper` inside a `.paper` section, `ink` elsewhere. */
+  tone?: "ink" | "paper";
+}) {
   return (
     <figure className={cn("w-full", className)}>
       <div className="relative aspect-[3/4] overflow-hidden border border-bronze/25 bg-charcoal grain vignette">
@@ -119,7 +128,7 @@ export function AdvocatePlate({ className, caption = "Fig. 01 — An advocate, i
           Plate 01
         </span>
       </div>
-      <figcaption className="mt-3 font-mono text-[0.62rem] uppercase leading-relaxed tracking-[0.18em] text-ash">{caption}</figcaption>
+      <figcaption className={cn("mt-3 font-mono text-[0.62rem] uppercase leading-relaxed tracking-[0.18em]", tone === "paper" ? "text-ink/60" : "text-ash")}>{caption}</figcaption>
     </figure>
   );
 }
