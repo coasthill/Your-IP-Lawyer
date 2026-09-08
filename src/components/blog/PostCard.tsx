@@ -48,15 +48,20 @@ function FeaturedCard({ post, priority }: { post: PostWithMeta; priority: boolea
             className="object-cover"
           />
         </div>
-      ) : null}
-      <div className={hero ? "md:col-span-5" : "md:col-span-11"}>
+      ) : (
+        /* No photograph on file: a printer's block carries the lead instead. */
+        <div className="relative aspect-[16/10] overflow-hidden border border-current/15 bg-charcoal sm:aspect-[2/1] md:col-span-5 md:aspect-[4/3]">
+          <Monogram title={post.title} label={post.category?.name ?? "Case note"} size="lg" />
+        </div>
+      )}
+      <div className={hero ? "md:col-span-5" : "md:col-span-7"}>
         <CategoryLine post={post} />
-        <h3 id={`post-${post.id}-title`} className={cn("mt-5", hero ? "display-md" : "display-lg")}>
+        <h3 id={`post-${post.id}-title`} className={cn("mt-5", hero ? "display-md" : "display-lg max-w-3xl")}>
           <Link href={href} className={TITLE_LINK}>
             {post.title}
           </Link>
         </h3>
-        {post.deck ? <p className={cn("lede mt-5 opacity-85", hero ? "max-w-md" : "max-w-3xl")}>{post.deck}</p> : null}
+        {post.deck ? <p className={cn("lede mt-5 opacity-85", hero ? "max-w-md" : "max-w-2xl")}>{post.deck}</p> : null}
         <MetaLine post={post} className="mt-7" />
         <p className="mt-6 inline-flex items-center gap-2 font-mono text-[0.66rem] uppercase tracking-[0.2em] text-current/60 transition-colors group-hover:text-current">
           Read the note <Arrow />
@@ -163,16 +168,30 @@ function MetaLine({ post, className }: { post: PostWithMeta; className?: string 
  * Typographic plate for posts without an image: the article's initial set in Cormorant
  * on a charcoal block with film grain — a printer's block rather than a placeholder.
  */
-export function Monogram({ title, label, className }: { title: string; label?: string | null; className?: string }) {
+export function Monogram({
+  title,
+  label,
+  size = "md",
+  className,
+}: {
+  title: string;
+  label?: string | null;
+  /** `lg` for the featured slot, where the plate is much wider. */
+  size?: "md" | "lg";
+  className?: string;
+}) {
   const initial = (title.match(/[A-Za-z]/)?.[0] ?? "§").toUpperCase();
   return (
     <div aria-hidden="true" className={cn("relative flex h-full w-full items-center justify-center overflow-hidden bg-charcoal text-ivory grain vignette", className)}>
       <div className="absolute inset-3 border border-bronze/25" />
       <div className="relative flex flex-col items-center">
-        <span className="select-none font-display text-[clamp(4.5rem,9vw,7rem)] leading-none text-ivory/90">{initial}</span>
-        <span className="mt-3 h-px w-10 bg-seal-2" />
+        <span className={cn("select-none font-display leading-none text-ivory/90", size === "lg" ? "text-[clamp(6rem,14vw,11rem)]" : "text-[clamp(4.5rem,9vw,7rem)]")}>
+          {initial}
+        </span>
+        <span className={cn("mt-3 h-px bg-seal-2", size === "lg" ? "w-16" : "w-10")} />
       </div>
       <span className="absolute bottom-5 left-5 max-w-[70%] truncate font-mono text-[0.58rem] uppercase tracking-[0.24em] text-bronze-2">{label || "Case note"}</span>
+      {size === "lg" ? <span className="absolute right-5 top-5 font-mono text-[0.58rem] uppercase tracking-[0.24em] text-bone/60">Lead</span> : null}
     </div>
   );
 }
