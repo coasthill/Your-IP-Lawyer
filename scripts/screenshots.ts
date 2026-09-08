@@ -50,7 +50,7 @@ async function shoot(browser: Browser, name: keyof typeof VIEWPORTS) {
   // Homepage scroll frames (forces the tier appropriate for the viewport)
   const tier = name === "desktop" ? "webgl" : "canvas";
   try {
-    await page.goto(`${BASE}/?render=${tier}`, { waitUntil: "networkidle", timeout: 60_000 });
+    await page.goto(`${BASE}/?render=${tier}&snap`, { waitUntil: "networkidle", timeout: 60_000 });
     await page.waitForTimeout(4500);
     const total = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight);
     const stage = await page.evaluate(() => (document.querySelector("[data-tier]") as HTMLElement | null)?.offsetHeight ?? 0);
