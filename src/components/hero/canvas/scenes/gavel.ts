@@ -1,8 +1,8 @@
 /**
  * Scene 3 — THE GAVEL (0.33 → 0.42).
  *
- * The advocate's right arm swings out of the gown (0.33), rises in a slow arc (0.34→0.38) and drops
- * (0.38→0.385) onto a sound block on a low plinth left of the figure. The strike itself is wall-time
+ * The advocate's arm swings out of the gown (0.33), rises in a slow arc (0.34→0.38) and drops
+ * (0.38→0.385) onto a sound block on a low plinth beside the figure (mirrored to whichever side the layout puts it). The strike itself is wall-time
  * and re-armable: a light pulse that flashes three times and decays, a ≤6px camera shake (350 ms),
  * an expanding ring on the floor and ≤120 sparks with drag and a little gravity.
  */
@@ -33,8 +33,8 @@ const sparkSize = new Float32Array(SPARKS);
 })();
 
 const WOOD: ReadonlyArray<readonly [number, string]> = [
-  [0, "#3d2617"],
-  [0.5, "#2a1a10"],
+  [0, "#6b4527"],
+  [0.45, "#3a2415"],
   [1, "#160d07"],
 ];
 const STONE: ReadonlyArray<readonly [number, string]> = [
@@ -49,8 +49,9 @@ const FLASH: ReadonlyArray<readonly [number, string]> = [
   [1, rgba(PALETTE.keyLight, 0)],
 ];
 
-const SLEEVE = "#0f0f12";
-const SLEEVE_EDGE = rgba(PALETTE.keyLight, 0.12);
+const SLEEVE = "#1c1b21";
+const SLEEVE_EDGE = rgba(PALETTE.keyLight, 0.3);
+const HEAD_EDGE = rgba(PALETTE.keyLight, 0.45);
 const SKIN = "#1a1411";
 const HANDLE_HI = rgba("#6a4a2c", 0.6);
 const RING_COLOUR = PALETTE.keyLight;
@@ -81,9 +82,13 @@ export function shakeOffset(age: number, out: Pt): void {
   out.y = Math.cos(age * 71 + 0.8) * env * 0.7;
 }
 
-/** The plinth and sound block the gavel strikes (room space). */
+/** The plinth and sound block the gavel strikes (room space); it arrives with the gavel scene. */
 export function drawPlinth(ctx: CanvasRenderingContext2D, f: Frame): void {
-  const { L, gfx } = f;
+  const { L, gfx, p } = f;
+  const arrive = ramp(p, 0.29, 0.33);
+  if (arrive <= 0.003) return;
+  const prevAlpha = ctx.globalAlpha;
+  ctx.globalAlpha = prevAlpha * arrive;
   const H = L.fig.H;
   const sx = L.strike.x;
   const blockTop = L.strike.y + 0.035 * H;
@@ -108,20 +113,24 @@ export function drawPlinth(ctx: CanvasRenderingContext2D, f: Frame): void {
   ctx.beginPath();
   ctx.ellipse(sx, blockTop, 0.052 * H, 0.0145 * H, 0, 0, TAU);
   ctx.stroke();
+  ctx.globalAlpha = prevAlpha;
 }
 
-/** The right arm and the gavel (room space, drawn after the figure). */
+/**
+ * The arm and the gavel (room space, drawn after the figure). The swing is choreographed with the
+ * block at the viewer's left; when the layout puts the block at the viewer's right the whole gesture
+ * is mirrored about the shoulder, so the raise, the drop and the recoil read the same either way.
+ */
 export function drawArm(ctx: CanvasRenderingContext2D, f: Frame): void {
   const { L, gfx, p } = f;
   if (p < ARM_VISIBLE) return;
   const H = L.fig.H;
-  const cx = L.fig.cx;
-  const feetY = L.fig.feetY;
-  const shoulderX = cx - 0.105 * H;
-  const shoulderY = feetY - 0.8 * H;
+  const mirror = L.strike.x >= L.fig.cx ? -1 : 1;
+  const shoulderX = L.fig.cx - mirror * 0.105 * H;
+  const shoulderY = L.fig.feetY - 0.8 * H;
   const upper = 0.22 * H;
   const fore = 0.16 * H;
-  const dxS = L.strike.x - shoulderX;
+  const dxS = (L.strike.x - shoulderX) * mirror;
   const dyS = L.strike.y - shoulderY;
   const dist = Math.hypot(dxS, dyS);
   const strikeAngle = Math.atan2(dyS, dxS);
@@ -130,30 +139,37 @@ export function drawArm(ctx: CanvasRenderingContext2D, f: Frame): void {
   const raise = ramp(p, RAISE_A, RAISE_B);
   const drop = easeInCubic((p - DROP_A) / (GAVEL_STRIKE_AT - DROP_A));
   const recoil = window01(p, GAVEL_STRIKE_AT, GAVEL_STRIKE_AT + 0.004, GAVEL_STRIKE_AT + 0.01, GAVEL_STRIKE_AT + 0.03) * 0.12;
+  // the forearm folds up ahead of the upper arm so the hand stays close to the body mid-swing;
+  // on the drop the upper arm goes first and the forearm whips after it, like a hammer blow,
+  // so the arm never extends sideways out of a narrow frame
   let a1 = lerp(HANG_UPPER, RAISED_UPPER, raise);
-  let a2 = lerp(HANG_FORE, RAISED_FORE, raise);
+  let a2 = lerp(HANG_FORE, RAISED_FORE, Math.pow(raise, 0.55));
   a1 = lerp(a1, strikeAngle, drop);
-  a2 = lerp(a2, strikeAngle, drop);
+  a2 = lerp(a2, strikeAngle, drop * drop);
   a1 = lerp(a1, RAISED_UPPER, recoil);
   a2 = lerp(a2, RAISED_FORE, recoil);
   const wrist = -0.85 * raise * (1 - drop);
   const aG = a2 + wrist;
 
-  const ex = shoulderX + Math.cos(a1) * upper;
-  const ey = shoulderY + Math.sin(a1) * upper;
+  // local frame: the shoulder at the origin, the swing toward −x, mirrored on screen if need be
+  const ex = Math.cos(a1) * upper;
+  const ey = Math.sin(a1) * upper;
   const hx = ex + Math.cos(a2) * fore;
   const hy = ey + Math.sin(a2) * fore;
   const gx = hx + Math.cos(aG) * reach;
   const gy = hy + Math.sin(aG) * reach;
 
   const prev = ctx.globalAlpha;
+  ctx.save();
+  ctx.translate(shoulderX, shoulderY);
+  ctx.scale(mirror, 1);
   ctx.globalAlpha = prev * ramp(p, ARM_VISIBLE, ARM_VISIBLE + 0.015);
   ctx.lineCap = "round";
   // sleeve
   ctx.strokeStyle = SLEEVE;
   ctx.lineWidth = 0.09 * H;
   ctx.beginPath();
-  ctx.moveTo(shoulderX, shoulderY);
+  ctx.moveTo(0, 0);
   ctx.lineTo(ex, ey);
   ctx.stroke();
   ctx.lineWidth = 0.07 * H;
@@ -161,16 +177,19 @@ export function drawArm(ctx: CanvasRenderingContext2D, f: Frame): void {
   ctx.moveTo(ex, ey);
   ctx.lineTo(hx, hy);
   ctx.stroke();
+  // the key light along the sleeve's upper edge
   ctx.strokeStyle = SLEEVE_EDGE;
   ctx.lineWidth = 1.2;
   ctx.beginPath();
-  ctx.moveTo(shoulderX - 0.04 * H, shoulderY - 0.01 * H);
-  ctx.lineTo(ex - 0.03 * H, ey - 0.01 * H);
+  ctx.moveTo(-0.02 * H, -0.035 * H);
+  ctx.lineTo(ex - 0.015 * H, ey - 0.03 * H);
+  ctx.moveTo(ex - 0.01 * H, ey - 0.028 * H);
+  ctx.lineTo(hx - 0.005 * H, hy - 0.024 * H);
   ctx.stroke();
   // hand
   ctx.fillStyle = SKIN;
   ctx.beginPath();
-  ctx.arc(hx, hy, 0.028 * H, 0, TAU);
+  ctx.arc(hx, hy, 0.037 * H, 0, TAU);
   ctx.fill();
   // gavel: handle along the wrist direction, head across it
   ctx.strokeStyle = "#2a1a10";
@@ -201,8 +220,16 @@ export function drawArm(ctx: CanvasRenderingContext2D, f: Frame): void {
   ctx.fillStyle = gfx.linear(ctx, "gv-band", 0, -hh, 0, hh, BRONZE_RING);
   ctx.fillRect(-hl * 0.72, -hh, 0.012 * H, hh * 2);
   ctx.fillRect(hl * 0.72 - 0.012 * H, -hh, 0.012 * H, hh * 2);
+  // the key light catches the head's upper edge
+  ctx.strokeStyle = HEAD_EDGE;
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(-hl, -hh + 0.6);
+  ctx.lineTo(hl, -hh + 0.6);
+  ctx.stroke();
   ctx.restore();
   ctx.lineCap = "butt";
+  ctx.restore();
   ctx.globalAlpha = prev;
 }
 

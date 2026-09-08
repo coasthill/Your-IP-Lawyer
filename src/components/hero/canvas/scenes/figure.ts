@@ -64,7 +64,7 @@ const moteS = new Float32Array(MOTES);
 const INK = PALETTE.ink;
 const GOWN_BASE = "#0c0c0f";
 const COAT = "#08080a";
-const SKIN = "#161110";
+const SKIN = "#120e0c";
 const HAIR = "#0a0909";
 const KEY_EDGE = rgba(PALETTE.keyLight, 1);
 const RIM_EDGE = rgba(PALETTE.rimLight, 1);
@@ -89,8 +89,8 @@ const SHADOW: ReadonlyArray<readonly [number, string]> = [
   [1, rgba(INK, 0)],
 ];
 const HEAD: ReadonlyArray<readonly [number, string]> = [
-  [0, "#2a221c"],
-  [0.35, "#171210"],
+  [0, "#221b16"],
+  [0.35, "#14100e"],
   [1, "#0b0a0a"],
 ];
 const BAND: ReadonlyArray<readonly [number, string]> = [
@@ -99,7 +99,7 @@ const BAND: ReadonlyArray<readonly [number, string]> = [
   [1, "#bfb6a3"],
 ];
 const BAND_GLOW: ReadonlyArray<readonly [number, string]> = [
-  [0, rgba(PALETTE.keyLight, 0.28)],
+  [0, rgba(PALETTE.keyLight, 0.15)],
   [1, rgba(PALETTE.keyLight, 0)],
 ];
 const GOWN_LIGHT: ReadonlyArray<readonly [number, string]> = [
@@ -140,16 +140,21 @@ export function resizeFigure(L: Layout): void {
   }
 }
 
-/** The figure act's camera for this frame: a slow dolly-in, a step forward, a hint of orbit. */
+/**
+ * The figure act's camera for this frame: a slow dolly-in, a step forward, a hint of orbit. On a
+ * portrait phone the frame is too narrow for the raised arm, so the camera steps back a little and
+ * drifts right as the gavel comes up (0.30 → 0.35), keeping the whole gesture in the picture.
+ */
 export function updateCamera(f: Frame): void {
   const { L, p } = f;
-  const k = (1 + 0.05 * ramp(p, 0, 0.1)) * (1 + 0.07 * ramp(p, 0.11, 0.31));
+  const step = L.portrait ? ramp(p, 0.3, 0.35) : 0;
+  const k = (1 + 0.05 * ramp(p, 0, 0.1)) * (1 + 0.07 * ramp(p, 0.11, 0.31)) * (1 - 0.2 * step);
   const orbit = ramp(p, 0.1, 0.34);
   f.cam.k = k;
   f.cam.px = L.fig.cx;
   f.cam.py = L.fig.feetY - 0.5 * L.fig.H;
-  f.cam.dx = -0.03 * L.w * orbit;
-  f.cam.dy = 0.012 * L.h * orbit;
+  f.cam.dx = -0.03 * L.w * orbit - 0.07 * L.w * step;
+  f.cam.dy = 0.012 * L.h * orbit + 0.02 * L.h * step;
   camToScreen(f.cam, L.strike.x, L.strike.y, f.strikeScreen);
 }
 
@@ -324,37 +329,38 @@ export function drawAdvocate(ctx: CanvasRenderingContext2D, f: Frame): void {
     ctx.globalAlpha = prev;
   }
 
-  // ---- collar and the two white bands
-  const bandW = 0.028 * H;
-  const bandH = 0.115 * H;
-  const bandTop = shoulderY - 0.005 * H;
+  // ---- the collar and the two white bands: narrow strips (the pair ≈ 0.4 of the head's width)
+  //      hanging about 1.3 head-heights from a small white collar band — the accent, not a block
+  const bandW = 0.017 * H;
+  const bandH = 0.154 * H;
+  const bandTop = shoulderY - 0.008 * H;
   const sway = vnoise(t * 0.55, 2.2) * 0.05 * (1 + swirl * 4);
   const liftB = Math.max(0, vnoise(t * 0.8, 5.1)) * swirl * 0.25;
   ctx.save();
   ctx.translate(cx, bandTop);
-  ctx.fillStyle = gfx.radial(ctx, "fig-bandglow", 0, bandH * 0.4, 0, 0.16 * H, BAND_GLOW);
-  ctx.fillRect(-0.16 * H, -0.16 * H + bandH * 0.4, 0.32 * H, 0.32 * H);
+  ctx.fillStyle = gfx.radial(ctx, "fig-bandglow", 0, bandH * 0.35, 0, 0.12 * H, BAND_GLOW);
+  ctx.fillRect(-0.12 * H, -0.12 * H + bandH * 0.35, 0.24 * H, 0.24 * H);
   ctx.fillStyle = PALETTE.ivory;
   ctx.beginPath();
-  ctx.ellipse(0, 0, 0.052 * H, 0.014 * H, 0, 0, Math.PI * 2);
+  ctx.ellipse(0, 0, 0.03 * H, 0.0065 * H, 0, 0, Math.PI * 2);
   ctx.fill();
   ctx.fillStyle = COAT;
   ctx.beginPath();
-  ctx.ellipse(0, -0.004 * H, 0.04 * H, 0.009 * H, 0, 0, Math.PI * 2);
+  ctx.ellipse(0, -0.0035 * H, 0.026 * H, 0.004 * H, 0, 0, Math.PI * 2);
   ctx.fill();
   ctx.rotate(sway);
   ctx.scale(1, 1 - liftB);
   const bandGrad = gfx.linear(ctx, "fig-band", -bandW, 0, bandW, bandH, BAND);
   for (const s of [-1, 1]) {
     ctx.save();
-    ctx.translate(s * (bandW * 0.62), 0.006 * H);
-    ctx.rotate(s * (0.075 + vnoise(t * 0.7, s * 3) * 0.03 * (1 + swirl * 3)));
+    ctx.translate(s * (bandW * 0.5 + 0.0035 * H), 0.004 * H);
+    ctx.rotate(s * (0.05 + vnoise(t * 0.7, s * 3) * 0.03 * (1 + swirl * 3)));
     ctx.fillStyle = bandGrad;
     ctx.beginPath();
     ctx.moveTo(-bandW * 0.5, 0);
     ctx.lineTo(bandW * 0.5, 0);
-    ctx.lineTo(bandW * 0.58, bandH);
-    ctx.lineTo(-bandW * 0.58, bandH);
+    ctx.lineTo(bandW * 0.6, bandH);
+    ctx.lineTo(-bandW * 0.6, bandH);
     ctx.closePath();
     ctx.fill();
     ctx.restore();

@@ -54,7 +54,8 @@ export function makeLayout(w: number, h: number): Layout {
   const s = Math.min(w, h);
   const H = portrait ? h * 0.72 : h * 0.78;
   const fig = { cx: portrait ? w * 0.52 : w * 0.62, feetY: portrait ? h * 0.9 : h * 0.93, H };
-  const strike = { x: fig.cx - 0.25 * H, y: fig.feetY - 0.33 * H };
+  // the sound block stands at the advocate's left hand (viewer's right), away from the bottom-left captions
+  const strike = { x: fig.cx + 0.25 * H, y: fig.feetY - 0.33 * H };
   const objR = portrait ? Math.min(s * 0.13, 64) : Math.min(s * 0.15, 96);
   const display: [Pt, Pt] = portrait
     ? [
@@ -65,13 +66,14 @@ export function makeLayout(w: number, h: number): Layout {
         { x: w * 0.22, y: h * 0.3 },
         { x: w * 0.82, y: h * 0.3 },
       ];
+  // (the site header covers the top ~9% of a phone screen; nothing settles under it)
   const rest: Pt[] = portrait
     ? [
-        { x: w * 0.13, y: h * 0.13 },
-        { x: w * 0.87, y: h * 0.12 },
-        { x: w * 0.3, y: h * 0.08 },
-        { x: w * 0.7, y: h * 0.075 },
-        { x: w * 0.1, y: h * 0.24 },
+        { x: w * 0.14, y: h * 0.19 },
+        { x: w * 0.86, y: h * 0.18 },
+        { x: w * 0.34, y: h * 0.135 },
+        { x: w * 0.68, y: h * 0.13 },
+        { x: w * 0.14, y: h * 0.31 },
       ]
     : [
         { x: w * 0.09, y: h * 0.17 },
@@ -81,16 +83,16 @@ export function makeLayout(w: number, h: number): Layout {
         { x: w * 0.07, y: h * 0.32 },
       ];
   const insBand = portrait ? { y0: h * 0.42, y1: h * 0.55 } : { y0: h * 0.74, y1: h * 0.85 };
-  const gearU = portrait ? s * 0.24 : s * 0.19;
+  const gearU = portrait ? s * 0.24 : s * 0.16;
   const plateR = portrait ? s * 0.27 : s * 0.21;
   const emblemR = portrait ? s * 0.26 : s * 0.21;
   const mapM = portrait ? Math.min(s * 0.86, h * 0.42) : s * 0.62;
-  const legalR = portrait ? s * 0.2 : s * 0.17;
+  const legalR = portrait ? s * 0.2 : s * 0.13;
   const focusY = portrait ? h * 0.36 : h * 0.5;
-  const focusShift = portrait ? 0 : w * 0.14;
+  const focusShift = portrait ? 0 : w * 0.22;
   const mapC = { x: w * 0.5, y: portrait ? h * 0.38 : h * 0.5 };
-  const legalC = { x: w * 0.5, y: portrait ? h * 0.66 : h * 0.6 };
-  const gearAnchor = portrait ? { x: -1.55, y: 0.55 } : { x: -1.05, y: 0.7 };
+  const legalC = { x: w * 0.5, y: portrait ? h * 0.66 : h * 0.72 };
+  const gearAnchor = portrait ? { x: -1.55, y: 0.45 } : { x: -0.9, y: 0.55 };
   return {
     key: `${Math.round(w)}x${Math.round(h)}`,
     w,
