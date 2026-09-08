@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { siteConfig } from "@/config/site";
-import { getFeaturedPost, listPublishedPosts } from "@/server/posts";
+import { getFeaturedPost, listPublishedPosts, type PostWithMeta } from "@/server/posts";
 import { listThreads } from "@/server/forum";
 import { PostCard } from "@/components/blog/PostCard";
 import { ThreadRow } from "@/components/forum/ThreadRow";
@@ -79,8 +79,8 @@ function Purpose() {
 }
 
 async function FromTheBlog() {
-  let featured = null;
-  let latest: Awaited<ReturnType<typeof listPublishedPosts>> = [];
+  let featured: PostWithMeta | null = null;
+  let latest: PostWithMeta[] = [];
   try {
     featured = await getFeaturedPost();
     const posts = await listPublishedPosts({ limit: 4 });

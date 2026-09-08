@@ -1,0 +1,17 @@
+/** Shape returned by the comment server actions and consumed by the client forms. */
+export type CommentFormState = { status: "idle" } | { status: "approved" } | { status: "pending" } | { status: "error"; error: string };
+
+export type ReportState = { status: "idle" } | { status: "done" } | { status: "error"; error: string };
+
+/** A comment prepared on the server for the client tree: body already rendered to safe HTML, dates already formatted. */
+export type CommentView = {
+  id: string;
+  author: string;
+  /** Relative time, e.g. "3 days ago". */
+  when: string;
+  whenIso: string;
+  whenFull: string;
+  bodyHtml: string;
+  /** Set on replies deeper than the second level, which are flattened visually. */
+  inReplyTo: string | null;
+};
