@@ -1,15 +1,19 @@
-import Link from "next/link";
-import { fontClassNames } from "./fonts";
+import { Navigation } from "@/components/navigation/Navigation";
+import { Footer } from "@/components/footer/Footer";
+import SiteNotFound from "./(site)/not-found";
 
+/**
+ * Root 404 — reached for URLs that match no route at all. Wraps the site's 404 in the site chrome
+ * (no smooth-scroll provider needed on a single-screen page).
+ */
 export default function NotFound() {
   return (
-    <main className={`${fontClassNames} container-editorial flex min-h-[70vh] flex-col justify-center`}>
-      <p className="eyebrow">404</p>
-      <h1 className="display-lg mt-6">This page has left the record.</h1>
-      <p className="lede mt-6 max-w-lg">The matter you are looking for is not on the cause list. It may have been moved, renamed or never filed.</p>
-      <div className="mt-10">
-        <Link href="/" className="btn">Back to the record</Link>
-      </div>
-    </main>
+    <>
+      <Navigation />
+      <main id="main" className="flex-1">
+        <SiteNotFound />
+      </main>
+      <Footer />
+    </>
   );
 }
