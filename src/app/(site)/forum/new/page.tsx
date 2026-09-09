@@ -83,35 +83,41 @@ export default async function NewThreadPage({ searchParams }: { searchParams: Se
   }
 
   return (
-    <section className="relative bg-ink" aria-labelledby="new-thread-title">
-      <div className="container-editorial pt-10 pb-24 md:pt-16 md:pb-32">
-        <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-x-3 gap-y-2">
-          <Link href="/forum" className="link-underline eyebrow-muted transition-colors hover:text-bone">
-            The IP Forum
-          </Link>
-          <span aria-hidden="true" className="text-ash">
-            /
-          </span>
-          <span className="eyebrow">{copy.eyebrow}</span>
-        </nav>
-
-        <div className="mt-8 grid gap-8 md:grid-cols-12 md:items-end">
-          <div className="md:col-span-8">
-            <h1 id="new-thread-title" className="display-lg">
-              {copy.title}
-            </h1>
-            <p className="lede mt-6 max-w-2xl">{copy.lede}</p>
-          </div>
-          <p className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ash md:col-span-4 md:text-right">
-            {copy.switchLabel}{" "}
-            <Link href={copy.switchHref} className="link-underline text-bronze-2 transition-colors hover:text-ivory">
-              {copy.switchText}
+    <section className="relative" aria-labelledby="new-thread-title">
+      {/* Masthead, framed by hairlines at the page margins */}
+      <div className="frame-lines max-md:before:hidden max-md:after:hidden">
+        <div className="container-editorial pt-10 pb-12 md:pt-16 md:pb-14">
+          <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-x-3 gap-y-2">
+            <span className="reg-mark text-lapis" aria-hidden="true" />
+            <Link href="/forum" className="link-underline eyebrow-muted transition-colors hover:text-lapis">
+              The IP Forum
             </Link>
-          </p>
+            <span aria-hidden="true" className="text-ash">
+              /
+            </span>
+            <span className="eyebrow">{copy.eyebrow}</span>
+          </nav>
+
+          <div className="mt-8 grid gap-8 md:grid-cols-12 md:items-end">
+            <div className="md:col-span-8">
+              <h1 id="new-thread-title" className="display-lg">
+                {copy.title}
+              </h1>
+              <p className="lede mt-6 max-w-2xl">{copy.lede}</p>
+            </div>
+            <p className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ash md:col-span-4 md:text-right">
+              {copy.switchLabel}{" "}
+              <Link href={copy.switchHref} className="link-underline text-lapis transition-colors hover:text-ink">
+                {copy.switchText}
+              </Link>
+            </p>
+          </div>
+
+          <div className="rule-solid mt-12" role="presentation" />
         </div>
+      </div>
 
-        <div className="rule-solid mt-12" role="presentation" />
-
+      <div className="container-editorial pb-24 md:pb-32">
         <div className="mt-12 grid gap-16 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-7">
             {categoriesFailed ? <Notice className="mb-8">Categories could not be loaded just now. You can still file the discussion; a moderator can place it later.</Notice> : null}
@@ -120,22 +126,22 @@ export default async function NewThreadPage({ searchParams }: { searchParams: Se
 
           <aside className="lg:col-span-4 lg:col-start-9" aria-labelledby="guidelines-heading">
             <div className="lg:sticky lg:top-28">
-              <p className="eyebrow">House rules</p>
+              <p className="eyebrow eyebrow-mark">House rules</p>
               <h2 id="guidelines-heading" className="display-sm mt-3">
                 What makes a good discussion
               </h2>
-              <ol className="mt-8 divide-y divide-bronze/15 border-y border-bronze/15">
+              <ol className="mt-8 divide-y border-y">
                 {RULES.map((rule) => (
                   <li key={rule.n} className="grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-4 py-5">
-                    <span className="pt-1 font-mono text-[0.66rem] tracking-[0.22em] text-bronze-2">{rule.n}</span>
+                    <span className="pt-1 font-mono text-[0.66rem] tracking-[0.22em] text-lapis">{rule.n}</span>
                     <div>
-                      <p className="font-display text-lg leading-snug text-ivory">{rule.title}</p>
-                      <p className="mt-1.5 text-sm leading-relaxed text-bone">{rule.body}</p>
+                      <p className="font-display text-lg leading-snug text-ink">{rule.title}</p>
+                      <p className="mt-1.5 text-sm leading-relaxed text-graphite">{rule.body}</p>
                     </div>
                   </li>
                 ))}
               </ol>
-              <div className="mt-8 space-y-3 text-xs leading-relaxed text-bone/60">
+              <div className="mt-8 space-y-3 text-xs leading-relaxed text-ash">
                 <p>{siteConfig.disclaimer.forum}</p>
                 <p>{siteConfig.disclaimer.general}</p>
               </div>

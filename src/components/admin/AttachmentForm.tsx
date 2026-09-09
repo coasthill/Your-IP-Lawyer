@@ -14,17 +14,17 @@ export function AttachmentForm({ action, library }: { action: (prev: FormState, 
   const uid = useId();
 
   return (
-    <form action={formAction} className="space-y-5" noValidate>
+    <form action={formAction} className="plate space-y-5 p-6" noValidate>
       {state.status === "error" ? <Notice tone="error">{state.message}</Notice> : null}
       {state.status === "success" ? <Notice tone="success">{state.message}</Notice> : null}
 
       <div className="flex flex-wrap gap-5" role="radiogroup" aria-label="Source">
         <label className="flex items-center gap-2 text-sm">
-          <input type="radio" name="source" value="upload" checked={source === "upload"} onChange={() => setSource("upload")} className="h-4 w-4 accent-bronze-2" />
+          <input type="radio" name="source" value="upload" checked={source === "upload"} onChange={() => setSource("upload")} className="h-4 w-4 accent-lapis" />
           Upload a file
         </label>
         <label className="flex items-center gap-2 text-sm">
-          <input type="radio" name="source" value="library" checked={source === "library"} onChange={() => setSource("library")} className="h-4 w-4 accent-bronze-2" />
+          <input type="radio" name="source" value="library" checked={source === "library"} onChange={() => setSource("library")} className="h-4 w-4 accent-lapis" />
           From the library
         </label>
       </div>
@@ -32,7 +32,7 @@ export function AttachmentForm({ action, library }: { action: (prev: FormState, 
       <div className="grid gap-5 md:grid-cols-2">
         {source === "upload" ? (
           <FormField label="File" htmlFor={`${uid}-file`} required hint="PDF or Word (.doc, .docx) up to 25 MB.">
-            <input id={`${uid}-file`} name="file" type="file" accept="application/pdf,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" className="text-sm file:mr-3 file:border file:border-bronze/40 file:bg-transparent file:px-3 file:py-1.5 file:font-mono file:text-[0.62rem] file:uppercase file:tracking-[0.16em] file:text-ivory" />
+            <input id={`${uid}-file`} name="file" type="file" accept="application/pdf,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" className="text-sm file:mr-3 file:rounded-full file:border file:border-ink/40 file:bg-transparent file:px-3 file:py-1.5 file:font-mono file:text-[0.62rem] file:uppercase file:tracking-[0.16em] file:text-ink" />
           </FormField>
         ) : (
           <FormField label="Document" htmlFor={`${uid}-doc`} required hint={library.length ? undefined : "No PDFs or Word files in the library yet."}>
@@ -51,7 +51,7 @@ export function AttachmentForm({ action, library }: { action: (prev: FormState, 
         </FormField>
       </div>
 
-      <button type="submit" className="btn btn-sm" disabled={pending} aria-busy={pending || undefined}>
+      <button type="submit" className="btn btn-solid btn-sm" disabled={pending} aria-busy={pending || undefined}>
         {pending ? "Attaching…" : "Attach"}
       </button>
     </form>

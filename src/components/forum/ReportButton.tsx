@@ -15,7 +15,7 @@ export function ReportButton({ targetType, targetId, threadSlug }: { targetType:
 
   if (state.status === "done") {
     return (
-      <p role="status" className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-current/60">
+      <p role="status" className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-ash">
         Reported. Thank you.
       </p>
     );
@@ -25,7 +25,7 @@ export function ReportButton({ targetType, targetId, threadSlug }: { targetType:
     <div className="flex flex-wrap items-center gap-3">
       <button
         type="button"
-        className="link-underline font-mono text-[0.62rem] uppercase tracking-[0.18em] text-current/55 transition-colors hover:text-current"
+        className="btn btn-sm btn-ghost text-slate hover:text-ink"
         aria-expanded={confirming}
         aria-controls={`${id}-confirm`}
         onClick={() => setConfirming((v) => !v)}
@@ -34,11 +34,11 @@ export function ReportButton({ targetType, targetId, threadSlug }: { targetType:
       </button>
       <div id={`${id}-confirm`} hidden={!confirming} className="w-full sm:w-auto">
         {confirming ? (
-          <form action={formAction} className="flex flex-wrap items-center gap-3 border-l-2 border-seal-2/60 pl-4">
+          <form action={formAction} className="flex flex-wrap items-center gap-3 border-l-2 border-seal/60 pl-4">
             <input type="hidden" name="targetType" value={targetType} />
             <input type="hidden" name="targetId" value={targetId} />
             <input type="hidden" name="threadSlug" value={threadSlug} />
-            <p className="w-full text-xs text-current/80 sm:w-auto">Report this {noun} to the moderator?</p>
+            <p className="w-full text-xs text-graphite sm:w-auto">Report this {noun} to the moderator?</p>
             <label htmlFor={`${id}-reason`} className="sr-only">
               Reason (optional)
             </label>
@@ -47,7 +47,7 @@ export function ReportButton({ targetType, targetId, threadSlug }: { targetType:
               {pending ? "Sending…" : "Confirm report"}
             </button>
             {state.status === "error" ? (
-              <p role="alert" className="w-full text-xs text-seal-2">
+              <p role="alert" className="w-full text-xs text-seal">
                 {state.error}
               </p>
             ) : null}

@@ -62,11 +62,11 @@ export default async function CommentsPage({ searchParams }: { searchParams: Pro
               id={`comment-${c.id}`}
               meta={
                 <>
-                  <span className="text-parchment">{displayName(c.authorName)}</span>
+                  <span className="text-ink">{displayName(c.authorName)}</span>
                   {c.parentId ? <span>in reply</span> : null}
                   <span>
                     on{" "}
-                    <Link href={`/blog/${c.postSlug}#comment-${c.id}`} className="link-underline text-bone">
+                    <Link href={`/blog/${c.postSlug}#comment-${c.id}`} className="link-underline text-lapis">
                       {c.postTitle}
                     </Link>
                   </span>
@@ -96,7 +96,7 @@ export default async function CommentsPage({ searchParams }: { searchParams: Pro
       ) : (
         <EmptyRecord title={EMPTY[tab].title} body={EMPTY[tab].body} />
       )}
-      {rows.length >= 300 ? <p className="mt-4 text-xs text-bone/60">Showing the latest 300. Older entries appear as these are dealt with.</p> : null}
+      {rows.length >= 300 ? <p className="mt-4 text-xs text-ash">Showing the latest 300. Older entries appear as these are dealt with.</p> : null}
     </div>
   );
 }

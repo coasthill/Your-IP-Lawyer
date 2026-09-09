@@ -41,7 +41,7 @@ export default async function SubmissionPage({ params }: Props) {
         }
         title={s.title}
         lede={
-          <span className="font-mono text-[0.7rem] tracking-[0.08em] text-bone">
+          <span className="font-mono text-[0.7rem] tracking-[0.08em] text-slate">
             by {s.name}
             {s.affiliation ? `, ${s.affiliation}` : ""} · received {formatDateTime(s.createdAt)}
           </span>
@@ -61,14 +61,14 @@ export default async function SubmissionPage({ params }: Props) {
       <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="min-w-0">
           <SectionHeading number="01" title="Abstract" />
-          <div className="prose-ugc max-w-[68ch] text-parchment/90" dangerouslySetInnerHTML={{ __html: renderPlainText(s.abstract) }} />
+          <div className="prose-ugc max-w-[68ch] text-charcoal" dangerouslySetInnerHTML={{ __html: renderPlainText(s.abstract) }} />
 
           <SectionHeading number="02" title="Attached file" />
           {s.document ? (
-            <div className="flex flex-wrap items-center gap-4 border-y border-bronze/20 py-4">
+            <div className="flex flex-wrap items-center gap-4 border-y py-4">
               <FileGlyph label={s.document.kind === "pdf" ? "PDF" : "DOC"} size={44} />
               <div className="min-w-0 flex-1">
-                <p className="font-display text-lg leading-snug text-ivory">{s.document.filename}</p>
+                <p className="font-display text-lg leading-snug text-ink">{s.document.filename}</p>
                 <p className="font-mono text-[0.62rem] tracking-[0.06em] text-ash">
                   {s.document.mimeType} · {formatBytes(s.document.sizeBytes)} · uploaded {formatDateTime(s.document.createdAt)}
                 </p>
@@ -81,15 +81,15 @@ export default async function SubmissionPage({ params }: Props) {
               </a>
             </div>
           ) : (
-            <p className="border-y border-bronze/20 py-6 text-sm text-bone/70">No file attached. The author sent the abstract only.</p>
+            <p className="border-y py-6 text-sm text-slate">No file attached. The author sent the abstract only.</p>
           )}
-          <p className="mt-3 text-xs text-bone/60">Files from guests are checked by content type and size before storage, but open them with the usual care.</p>
+          <p className="mt-3 text-xs text-ash">Files from guests are checked by content type and size before storage, but open them with the usual care.</p>
         </div>
 
-        <aside className="space-y-10 lg:border-l lg:border-bronze/15 lg:pl-8">
+        <aside className="space-y-10 lg:border-l lg:pl-8">
           <div>
             <p className="eyebrow mb-4">Contact</p>
-            <dl className="divide-y divide-bronze/15 border-y border-bronze/20 text-sm">
+            <dl className="divide-y border-y text-sm">
               <Row label="Author">{s.name}</Row>
               <Row label="Email">
                 <a href={`mailto:${s.email}?subject=${encodeURIComponent(`Re: ${s.title}`)}`} className="link-underline break-all">
@@ -117,7 +117,7 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
   return (
     <div className="grid grid-cols-[7rem_minmax(0,1fr)] gap-3 py-2.5">
       <dt className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-ash">{label}</dt>
-      <dd className="min-w-0 text-parchment">{children}</dd>
+      <dd className="min-w-0 text-ink">{children}</dd>
     </div>
   );
 }

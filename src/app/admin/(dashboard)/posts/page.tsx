@@ -57,9 +57,9 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
             {posts.map((post) => {
               const scheduled = post.status === "published" && isInFuture(post.publishedAt);
               return (
-                <tr key={post.id} className="transition-colors hover:bg-ivory/[0.02]">
+                <tr key={post.id} className="transition-colors hover:bg-lapis-tint/60">
                   <Td>
-                    <Link href={`/admin/posts/${post.id}`} className="font-display text-lg leading-snug text-ivory transition-colors hover:text-bronze-2">
+                    <Link href={`/admin/posts/${post.id}`} className="font-display text-lg leading-snug text-ink transition-colors hover:text-lapis">
                       {post.title}
                     </Link>
                     <p className="mt-1 font-mono text-[0.62rem] tracking-[0.06em] text-ash">
@@ -72,8 +72,8 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
                       {scheduled ? <FlagChip>Scheduled</FlagChip> : null}
                     </div>
                   </Td>
-                  <Td className="text-bone">{post.category?.name ?? <span className="text-ash">—</span>}</Td>
-                  <Td className="whitespace-nowrap text-bone">
+                  <Td className="text-graphite">{post.category?.name ?? <span className="text-ash">—</span>}</Td>
+                  <Td className="whitespace-nowrap text-graphite">
                     {post.publishedAt ? <time dateTime={post.publishedAt.toISOString()}>{formatDateTime(post.publishedAt)}</time> : <span className="text-ash">—</span>}
                   </Td>
                   <Td>
@@ -83,7 +83,7 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
                       {!post.featured && !post.isDemo ? <span className="text-ash">—</span> : null}
                     </div>
                   </Td>
-                  <Td className="whitespace-nowrap text-bone">
+                  <Td className="whitespace-nowrap text-graphite">
                     <time dateTime={post.updatedAt.toISOString()} title={formatDateTime(post.updatedAt)}>
                       {timeAgo(post.updatedAt)}
                     </time>

@@ -6,11 +6,11 @@ import Link from "next/link";
 export default function BlogError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
     <section className="container-editorial flex min-h-[60vh] flex-col justify-center py-24 md:py-32" aria-labelledby="blog-error-title">
-      <p className="eyebrow">Objection.</p>
+      <p className="eyebrow eyebrow-mark">Objection.</p>
       <h1 id="blog-error-title" className="display-lg mt-6">
         The record could not be produced.
       </h1>
-      <p className="lede mt-6 max-w-lg">Something went wrong while retrieving this page. It is almost certainly our fault, and almost certainly temporary.</p>
+      <p className="lede mt-6 max-w-lg text-graphite">Something went wrong while retrieving this page. It is almost certainly our fault, and almost certainly temporary.</p>
       <div className="mt-10 flex flex-wrap gap-3">
         <button type="button" onClick={reset} className="btn btn-solid">
           Try again

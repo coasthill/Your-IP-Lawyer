@@ -74,20 +74,25 @@ export default async function ForumPage({ searchParams }: { searchParams: Search
   return (
     <>
       {/* Masthead */}
-      <section className="relative bg-ink" aria-labelledby="forum-title">
-        <div className="container-editorial pt-10 pb-10 md:pt-16 md:pb-12">
+      <section className="surface-lapis relative frame-lines max-md:before:hidden max-md:after:hidden" aria-labelledby="forum-title">
+        <div className="container-editorial pt-10 pb-12 md:pt-16 md:pb-14">
           <div className="grid gap-10 md:grid-cols-12 md:items-end">
             <div className="md:col-span-8">
-              <p className="eyebrow">The community</p>
+              <p className="eyebrow eyebrow-mark">The community</p>
               <h1 id="forum-title" className="display-xl mt-5">
                 The IP Forum
               </h1>
               <p className="lede mt-6 max-w-2xl">Where the argument continues after the hearing.</p>
+              <div className="mt-8">
+                <ButtonLink href="/forum/new" variant="solid" size="sm">
+                  Start a discussion
+                </ButtonLink>
+              </div>
             </div>
             <div className="md:col-span-4 md:text-right">
-              <p className="font-mono text-[0.62rem] uppercase tracking-[0.22em] text-ash">Record</p>
+              <p className="font-mono text-[0.62rem] uppercase tracking-[0.22em] text-bone">Record</p>
               <p className="mt-2 font-display text-xl text-parchment">{data.total === null ? siteConfig.name : `${pluralise(data.total, "discussion")} on record`}</p>
-              <p className="mt-1 font-mono text-[0.62rem] uppercase tracking-[0.22em] text-ash">
+              <p className="mt-1 font-mono text-[0.62rem] uppercase tracking-[0.22em] text-bone">
                 {siteConfig.author.location} · {editionLabel()}
               </p>
               <div className="mt-5">
@@ -95,21 +100,21 @@ export default async function ForumPage({ searchParams }: { searchParams: Search
               </div>
             </div>
           </div>
-          <div className="rule-solid mt-12" role="presentation" />
-          <ForumToolbar categories={data.categories} currentCategory={category?.slug ?? null} sort={sort} className="mt-6" />
         </div>
       </section>
 
       {/* The cause list */}
-      <section className="relative bg-ink" aria-labelledby="list-heading">
-        <div className="container-editorial pt-8 pb-24 md:pt-12 md:pb-32">
-          <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
+      <section className="relative" aria-labelledby="list-heading">
+        <div className="container-editorial pt-8 pb-24 md:pt-10 md:pb-32">
+          <ForumToolbar categories={data.categories} currentCategory={category?.slug ?? null} sort={sort} />
+          <div className="rule-solid mt-8" role="presentation" />
+          <div className="mt-10 flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
             <div>
-              <p className="eyebrow-muted">The record</p>
+              <p className="eyebrow eyebrow-mark">The record</p>
               <h2 id="list-heading" className="display-md mt-3">
                 {listHeading}
               </h2>
-              {category?.description ? <p className="mt-3 max-w-xl text-sm text-bone">{category.description}</p> : null}
+              {category?.description ? <p className="mt-3 max-w-xl text-sm text-graphite">{category.description}</p> : null}
             </div>
             <p className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ash">
               {page > 1 ? `Page ${page} · ` : ""}
@@ -121,7 +126,7 @@ export default async function ForumPage({ searchParams }: { searchParams: Search
             {data.status === "error" ? (
               <Notice tone="error">The forum could not be reached just now. Please try again in a moment.</Notice>
             ) : data.threads.length ? (
-              <ol className="border-t border-bronze/15">
+              <ol className="border-t">
                 {data.threads.map((t) => (
                   <li key={t.id}>
                     <ThreadRow thread={t} />
@@ -142,7 +147,7 @@ export default async function ForumPage({ searchParams }: { searchParams: Search
           </div>
 
           {data.status === "ok" && (page > 1 || data.hasNext) ? (
-            <nav aria-label="Pagination" className="mt-12 flex items-center justify-between gap-4 border-t border-bronze/15 pt-8">
+            <nav aria-label="Pagination" className="mt-12 flex items-center justify-between gap-4 border-t pt-8">
               <div>
                 {page > 1 ? (
                   <Link href={forumHref({ category: category?.slug ?? null, sort, page: page - 1 })} rel="prev" className="btn btn-sm">
@@ -161,7 +166,7 @@ export default async function ForumPage({ searchParams }: { searchParams: Search
             </nav>
           ) : null}
 
-          <div className="mt-16 max-w-2xl space-y-2 border-t border-bronze/15 pt-8 text-xs leading-relaxed text-bone/60">
+          <div className="mt-16 max-w-2xl space-y-2 border-t pt-8 text-xs leading-relaxed text-ash">
             <p>{siteConfig.disclaimer.forum}</p>
             <p>No account is required. Guest posts may be held for moderation before they appear; nothing here is legal advice on any particular matter.</p>
           </div>

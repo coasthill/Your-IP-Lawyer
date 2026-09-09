@@ -119,7 +119,7 @@ export function PostEditor({
               name="title"
               value={form.title}
               onChange={(e) => set("title", e.target.value)}
-              className="font-display text-2xl text-ivory md:text-3xl"
+              className="font-display text-2xl text-ink md:text-3xl"
               placeholder="The headline"
               aria-invalid={Boolean(errors.title) || undefined}
               aria-describedby={describedBy(id("title"), errors.title)}
@@ -142,7 +142,7 @@ export function PostEditor({
           {/* Body: write / preview */}
           <div className="space-y-3">
             <div className="flex flex-wrap items-end justify-between gap-3">
-              <div role="tablist" aria-label="Article body" className="flex gap-1 border-b border-bronze/20">
+              <div role="tablist" aria-label="Article body" className="flex gap-1 border-b">
                 <button
                   type="button"
                   role="tab"
@@ -150,7 +150,7 @@ export function PostEditor({
                   aria-selected={tab === "write"}
                   aria-controls={id("panel-write")}
                   onClick={() => setTab("write")}
-                  className={`-mb-px border-b-2 px-3 py-2 font-mono text-[0.66rem] uppercase tracking-[0.18em] ${tab === "write" ? "border-bronze-2 text-ivory" : "border-transparent text-bone hover:text-ivory"}`}
+                  className={`-mb-px border-b-2 px-3 py-2 font-mono text-[0.66rem] uppercase tracking-[0.18em] ${tab === "write" ? "border-lapis text-ink" : "border-transparent text-slate hover:text-ink"}`}
                 >
                   Write
                 </button>
@@ -162,7 +162,7 @@ export function PostEditor({
                   aria-controls={id("panel-preview")}
                   onClick={showPreview}
                   disabled={previewing}
-                  className={`-mb-px border-b-2 px-3 py-2 font-mono text-[0.66rem] uppercase tracking-[0.18em] ${tab === "preview" ? "border-bronze-2 text-ivory" : "border-transparent text-bone hover:text-ivory"}`}
+                  className={`-mb-px border-b-2 px-3 py-2 font-mono text-[0.66rem] uppercase tracking-[0.18em] ${tab === "preview" ? "border-lapis text-ink" : "border-transparent text-slate hover:text-ink"}`}
                 >
                   {previewing ? "Rendering…" : "Preview"}
                 </button>
@@ -188,7 +188,7 @@ export function PostEditor({
                 aria-describedby={errors.bodyMd ? id("body-error") : undefined}
               />
               {errors.bodyMd ? (
-                <p id={id("body-error")} className="mt-2 text-xs text-seal-2" role="alert">
+                <p id={id("body-error")} className="mt-2 text-xs text-seal" role="alert">
                   {errors.bodyMd}
                 </p>
               ) : null}
@@ -196,7 +196,7 @@ export function PostEditor({
 
             <div id={id("panel-preview")} role="tabpanel" aria-labelledby={id("tab-preview")} hidden={tab !== "preview"}>
               {/* The textarea above stays in the form while hidden, so the Markdown is still submitted. */}
-              <div className="paper relative grain px-6 py-10 md:px-12 md:py-14">
+              <div className="plate relative px-6 py-10 md:px-12 md:py-14">
                 <div className="relative z-10 mx-auto max-w-[var(--measure)]">
                   <p className="eyebrow mb-6">Preview · as it will be published</p>
                   {previewHtml && previewHtml.trim() ? (
@@ -213,7 +213,7 @@ export function PostEditor({
         </div>
 
         {/* ------------------------------------------------ rail */}
-        <aside className="space-y-8 lg:border-l lg:border-bronze/15 lg:pl-8">
+        <aside className="space-y-8 lg:border-l lg:pl-8">
           <div className="space-y-5">
             <p className="eyebrow">Filing</p>
             <FormField label="Status" htmlFor={id("status")}>
@@ -267,7 +267,7 @@ export function PostEditor({
             {post?.heroPreview ? (
               <div className="flex items-center gap-3">
                 <Thumb src={post.heroPreview.url} alt={post.heroPreview.alt || "Current feature image"} size={64} />
-                <p className="text-xs text-bone/70">Current image{post.heroPreview.alt ? `: “${post.heroPreview.alt}”` : ""}</p>
+                <p className="text-xs text-slate">Current image{post.heroPreview.alt ? `: “${post.heroPreview.alt}”` : ""}</p>
               </div>
             ) : null}
             <div className="space-y-2" role="radiogroup" aria-label="Image source">
@@ -280,8 +280,8 @@ export function PostEditor({
                   ["url", "Paste an image address"],
                 ] as ReadonlyArray<readonly [HeroMode, string]>
               ).map(([mode, label]) => (
-                <label key={mode} className="flex items-center gap-3 text-sm text-parchment">
-                  <input type="radio" name="heroMode" value={mode} checked={form.heroMode === mode} onChange={() => set("heroMode", mode)} className="h-4 w-4 accent-bronze-2" />
+                <label key={mode} className="flex items-center gap-3 text-sm text-ink">
+                  <input type="radio" name="heroMode" value={mode} checked={form.heroMode === mode} onChange={() => set("heroMode", mode)} className="h-4 w-4 accent-lapis" />
                   {label}
                 </label>
               ))}
@@ -289,7 +289,7 @@ export function PostEditor({
 
             {form.heroMode === "upload" ? (
               <FormField label="Image file" htmlFor={id("heroFile")} error={errors.heroFile} hint="JPG, PNG, WebP, AVIF or GIF up to 6 MB.">
-                <input id={id("heroFile")} name="heroFile" type="file" accept="image/jpeg,image/png,image/webp,image/avif,image/gif" className="text-sm file:mr-3 file:border file:border-bronze/40 file:bg-transparent file:px-3 file:py-1.5 file:font-mono file:text-[0.62rem] file:uppercase file:tracking-[0.16em] file:text-ivory" aria-invalid={Boolean(errors.heroFile) || undefined} />
+                <input id={id("heroFile")} name="heroFile" type="file" accept="image/jpeg,image/png,image/webp,image/avif,image/gif" className="text-sm file:mr-3 file:rounded-full file:border file:border-ink/40 file:bg-transparent file:px-3 file:py-1.5 file:font-mono file:text-[0.62rem] file:uppercase file:tracking-[0.16em] file:text-ink" aria-invalid={Boolean(errors.heroFile) || undefined} />
               </FormField>
             ) : null}
 
@@ -306,7 +306,7 @@ export function PostEditor({
                 {selectedLibraryImage ? (
                   <div className="mt-2 flex items-center gap-3">
                     <Thumb src={selectedLibraryImage.url} alt={selectedLibraryImage.alt || selectedLibraryImage.label} size={64} />
-                    <p className="text-xs text-bone/70">{selectedLibraryImage.label}</p>
+                    <p className="text-xs text-slate">{selectedLibraryImage.label}</p>
                   </div>
                 ) : null}
               </FormField>
@@ -328,7 +328,7 @@ export function PostEditor({
       </div>
 
       {/* ------------------------------------------------ action bar */}
-      <div className="sticky bottom-0 z-20 -mx-[var(--page-x)] border-t border-bronze/20 bg-ink px-[var(--page-x)] py-3">
+      <div className="sticky bottom-0 z-20 -mx-[var(--page-x)] border-t bg-paper px-[var(--page-x)] py-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-ash" aria-live="polite">
             {saving ? "Saving…" : state.status === "error" ? "Not saved — see the notes above." : form.status === "published" ? "Will be live on save." : "Saved as a draft on save."}

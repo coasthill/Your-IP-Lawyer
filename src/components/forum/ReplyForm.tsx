@@ -42,8 +42,8 @@ export function ReplyForm({
     const approved = state.status === "approved";
     return (
       <div role="status" className="plate px-6 py-6">
-        <p className="font-display text-2xl text-ivory">{approved ? "Filed. Thank you." : "Received."}</p>
-        <p className="mt-2 text-sm text-bone">{approved ? "Your reply is on the record." : "Replies are reviewed before they appear."}</p>
+        <p className="font-display text-2xl text-ink">{approved ? "Filed. Thank you." : "Received."}</p>
+        <p className="mt-2 text-sm text-slate">{approved ? "Your reply is on the record." : "Replies are reviewed before they appear."}</p>
         {onCancel ? (
           <Button type="button" size="sm" className="mt-5" onClick={onCancel}>
             Close
@@ -71,7 +71,7 @@ export function ReplyForm({
         hint={
           <span className="flex flex-wrap justify-between gap-x-6 gap-y-1">
             <span>Plain text. **bold**, _italic_ and &gt; quotes are understood; links may hold the reply for review.</span>
-            <span aria-live="polite" className={cn("font-mono tabular-nums", remaining < 200 ? "text-seal-2" : "text-ash")}>
+            <span aria-live="polite" className={cn("font-mono tabular-nums", remaining < 200 ? "text-seal" : "text-ash")}>
               {nf.format(body.length)} / {nf.format(REPLY_BODY_MAX)}
             </span>
           </span>
@@ -114,7 +114,7 @@ export function ReplyForm({
             Cancel
           </Button>
         ) : null}
-        <p id={`${id}-note`} className="text-xs text-bone/70">
+        <p id={`${id}-note`} className="text-xs text-ash">
           Replies may be held for moderation before they appear.
         </p>
       </div>

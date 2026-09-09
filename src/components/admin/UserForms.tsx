@@ -13,7 +13,7 @@ export function AddAdminForm({ action }: { action: Action }) {
   const errors = state.status === "error" ? (state.fieldErrors ?? {}) : {};
   const v = state.values ?? {};
   return (
-    <form action={formAction} className="space-y-5" noValidate>
+    <form action={formAction} className="plate space-y-5 p-6" noValidate>
       {state.status === "error" ? <Notice tone="error">{state.message}</Notice> : null}
       {state.status === "success" ? <Notice tone="success">{state.message}</Notice> : null}
       <FormField label="Name" htmlFor={`${uid}-name`} required error={errors.name}>
@@ -28,7 +28,7 @@ export function AddAdminForm({ action }: { action: Action }) {
       <FormField label="Confirm password" htmlFor={`${uid}-confirm`} required error={errors.confirm}>
         <input id={`${uid}-confirm`} name="confirm" type="password" autoComplete="new-password" aria-invalid={Boolean(errors.confirm) || undefined} aria-describedby={describedBy(`${uid}-confirm`, errors.confirm)} />
       </FormField>
-      <button type="submit" className="btn btn-sm" disabled={pending} aria-busy={pending || undefined}>
+      <button type="submit" className="btn btn-solid btn-sm" disabled={pending} aria-busy={pending || undefined}>
         {pending ? "Adding…" : "Add admin"}
       </button>
     </form>
@@ -40,7 +40,7 @@ export function ChangePasswordForm({ action }: { action: Action }) {
   const uid = useId();
   const errors = state.status === "error" ? (state.fieldErrors ?? {}) : {};
   return (
-    <form action={formAction} className="space-y-5" noValidate>
+    <form action={formAction} className="plate space-y-5 p-6" noValidate>
       {state.status === "error" ? <Notice tone="error">{state.message}</Notice> : null}
       {state.status === "success" ? <Notice tone="success">{state.message}</Notice> : null}
       <FormField label="Current password" htmlFor={`${uid}-current`} required error={errors.current}>
@@ -52,7 +52,7 @@ export function ChangePasswordForm({ action }: { action: Action }) {
       <FormField label="Confirm new password" htmlFor={`${uid}-confirm`} required error={errors.confirm}>
         <input id={`${uid}-confirm`} name="confirm" type="password" autoComplete="new-password" aria-invalid={Boolean(errors.confirm) || undefined} aria-describedby={describedBy(`${uid}-confirm`, errors.confirm)} />
       </FormField>
-      <button type="submit" className="btn btn-sm" disabled={pending} aria-busy={pending || undefined}>
+      <button type="submit" className="btn btn-solid btn-sm" disabled={pending} aria-busy={pending || undefined}>
         {pending ? "Changing…" : "Change password"}
       </button>
     </form>

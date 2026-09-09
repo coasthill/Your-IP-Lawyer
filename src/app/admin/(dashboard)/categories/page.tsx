@@ -29,8 +29,8 @@ export default async function CategoriesPage() {
         <SectionHeading number="01" title={<span id="categories-heading">Categories</span>} aside="Edit in place, then Save" />
         {cats.length ? (
           <div className="-mx-[var(--page-x)] overflow-x-auto px-[var(--page-x)]">
-            <div className="min-w-[58rem] border-t border-bronze/25">
-              <div className="grid grid-cols-[3rem_1fr_1.6fr_11rem_6rem_auto_auto] gap-4 border-b border-bronze/25 py-2.5 font-mono text-[0.62rem] uppercase tracking-[0.18em] text-ash">
+            <div className="min-w-[58rem] border-t border-ink/25">
+              <div className="grid grid-cols-[3rem_1fr_1.6fr_11rem_6rem_auto_auto] gap-4 border-b border-ink/25 py-2.5 font-mono text-[0.62rem] uppercase tracking-[0.18em] text-ash">
                 <span aria-hidden="true">No.</span>
                 <span>Name · address</span>
                 <span>Description</span>
@@ -38,12 +38,12 @@ export default async function CategoriesPage() {
                 <span>Order</span>
                 <span className="col-span-2 text-right">Actions</span>
               </div>
-              <ol className="divide-y divide-bronze/10">
+              <ol className="divide-y">
                 {cats.map((c, i) => {
                   const fid = `cat-${c.id}`;
                   return (
                     <li key={c.id} className="grid grid-cols-[3rem_1fr_1.6fr_11rem_6rem_auto_auto] items-start gap-4 py-3">
-                      <span className="pt-3 font-mono text-[0.66rem] tracking-[0.2em] text-bronze-2" aria-hidden="true">
+                      <span className="pt-3 font-mono text-[0.66rem] tracking-[0.2em] text-lapis" aria-hidden="true">
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       {/* The row is one form; the delete form sits beside it and shares nothing. */}
@@ -95,7 +95,7 @@ export default async function CategoriesPage() {
         ) : (
           <EmptyRecord title="No categories yet." body="Add one below. The seed script installs the standard set (Trade Marks, Patents, Copyright and so on) if you would rather start from those." />
         )}
-        <p className="mt-4 text-xs text-bone/60">
+        <p className="mt-4 text-xs text-ash">
           Deleting a category does not delete anything filed under it — those articles and discussions simply lose the label. Scope <FlagChip className="mx-1">forum only</FlagChip> hides the category from the article editor, and vice versa.
         </p>
       </section>

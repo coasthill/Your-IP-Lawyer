@@ -86,10 +86,11 @@ export default async function ThreadPage({ params }: Props) {
 
       <article aria-labelledby="thread-title">
         {/* Masthead */}
-        <header className="relative bg-ink">
-          <div className="container-editorial pt-10 pb-14 md:pt-16 md:pb-20">
+        <header className="relative frame-lines max-md:before:hidden max-md:after:hidden">
+          <div className="container-editorial pt-10 pb-10 md:pt-16 md:pb-12">
             <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-x-3 gap-y-2">
-              <Link href="/forum" className="link-underline eyebrow-muted transition-colors hover:text-bone">
+              <span className="reg-mark text-lapis" aria-hidden="true" />
+              <Link href="/forum" className="link-underline eyebrow-muted transition-colors hover:text-lapis">
                 The IP Forum
               </Link>
               {thread.category ? (
@@ -97,12 +98,12 @@ export default async function ThreadPage({ params }: Props) {
                   <span aria-hidden="true" className="text-ash">
                     /
                   </span>
-                  <Link href={forumHref({ category: thread.category.slug })} className="link-underline eyebrow transition-colors hover:text-ivory">
+                  <Link href={forumHref({ category: thread.category.slug })} className="link-underline eyebrow transition-colors hover:text-ink">
                     {thread.category.name}
                   </Link>
                 </>
               ) : null}
-              {thread.pinned ? <span className="chip border-bronze-2/60 text-bronze-2">Pinned</span> : null}
+              {thread.pinned ? <span className="chip border-lapis/60 text-lapis">Pinned</span> : null}
               {thread.locked ? <span className="chip text-ash">Closed</span> : null}
             </nav>
 
@@ -115,21 +116,21 @@ export default async function ThreadPage({ params }: Props) {
             <dl className="mt-8 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
               <div>
                 <dt className="eyebrow-muted">Opened by</dt>
-                <dd className="mt-2 font-display text-xl text-ivory">{author}</dd>
+                <dd className="mt-2 font-display text-xl text-ink">{author}</dd>
               </div>
               <div>
                 <dt className="eyebrow-muted">Filed</dt>
-                <dd className="mt-2 font-display text-xl text-ivory">
+                <dd className="mt-2 font-display text-xl text-ink">
                   <time dateTime={thread.createdAt.toISOString()}>{formatDate(thread.createdAt)}</time>
                 </dd>
               </div>
               <div>
                 <dt className="eyebrow-muted">Views</dt>
-                <dd className="mt-2 font-display text-xl text-ivory tabular-nums">{views.toLocaleString("en-IN")}</dd>
+                <dd className="mt-2 font-display text-xl text-ink tabular-nums">{views.toLocaleString("en-IN")}</dd>
               </div>
               <div>
                 <dt className="eyebrow-muted">Replies</dt>
-                <dd className="mt-2 font-display text-xl text-ivory">
+                <dd className="mt-2 font-display text-xl text-ink">
                   <a href="#replies" className="link-underline">
                     {replyCount ? pluralise(replyCount, "reply", "replies") : "None yet"}
                   </a>
@@ -150,44 +151,46 @@ export default async function ThreadPage({ params }: Props) {
         </header>
 
         {/* The opening statement, on paper */}
-        <section className="paper relative grain" aria-labelledby="opening-heading">
-          <div className="container-prose relative z-[2] py-16 md:py-24">
-            <div className="flex items-baseline justify-between gap-4 border-b border-current/20 pb-4">
-              <p id="opening-heading" className="eyebrow">
-                Opening statement
-              </p>
-              <p className="font-mono text-[0.62rem] tracking-[0.22em] text-current/60">01</p>
+        <section className="relative" aria-labelledby="opening-heading">
+          <div className="container-prose py-10 md:py-14">
+            <div className="plate px-6 py-8 sm:px-10 sm:py-10">
+              <div className="flex items-baseline justify-between gap-4 border-b pb-4">
+                <p id="opening-heading" className="eyebrow eyebrow-mark">
+                  Opening statement
+                </p>
+                <p className="font-mono text-[0.62rem] tracking-[0.22em] text-ash">01</p>
+              </div>
+              <div className="prose-ugc mt-8 text-[1.05rem] leading-[1.7] break-words" dangerouslySetInnerHTML={{ __html: bodyHtml }} />
+              <footer className="mt-10 flex flex-wrap items-center justify-between gap-x-8 gap-y-4 border-t pt-6">
+                <p className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-ash">
+                  {author}
+                  <span aria-hidden="true"> · </span>
+                  <time dateTime={thread.createdAt.toISOString()}>{formatDate(thread.createdAt)}</time>
+                </p>
+                <ReportButton targetType="thread" targetId={thread.id} threadSlug={thread.slug} />
+              </footer>
             </div>
-            <div className="prose-ugc mt-8 text-[1.05rem] leading-[1.7] break-words" dangerouslySetInnerHTML={{ __html: bodyHtml }} />
-            <footer className="mt-12 flex flex-wrap items-center justify-between gap-x-8 gap-y-4 border-t border-current/20 pt-6">
-              <p className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-current/60">
-                {author}
-                <span aria-hidden="true"> · </span>
-                <time dateTime={thread.createdAt.toISOString()}>{formatDate(thread.createdAt)}</time>
-              </p>
-              <ReportButton targetType="thread" targetId={thread.id} threadSlug={thread.slug} />
-            </footer>
           </div>
         </section>
       </article>
 
       {/* The argument */}
-      <section id="replies" className="relative scroll-mt-24 border-t border-bronze/15 bg-ink-2" aria-labelledby="replies-heading">
+      <section id="replies" className="relative scroll-mt-24 border-t" aria-labelledby="replies-heading">
         <div className="container-prose py-20 md:py-28">
           <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
             <div>
-              <p className="eyebrow">The argument</p>
+              <p className="eyebrow eyebrow-mark">The argument</p>
               <h2 id="replies-heading" className="display-md mt-3">
                 Replies
               </h2>
             </div>
             <p className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ash">{replyCount ? pluralise(replyCount, "reply", "replies") : "Nothing on record"}</p>
           </div>
-          <p className="mt-5 max-w-xl text-sm leading-relaxed text-bone/80">{siteConfig.disclaimer.forum}</p>
+          <Notice className="mt-6 max-w-xl">{siteConfig.disclaimer.forum}</Notice>
 
           {thread.locked ? (
             <Notice className="mt-8">
-              <span className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-bronze-2">Closed · </span>
+              <span className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-lapis">Closed · </span>
               This discussion has been closed. It stays on the record, but no further replies are accepted.
             </Notice>
           ) : null}
@@ -197,7 +200,7 @@ export default async function ThreadPage({ params }: Props) {
           </div>
 
           {thread.locked ? null : (
-            <div className="mt-16 border-t border-bronze/15 pt-10">
+            <div className="plate mt-16 px-6 py-8 sm:px-8 sm:py-10">
               <p className="eyebrow-muted">Add a reply</p>
               <h3 className="display-sm mt-3">Counsel may proceed.</h3>
               <div className="mt-8">
@@ -206,11 +209,11 @@ export default async function ThreadPage({ params }: Props) {
             </div>
           )}
 
-          <div className="mt-16 flex flex-wrap items-center justify-between gap-6 border-t border-bronze/15 pt-8">
+          <div className="mt-16 flex flex-wrap items-center justify-between gap-6 border-t pt-8">
             <Link href="/forum" className="btn btn-sm">
               Back to the record
             </Link>
-            <p className="max-w-md text-xs leading-relaxed text-bone/60">{siteConfig.disclaimer.general}</p>
+            <p className="max-w-md text-xs leading-relaxed text-ash">{siteConfig.disclaimer.general}</p>
           </div>
         </div>
       </section>

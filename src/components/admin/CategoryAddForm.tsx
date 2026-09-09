@@ -11,7 +11,7 @@ export function CategoryAddForm({ action }: { action: (prev: FormState, formData
   const errors = state.status === "error" ? (state.fieldErrors ?? {}) : {};
 
   return (
-    <form action={formAction} className="space-y-5" noValidate>
+    <form action={formAction} className="plate space-y-5 p-6" noValidate>
       {state.status === "error" ? <Notice tone="error">{state.message}</Notice> : null}
       {state.status === "success" ? <Notice tone="success">{state.message}</Notice> : null}
       <div className="grid gap-5 md:grid-cols-[1fr_1fr_10rem]">
@@ -29,7 +29,7 @@ export function CategoryAddForm({ action }: { action: (prev: FormState, formData
           </select>
         </FormField>
       </div>
-      <button type="submit" className="btn btn-sm" disabled={pending} aria-busy={pending || undefined}>
+      <button type="submit" className="btn btn-solid btn-sm" disabled={pending} aria-busy={pending || undefined}>
         {pending ? "Adding…" : "Add category"}
       </button>
     </form>

@@ -1,12 +1,11 @@
 import Link from "next/link";
 import type { Category } from "@/db/schema";
 import { cn } from "@/lib/utils";
-import { ButtonLink } from "@/components/ui/primitives";
 import { SORTS, forumHref, type ThreadSort } from "./format";
 
 /**
- * Category chips (scroll inside themselves on small screens, never widening the page),
- * the sort switch in mono, and the primary call to start a discussion.
+ * Category chips (scroll inside themselves on small screens, never widening the page)
+ * and the sort switch in mono. The call to start a discussion sits in the masthead above.
  */
 export function ForumToolbar({
   categories,
@@ -35,7 +34,7 @@ export function ForumToolbar({
                   aria-current={active ? "page" : undefined}
                   className={cn(
                     "chip whitespace-nowrap transition-colors duration-300",
-                    active ? "border-bronze-2 bg-bronze/15 text-ivory" : "hover:border-current hover:text-ivory",
+                    active ? "border-lapis bg-lapis text-ivory" : "hover:border-current hover:text-lapis",
                   )}
                 >
                   {item.name}
@@ -59,7 +58,7 @@ export function ForumToolbar({
                     aria-current={active ? "true" : undefined}
                     className={cn(
                       "link-underline whitespace-nowrap transition-colors",
-                      active ? "text-ivory underline decoration-bronze-2 underline-offset-[0.4em]" : "text-bone/70 hover:text-ivory",
+                      active ? "text-ink underline decoration-lapis underline-offset-[0.4em]" : "text-slate hover:text-lapis",
                     )}
                   >
                     {s.label}
@@ -69,9 +68,6 @@ export function ForumToolbar({
             })}
           </ul>
         </nav>
-        <ButtonLink href="/forum/new" variant="solid" size="sm">
-          Start a discussion
-        </ButtonLink>
       </div>
     </div>
   );

@@ -77,7 +77,7 @@ export default async function OverviewPage() {
       </StatGrid>
 
       <p className="mt-4 font-mono text-[0.64rem] uppercase tracking-[0.16em] text-ash">
-        Moderation mode · <span className="text-bronze-2">{moderationMode}</span>
+        Moderation mode · <span className="text-lapis">{moderationMode}</span>
         <span className="normal-case tracking-normal">
           {" "}
           — {moderationMode === "manual" ? "every guest comment, discussion and reply waits here for approval." : "clean guest content goes live at once; links, shouting and blocked phrases are held here; obvious spam is stored as spam."}
@@ -94,10 +94,10 @@ export default async function OverviewPage() {
                 key={c.id}
                 meta={
                   <>
-                    <span className="text-parchment">{displayName(c.authorName)}</span>
+                    <span className="text-ink">{displayName(c.authorName)}</span>
                     <span>
                       on{" "}
-                      <Link href={`/blog/${c.postSlug}#comment-${c.id}`} className="link-underline text-bone">
+                      <Link href={`/blog/${c.postSlug}#comment-${c.id}`} className="link-underline text-lapis">
                         {c.postTitle}
                       </Link>
                     </span>
@@ -135,7 +135,7 @@ export default async function OverviewPage() {
                 key={t.id}
                 meta={
                   <>
-                    <span className="text-parchment">{displayName(t.authorName)}</span>
+                    <span className="text-ink">{displayName(t.authorName)}</span>
                     <time dateTime={t.createdAt.toISOString()}>{formatDateTime(t.createdAt)}</time>
                     <StatusChip status={t.status} />
                     {t.reportCount > 0 ? <FlagChip tone="seal">{t.reportCount} {t.reportCount === 1 ? "report" : "reports"}</FlagChip> : null}
@@ -171,10 +171,10 @@ export default async function OverviewPage() {
                 key={r.id}
                 meta={
                   <>
-                    <span className="text-parchment">{displayName(r.authorName)}</span>
+                    <span className="text-ink">{displayName(r.authorName)}</span>
                     <span>
                       in{" "}
-                      <Link href={`/forum/${r.threadSlug}#reply-${r.id}`} className="link-underline text-bone">
+                      <Link href={`/forum/${r.threadSlug}#reply-${r.id}`} className="link-underline text-lapis">
                         {r.threadTitle}
                       </Link>
                     </span>
@@ -209,7 +209,7 @@ export default async function OverviewPage() {
 function MoreLine({ n, href, noun }: { n: number; href: string; noun: string }) {
   const plural = noun === "reply" ? "replies" : `${noun}s`;
   return (
-    <p className="mt-4 text-sm text-bone/70">
+    <p className="mt-4 text-sm text-slate">
       <Link href={href} className="link-underline">
         {n} more {n === 1 ? noun : plural} in the queue
       </Link>

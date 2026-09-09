@@ -127,7 +127,7 @@ export function IntentModal({ className }: { className?: string }) {
         aria-expanded={open}
         aria-controls={open ? dialogId : undefined}
         className={cn(
-          "link-underline inline-flex items-center gap-2 font-mono text-[0.66rem] uppercase tracking-[0.2em] text-bronze-2 transition-colors hover:text-ivory",
+          "btn btn-sm text-ivory",
           className,
         )}
       >
@@ -137,7 +137,7 @@ export function IntentModal({ className }: { className?: string }) {
 
       {open ? (
         <div className="fixed inset-0 z-[80] flex items-end justify-center p-0 sm:items-center sm:p-6">
-          <div className="animate-fade-in absolute inset-0 bg-ink/85 backdrop-blur-sm" onClick={() => setOpen(false)} aria-hidden="true" />
+          <div className="animate-fade-in absolute inset-0 bg-lapis-4/80 backdrop-blur-sm" onClick={() => setOpen(false)} aria-hidden="true" />
           <div
             ref={dialogRef}
             id={dialogId}
@@ -147,16 +147,16 @@ export function IntentModal({ className }: { className?: string }) {
             aria-describedby={`${id}-desc`}
             onKeyDown={trapTab}
             data-lenis-prevent
-            className="animate-fade-up relative z-[1] max-h-[calc(100dvh-1rem)] w-full max-w-3xl overflow-y-auto border border-bronze/25 bg-ink-2 shadow-plate grain"
+            className="paper animate-fade-up relative z-[1] max-h-[calc(100dvh-1rem)] w-full max-w-3xl overflow-y-auto border bg-ivory text-left text-ink shadow-plate"
           >
             <div className="relative z-[2] px-6 py-8 sm:px-10 sm:py-12 md:px-14 md:py-14">
               <div className="flex items-start justify-between gap-6">
                 <div>
-                  <p className="eyebrow">The IP Forum · Cause list</p>
-                  <h2 id={`${id}-title`} className="display-md mt-4 uppercase tracking-[0.04em]">
+                  <p className="eyebrow eyebrow-mark text-lapis">The IP Forum · Cause list</p>
+                  <h2 id={`${id}-title`} className="display-md mt-4 uppercase tracking-[0.04em] text-ink">
                     What are you looking for?
                   </h2>
-                  <p id={`${id}-desc`} className="mt-4 max-w-md text-sm leading-relaxed text-bone">
+                  <p id={`${id}-desc`} className="mt-4 max-w-md text-sm leading-relaxed text-graphite">
                     Three doors. Pick one; the other two stay open, and you can come back to this from the forum at any time.
                   </p>
                 </div>
@@ -164,7 +164,7 @@ export function IntentModal({ className }: { className?: string }) {
                   type="button"
                   onClick={() => setOpen(false)}
                   aria-label="Close"
-                  className="-mr-2 -mt-2 flex h-11 w-11 shrink-0 items-center justify-center text-bone transition-colors hover:text-ivory"
+                  className="-mr-2 -mt-2 flex h-11 w-11 shrink-0 items-center justify-center text-slate transition-colors hover:text-ink focus-visible:outline-lapis"
                 >
                   <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16">
                     <path d="M2 2l12 12M14 2L2 14" fill="none" stroke="currentColor" strokeWidth="1.2" />
@@ -172,21 +172,21 @@ export function IntentModal({ className }: { className?: string }) {
                 </button>
               </div>
 
-              <ol className="mt-10 border-t border-bronze/20">
+              <ol className="mt-10 border-t">
                 {CHOICES.map((choice, i) => {
                   const inner = (
                     <>
-                      <span className="pt-1.5 font-mono text-[0.68rem] tracking-[0.22em] text-bronze-2">{choice.n}</span>
+                      <span className="pt-1.5 font-mono text-[0.68rem] tracking-[0.22em] text-lapis">{choice.n}</span>
                       <span className="min-w-0">
-                        <span className="block font-display text-2xl uppercase leading-none tracking-[0.1em] text-ivory transition-colors group-hover:text-bronze-2 sm:text-3xl">
+                        <span className="block font-display text-2xl uppercase leading-none tracking-[0.1em] text-ink transition-colors group-hover:text-lapis sm:text-3xl">
                           {choice.title}
                         </span>
-                        <span className="mt-2 block text-sm leading-relaxed text-bone/80">{choice.body}</span>
+                        <span className="mt-2 block text-sm leading-relaxed text-slate">{choice.body}</span>
                       </span>
-                      <Arrow className="mt-2 text-bone/60 transition-[transform,color] duration-300 group-hover:translate-x-1 group-hover:text-bronze-2" />
+                      <Arrow className="mt-2 text-ash transition-[transform,color] duration-300 group-hover:translate-x-1 group-hover:text-lapis" />
                     </>
                   );
-                  const rowClass = "group grid w-full grid-cols-[2.5rem_minmax(0,1fr)_auto] items-start gap-x-4 border-b border-bronze/20 py-6 text-left sm:gap-x-6 sm:py-7";
+                  const rowClass = "group grid w-full grid-cols-[2.5rem_minmax(0,1fr)_auto] items-start gap-x-4 border-b py-6 text-left focus-visible:outline-lapis sm:gap-x-6 sm:py-7";
                   return (
                     <li key={choice.n}>
                       {choice.href ? (

@@ -14,7 +14,7 @@ export function ReportButton({ commentId, postSlug }: { commentId: string; postS
 
   if (state.status === "done") {
     return (
-      <p role="status" className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-bone/70">
+      <p role="status" className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-ash">
         Reported. Thank you.
       </p>
     );
@@ -24,7 +24,7 @@ export function ReportButton({ commentId, postSlug }: { commentId: string; postS
     <div className="flex flex-wrap items-center gap-3">
       <button
         type="button"
-        className="link-underline font-mono text-[0.62rem] uppercase tracking-[0.18em] text-ash transition-colors hover:text-bone"
+        className="link-underline font-mono text-[0.62rem] uppercase tracking-[0.18em] text-ash transition-colors hover:text-ink"
         aria-expanded={confirming}
         aria-controls={`${id}-confirm`}
         onClick={() => setConfirming((v) => !v)}
@@ -33,10 +33,10 @@ export function ReportButton({ commentId, postSlug }: { commentId: string; postS
       </button>
       <div id={`${id}-confirm`} hidden={!confirming} className="w-full sm:w-auto">
         {confirming ? (
-          <form action={formAction} className="flex flex-wrap items-center gap-3 border-l-2 border-seal-2/60 pl-4">
+          <form action={formAction} className="flex flex-wrap items-center gap-3 border-l-2 border-seal/60 pl-4">
             <input type="hidden" name="commentId" value={commentId} />
             <input type="hidden" name="postSlug" value={postSlug} />
-            <p className="w-full text-xs text-bone sm:w-auto">Report this comment to the moderator?</p>
+            <p className="w-full text-xs text-graphite sm:w-auto">Report this comment to the moderator?</p>
             <label htmlFor={`${id}-reason`} className="sr-only">
               Reason (optional)
             </label>
@@ -45,7 +45,7 @@ export function ReportButton({ commentId, postSlug }: { commentId: string; postS
               {pending ? "Sending…" : "Confirm report"}
             </button>
             {state.status === "error" ? (
-              <p role="alert" className="w-full text-xs text-seal-2">
+              <p role="alert" className="w-full text-xs text-seal">
                 {state.error}
               </p>
             ) : null}

@@ -44,14 +44,14 @@ export default async function UsersPage() {
               return (
                 <tr key={u.id}>
                   <Td>
-                    <span className="font-display text-lg text-ivory">{u.name}</span>
+                    <span className="font-display text-lg text-ink">{u.name}</span>
                     {self ? <FlagChip tone="bronze" className="ml-2 align-middle">You</FlagChip> : null}
                   </Td>
-                  <Td className="text-parchment">{u.email}</Td>
-                  <Td className="whitespace-nowrap text-bone">
+                  <Td className="text-ink">{u.email}</Td>
+                  <Td className="whitespace-nowrap text-graphite">
                     <time dateTime={u.createdAt.toISOString()}>{formatDateTime(u.createdAt)}</time>
                   </Td>
-                  <Td className="whitespace-nowrap text-bone">{u.lastLoginAt ? <time dateTime={u.lastLoginAt.toISOString()}>{formatDateTime(u.lastLoginAt)}</time> : <span className="text-ash">Never</span>}</Td>
+                  <Td className="whitespace-nowrap text-graphite">{u.lastLoginAt ? <time dateTime={u.lastLoginAt.toISOString()}>{formatDateTime(u.lastLoginAt)}</time> : <span className="text-ash">Never</span>}</Td>
                   <Td className="pr-0">
                     <ActionRow className="justify-end">
                       {self ? (
@@ -70,20 +70,20 @@ export default async function UsersPage() {
             })}
           </tbody>
         </DataTable>
-        <p className="mt-4 text-xs text-bone/60">Deleting an account signs that person out everywhere at once. You cannot delete your own account from here.</p>
+        <p className="mt-4 text-xs text-ash">Deleting an account signs that person out everywhere at once. You cannot delete your own account from here.</p>
       </section>
 
       <div className="mt-16 grid gap-16 lg:grid-cols-2">
         <section aria-labelledby="add-admin-heading">
           <SectionHeading number="02" title={<span id="add-admin-heading">Add an admin</span>} />
-          <p className="mb-6 text-sm text-bone/80">They sign in at /admin/login with the password you set here and can change it afterwards.</p>
+          <p className="mb-6 text-sm text-slate">They sign in at /admin/login with the password you set here and can change it afterwards.</p>
           <AddAdminForm action={addAdminAction} />
         </section>
 
         <section id="password" className="scroll-mt-20" aria-labelledby="password-heading">
           <SectionHeading number="03" title={<span id="password-heading">Change your password</span>} />
-          <p className="mb-6 text-sm text-bone/80">
-            Signed in as <span className="text-ivory">{me.email}</span>. Twelve characters or more, with at least one letter and one number.
+          <p className="mb-6 text-sm text-slate">
+            Signed in as <span className="font-medium text-ink">{me.email}</span>. Twelve characters or more, with at least one letter and one number.
           </p>
           <ChangePasswordForm action={changePasswordAction} />
         </section>

@@ -65,21 +65,21 @@ export default async function SubmissionsPage({ searchParams }: { searchParams: 
           </thead>
           <tbody>
             {rows.map((s) => (
-              <tr key={s.id} className="transition-colors hover:bg-ivory/[0.02]">
+              <tr key={s.id} className="transition-colors hover:bg-lapis-tint/60">
                 <Td>
-                  <Link href={`/admin/submissions/${s.id}`} className="font-display text-lg leading-snug text-ivory transition-colors hover:text-bronze-2">
+                  <Link href={`/admin/submissions/${s.id}`} className="font-display text-lg leading-snug text-ink transition-colors hover:text-lapis">
                     {s.title}
                   </Link>
                 </Td>
                 <Td>
-                  <span className="text-parchment">{s.name}</span>
-                  {s.affiliation ? <span className="block text-xs text-bone/70">{s.affiliation}</span> : null}
+                  <span className="text-ink">{s.name}</span>
+                  {s.affiliation ? <span className="block text-xs text-slate">{s.affiliation}</span> : null}
                 </Td>
-                <Td className="text-bone">{KIND_LABEL[s.kind] ?? s.kind}</Td>
+                <Td className="text-graphite">{KIND_LABEL[s.kind] ?? s.kind}</Td>
                 <Td>
                   <StatusChip status={s.status} />
                 </Td>
-                <Td className="text-bone">
+                <Td className="text-graphite">
                   {s.document ? (
                     <a href={s.document.url} className="link-underline" target="_blank" rel="noopener">
                       {s.document.kind.toUpperCase()} · {formatBytes(s.document.sizeBytes)}
@@ -88,7 +88,7 @@ export default async function SubmissionsPage({ searchParams }: { searchParams: 
                     <span className="text-ash">—</span>
                   )}
                 </Td>
-                <Td className="whitespace-nowrap text-bone">
+                <Td className="whitespace-nowrap text-graphite">
                   <time dateTime={s.createdAt.toISOString()}>{formatDateTime(s.createdAt)}</time>
                 </Td>
                 <Td className="pr-0">

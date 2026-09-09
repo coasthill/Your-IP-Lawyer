@@ -12,7 +12,7 @@ export function NewThreadForm({ action, categories, authorName }: { action: (pre
   const v = state.values ?? {};
 
   return (
-    <form action={formAction} className="space-y-6" noValidate>
+    <form action={formAction} className="plate space-y-6 p-6" noValidate>
       {state.status === "error" ? <Notice tone="error">{state.message}</Notice> : null}
       <FormField label="Title" htmlFor={`${uid}-title`} required error={errors.title}>
         <input id={`${uid}-title`} name="title" defaultValue={v.title ?? ""} maxLength={140} className="font-display text-xl" aria-invalid={Boolean(errors.title) || undefined} aria-describedby={describedBy(`${uid}-title`, errors.title)} />

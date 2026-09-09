@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useId, useRef } from "react";
+import { cn } from "@/lib/utils";
 import { submitComment } from "@/app/(site)/blog/[slug]/actions";
 import { Button, Field, Honeypot, Notice } from "@/components/ui/primitives";
 import { Turnstile } from "@/components/ui/Turnstile";
@@ -35,15 +36,15 @@ export function CommentForm({
   if (state.status === "approved" || state.status === "pending") {
     const approved = state.status === "approved";
     return (
-      <div role="status" className="plate px-6 py-6">
-        <p className="font-display text-2xl text-ivory">{approved ? "Filed. Thank you." : "Received."}</p>
-        <p className="mt-2 text-sm text-bone">{approved ? "Your comment is on the record." : "Comments are reviewed before they appear."}</p>
+      <Notice tone={approved ? "success" : "info"} className="px-6 py-6">
+        <p className="font-display text-2xl">{approved ? "Filed. Thank you." : "Received."}</p>
+        <p className={cn("mt-2 text-sm", approved ? "text-parchment" : "text-graphite")}>{approved ? "Your comment is on the record." : "Comments are reviewed before they appear."}</p>
         {onCancel ? (
           <Button type="button" size="sm" className="mt-5" onClick={onCancel}>
             Close
           </Button>
         ) : null}
-      </div>
+      </Notice>
     );
   }
 
@@ -82,7 +83,7 @@ export function CommentForm({
             Cancel
           </Button>
         ) : null}
-        <p id={`${id}-note`} className="text-xs text-bone/70">
+        <p id={`${id}-note`} className="text-xs text-ash">
           Comments may be held for moderation before they appear.
         </p>
       </div>

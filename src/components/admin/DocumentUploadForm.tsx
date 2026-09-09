@@ -11,7 +11,7 @@ export function DocumentUploadForm({ action, limits }: { action: (prev: FormStat
   const errors = state.status === "error" ? (state.fieldErrors ?? {}) : {};
 
   return (
-    <form action={formAction} className="space-y-6" noValidate>
+    <form action={formAction} className="plate space-y-6 p-6" noValidate>
       {state.status === "error" ? <Notice tone="error">{state.message}</Notice> : null}
       {state.status === "success" ? <Notice tone="success">{state.message}</Notice> : null}
 
@@ -22,7 +22,7 @@ export function DocumentUploadForm({ action, limits }: { action: (prev: FormStat
             name="file"
             type="file"
             accept="image/jpeg,image/png,image/webp,image/avif,image/gif,application/pdf,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            className="text-sm file:mr-3 file:border file:border-bronze/40 file:bg-transparent file:px-3 file:py-1.5 file:font-mono file:text-[0.62rem] file:uppercase file:tracking-[0.16em] file:text-ivory"
+            className="text-sm file:mr-3 file:rounded-full file:border file:border-ink/40 file:bg-transparent file:px-3 file:py-1.5 file:font-mono file:text-[0.62rem] file:uppercase file:tracking-[0.16em] file:text-ink"
             aria-invalid={Boolean(errors.file) || undefined}
             aria-describedby={describedBy(`${uid}-file`, errors.file, true)}
           />

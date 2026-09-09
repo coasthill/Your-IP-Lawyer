@@ -27,11 +27,11 @@ export function FormField({
       </label>
       {children}
       {error ? (
-        <p id={`${htmlFor}-error`} className="text-xs text-seal-2" role="alert">
+        <p id={`${htmlFor}-error`} className="text-xs text-seal" role="alert">
           {error}
         </p>
       ) : hint ? (
-        <p id={`${htmlFor}-hint`} className="text-xs text-bone/60">
+        <p id={`${htmlFor}-hint`} className="text-xs text-ash">
           {hint}
         </p>
       ) : null}
@@ -53,14 +53,14 @@ export function CheckField({ id, name, label, hint, checked, defaultChecked, onC
         id={id}
         name={name}
         type="checkbox"
-        className="mt-1 h-4 w-4 shrink-0 accent-bronze-2"
+        className="mt-1 h-4 w-4 shrink-0 accent-lapis"
         checked={checked}
         defaultChecked={defaultChecked}
         onChange={onChange ? (e) => onChange(e.target.checked) : undefined}
       />
-      <label htmlFor={id} className="text-sm text-parchment">
+      <label htmlFor={id} className="text-sm text-ink">
         <span className="block">{label}</span>
-        {hint ? <span className="block text-xs text-bone/60">{hint}</span> : null}
+        {hint ? <span className="block text-xs text-ash">{hint}</span> : null}
       </label>
     </div>
   );

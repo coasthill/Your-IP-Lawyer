@@ -68,22 +68,22 @@ export default async function DocumentsPage({ searchParams }: { searchParams: Pr
             </thead>
             <tbody>
               {docs.map((d) => (
-                <tr key={d.id} className="align-top transition-colors hover:bg-ivory/[0.02]">
+                <tr key={d.id} className="align-top transition-colors hover:bg-lapis-tint/60">
                   <Td>{d.kind === "image" ? <Thumb src={d.url} alt={d.altText || d.title || d.filename} size={48} /> : <FileGlyph label={d.kind === "pdf" ? "PDF" : "DOC"} size={48} />}</Td>
                   <Td>
-                    <p className="font-display text-lg leading-snug text-ivory">{d.title || d.filename}</p>
+                    <p className="font-display text-lg leading-snug text-ink">{d.title || d.filename}</p>
                     <p className="font-mono text-[0.62rem] tracking-[0.06em] text-ash">
                       {d.filename}
                       {d.width && d.height ? ` · ${d.width}×${d.height}` : ""}
                     </p>
-                    {d.altText ? <p className="mt-1 text-xs text-bone/70">Alt: {d.altText}</p> : d.kind === "image" ? <p className="mt-1 text-xs text-seal-2">No alt text yet.</p> : null}
-                    {d.description ? <p className="mt-1 text-xs text-bone/70">{d.description}</p> : null}
+                    {d.altText ? <p className="mt-1 text-xs text-slate">Alt: {d.altText}</p> : d.kind === "image" ? <p className="mt-1 text-xs text-seal">No alt text yet.</p> : null}
+                    {d.description ? <p className="mt-1 text-xs text-slate">{d.description}</p> : null}
                   </Td>
                   <Td>
                     <FlagChip>{d.kind}</FlagChip>
                   </Td>
-                  <Td className="whitespace-nowrap text-bone">{formatBytes(d.sizeBytes)}</Td>
-                  <Td className="whitespace-nowrap text-bone">
+                  <Td className="whitespace-nowrap text-graphite">{formatBytes(d.sizeBytes)}</Td>
+                  <Td className="whitespace-nowrap text-graphite">
                     <time dateTime={d.createdAt.toISOString()}>{formatDateTime(d.createdAt)}</time>
                   </Td>
                   <Td>
@@ -98,7 +98,7 @@ export default async function DocumentsPage({ searchParams }: { searchParams: Pr
                     <ActionRow className="justify-end">
                       <details className="group relative">
                         <summary className="btn btn-sm cursor-pointer list-none [&::-webkit-details-marker]:hidden">Edit</summary>
-                        <form action={updateDocumentAction.bind(null, d.id)} className="mt-3 w-72 space-y-3 border border-bronze/25 bg-ink p-4 text-left">
+                        <form action={updateDocumentAction.bind(null, d.id)} className="plate mt-3 w-72 space-y-3 p-4 text-left">
                           <FormField label="Title" htmlFor={`doc-${d.id}-title`}>
                             <input id={`doc-${d.id}-title`} name="title" defaultValue={d.title ?? ""} maxLength={200} />
                           </FormField>
@@ -123,7 +123,7 @@ export default async function DocumentsPage({ searchParams }: { searchParams: Pr
         ) : (
           <EmptyRecord title={kind === "all" ? "The library is empty." : `No ${KIND_LABEL[kind].toLowerCase()} yet.`} body="Upload a feature image or a PDF above. Files attached to articles or submissions also appear here." />
         )}
-        <p className="mt-4 text-xs text-bone/60">Deleting a file removes it from storage. Articles that used it as a feature image lose the image; attachments and submission files are unlinked.</p>
+        <p className="mt-4 text-xs text-ash">Deleting a file removes it from storage. Articles that used it as a feature image lose the image; attachments and submission files are unlinked.</p>
       </section>
     </div>
   );

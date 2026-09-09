@@ -134,13 +134,13 @@ export default async function ForumAdminPage({ searchParams }: { searchParams: P
                     <>
                       <FlagChip tone="seal">{r.targetType}</FlagChip>
                       <time dateTime={r.createdAt.toISOString()}>{formatDateTime(r.createdAt)}</time>
-                      {target ? <StatusChip status={target.status} /> : <span className="text-seal-2">target removed</span>}
+                      {target ? <StatusChip status={target.status} /> : <span className="text-seal">target removed</span>}
                     </>
                   }
                   title={target ? target.label : "The reported item has already been deleted."}
                   footer={
                     <>
-                      <span className="text-parchment/80">{r.reason ? `Reason: ${r.reason}` : "No reason given."}</span>
+                      <span className="text-graphite">{r.reason ? `Reason: ${r.reason}` : "No reason given."}</span>
                       {target ? (
                         <span className="ml-3 inline-flex gap-3">
                           <Link href={target.admin} className="link-underline">
@@ -194,7 +194,7 @@ export default async function ForumAdminPage({ searchParams }: { searchParams: P
                 id={`thread-${t.id}`}
                 meta={
                   <>
-                    <span className="text-parchment">{displayName(t.authorName)}</span>
+                    <span className="text-ink">{displayName(t.authorName)}</span>
                     <time dateTime={t.createdAt.toISOString()}>{formatDateTime(t.createdAt)}</time>
                     <StatusChip status={t.status} />
                     {t.pinned ? <FlagChip tone="bronze">Pinned</FlagChip> : null}
@@ -207,7 +207,7 @@ export default async function ForumAdminPage({ searchParams }: { searchParams: P
                 }
                 title={
                   t.status === "approved" ? (
-                    <Link href={`/forum/${t.slug}`} className="transition-colors hover:text-bronze-2">
+                    <Link href={`/forum/${t.slug}`} className="transition-colors hover:text-lapis">
                       {t.title}
                     </Link>
                   ) : (
@@ -244,11 +244,11 @@ export default async function ForumAdminPage({ searchParams }: { searchParams: P
                 id={`reply-${r.id}`}
                 meta={
                   <>
-                    <span className="text-parchment">{displayName(r.authorName)}</span>
+                    <span className="text-ink">{displayName(r.authorName)}</span>
                     {r.parentId ? <span>in reply</span> : null}
                     <span>
                       in{" "}
-                      <Link href={`/forum/${r.threadSlug}#reply-${r.id}`} className="link-underline text-bone">
+                      <Link href={`/forum/${r.threadSlug}#reply-${r.id}`} className="link-underline text-lapis">
                         {r.threadTitle}
                       </Link>
                     </span>
@@ -272,13 +272,13 @@ export default async function ForumAdminPage({ searchParams }: { searchParams: P
             ))}
           </EntryList>
         )}
-        {rows.length >= 300 ? <p className="mt-4 text-xs text-bone/60">Showing the latest 300. Older entries appear as these are dealt with.</p> : null}
+        {rows.length >= 300 ? <p className="mt-4 text-xs text-ash">Showing the latest 300. Older entries appear as these are dealt with.</p> : null}
       </section>
 
       {/* ---------------------------------------------------------- 03 New discussion */}
       <section id="new-discussion" className="mt-16 scroll-mt-20" aria-labelledby="new-discussion-heading">
         <SectionHeading number="03" title={<span id="new-discussion-heading">Open a discussion</span>} aside="Published immediately, no moderation" />
-        <p className="mb-6 max-w-2xl text-sm text-bone/80">Nothing here yet? Start the argument. A discussion opened from here goes live at once under the name you choose, and can be pinned to lead the forum.</p>
+        <p className="mb-6 max-w-2xl text-sm text-slate">Nothing here yet? Start the argument. A discussion opened from here goes live at once under the name you choose, and can be pinned to lead the forum.</p>
         <div className="max-w-3xl">
           <NewThreadForm action={createThreadAction} categories={categories.map((c) => ({ id: c.id, name: c.name }))} authorName={admin.name} />
         </div>

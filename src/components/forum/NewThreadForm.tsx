@@ -54,8 +54,8 @@ export function NewThreadForm({ categories, kind = "discussion" }: { categories:
     return (
       <div role="status" className="plate px-6 py-8 sm:px-8">
         <p className="eyebrow">Filed</p>
-        <p className="mt-3 font-display text-3xl text-ivory">Received.</p>
-        <p className="mt-3 max-w-md text-sm leading-relaxed text-bone">
+        <p className="mt-3 font-display text-3xl text-ink">Received.</p>
+        <p className="mt-3 max-w-md text-sm leading-relaxed text-slate">
           Discussions are reviewed before they appear. Yours is in the queue; it will be on the record once a moderator has read it.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
@@ -105,10 +105,10 @@ export function NewThreadForm({ categories, kind = "discussion" }: { categories:
         hint={
           <span className="flex flex-wrap justify-between gap-x-6 gap-y-1">
             <span>
-              Plain text. <strong className="font-medium text-parchment/80">**bold**</strong>, <em>_italic_</em>, <span className="font-mono">&gt;</span> quotes and links are understood. Links may
+              Plain text. <strong className="font-medium text-ink">**bold**</strong>, <em>_italic_</em>, <span className="font-mono">&gt;</span> quotes and links are understood. Links may
               hold the discussion for review.
             </span>
-            <span aria-live="polite" className={cn("font-mono tabular-nums", remaining < 200 ? "text-seal-2" : "text-ash")}>
+            <span aria-live="polite" className={cn("font-mono tabular-nums", remaining < 200 ? "text-seal" : "text-ash")}>
               {nf.format(body.length)} / {nf.format(THREAD_BODY_MAX)}
             </span>
           </span>
@@ -134,7 +134,7 @@ export function NewThreadForm({ categories, kind = "discussion" }: { categories:
         hint={
           <span className="flex flex-wrap justify-between gap-x-6 gap-y-1">
             <span>Optional. Comma-separated, up to {MAX_TAGS}. Example: passing off, interim injunction, Delhi High Court.</span>
-            <span className={cn("font-mono tabular-nums", tooManyTags ? "text-seal-2" : "text-ash")}>
+            <span className={cn("font-mono tabular-nums", tooManyTags ? "text-seal" : "text-ash")}>
               {tagList.length} / {MAX_TAGS}
             </span>
           </span>
@@ -189,11 +189,11 @@ export function NewThreadForm({ categories, kind = "discussion" }: { categories:
         </Notice>
       ) : null}
 
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-4 border-t border-bronze/15 pt-8">
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-4 border-t pt-8">
         <Button type="submit" variant="solid" disabled={pending}>
           {pending ? copy.pending : copy.submit}
         </Button>
-        <p id={`${id}-note`} className="max-w-sm text-xs leading-relaxed text-bone/70">
+        <p id={`${id}-note`} className="max-w-sm text-xs leading-relaxed text-ash">
           Clean posts appear at once. Anything with links or heat may be held for a moderator first.
         </p>
       </div>

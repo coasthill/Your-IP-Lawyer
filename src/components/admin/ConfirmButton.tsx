@@ -42,7 +42,7 @@ export function ConfirmButton({
 
   return (
     <span id={regionId} role="group" aria-label={typeof question === "string" ? question : "Confirm"} className="inline-flex flex-wrap items-center gap-2">
-      <span className="font-mono text-[0.64rem] uppercase tracking-[0.14em] text-seal-2">{question}</span>
+      <span className="font-mono text-[0.64rem] uppercase tracking-[0.14em] text-seal">{question}</span>
       <button type="submit" className={cn("btn btn-seal", size === "sm" && "btn-sm")} disabled={pending} aria-busy={pending || undefined} autoFocus>
         {pending ? "Working…" : confirmLabel}
       </button>

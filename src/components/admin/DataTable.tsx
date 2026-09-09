@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 export function DataTable({ children, className, caption }: { children: ReactNode; className?: string; caption?: string }) {
   return (
     <div className="-mx-[var(--page-x)] overflow-x-auto px-[var(--page-x)]">
-      <table className={cn("w-full min-w-[40rem] border-collapse text-sm", className)}>
+      <table className={cn("w-full min-w-[40rem] border-collapse text-sm tabular-nums", className)}>
         {caption ? <caption className="sr-only">{caption}</caption> : null}
         {children}
       </table>
@@ -15,7 +15,7 @@ export function DataTable({ children, className, caption }: { children: ReactNod
 
 export function Th({ children, className, ...rest }: ComponentProps<"th">) {
   return (
-    <th scope="col" className={cn("border-b border-bronze/25 py-2.5 pr-4 text-left font-mono text-[0.62rem] font-medium uppercase tracking-[0.18em] text-ash", className)} {...rest}>
+    <th scope="col" className={cn("border-b border-ink/25 py-2.5 pr-4 text-left font-mono text-[0.62rem] font-medium uppercase tracking-[0.18em] text-ash", className)} {...rest}>
       {children}
     </th>
   );
@@ -23,7 +23,7 @@ export function Th({ children, className, ...rest }: ComponentProps<"th">) {
 
 export function Td({ children, className, ...rest }: ComponentProps<"td">) {
   return (
-    <td className={cn("border-b border-bronze/10 py-3 pr-4 align-top", className)} {...rest}>
+    <td className={cn("border-b py-3 pr-4 align-top", className)} {...rest}>
       {children}
     </td>
   );

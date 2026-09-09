@@ -72,10 +72,10 @@ export default async function ArticlePage({ params }: Props) {
       <ArticleJsonLd post={post} />
       <article aria-labelledby="article-title">
         {/* Masthead */}
-        <header className="relative bg-ink">
+        <header className="frame-lines relative">
           <div className="container-editorial pt-10 pb-14 md:pt-16 md:pb-20">
             <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-x-3 gap-y-2">
-              <Link href="/blog" className="link-underline eyebrow-muted transition-colors hover:text-bone">
+              <Link href="/blog" className="link-underline eyebrow-muted transition-colors hover:text-ink">
                 The publication
               </Link>
               {post.category ? (
@@ -83,7 +83,7 @@ export default async function ArticlePage({ params }: Props) {
                   <span aria-hidden="true" className="text-ash">
                     /
                   </span>
-                  <Link href={`/blog/category/${post.category.slug}`} className="link-underline eyebrow transition-colors hover:text-ivory">
+                  <Link href={`/blog/category/${post.category.slug}`} className="link-underline eyebrow transition-colors hover:text-ink">
                     {post.category.name}
                   </Link>
                 </>
@@ -94,32 +94,32 @@ export default async function ArticlePage({ params }: Props) {
             <h1 id="article-title" className="display-lg mt-8 max-w-5xl">
               {post.title}
             </h1>
-            {post.deck ? <p className="lede mt-8 max-w-3xl">{post.deck}</p> : null}
+            {post.deck ? <p className="lede mt-8 max-w-3xl text-graphite">{post.deck}</p> : null}
 
             <div className="rule mt-12" role="presentation" />
 
             <dl className="mt-8 grid gap-x-8 gap-y-6 sm:grid-cols-3">
               <div>
                 <dt className="eyebrow-muted">Written by</dt>
-                <dd className="mt-2 font-display text-xl text-ivory">{post.authorName}</dd>
-                {post.authorRole ? <dd className="mt-0.5 text-sm text-bone">{post.authorRole}</dd> : null}
+                <dd className="mt-2 font-display text-xl text-ink">{post.authorName}</dd>
+                {post.authorRole ? <dd className="mt-1 font-mono text-[0.62rem] uppercase tracking-[0.18em] text-ash">{post.authorRole}</dd> : null}
               </div>
               <div>
                 <dt className="eyebrow-muted">Filed</dt>
-                <dd className="mt-2 font-display text-xl text-ivory">
+                <dd className="mt-2 font-display text-xl text-ink">
                   {post.publishedAt ? <time dateTime={post.publishedAt.toISOString()}>{formatDate(post.publishedAt)}</time> : "Undated"}
                 </dd>
                 {revised ? (
-                  <dd className="mt-0.5 text-sm text-bone">
+                  <dd className="mt-1 font-mono text-[0.62rem] uppercase tracking-[0.18em] text-ash">
                     Revised <time dateTime={revised.toISOString()}>{formatDate(revised)}</time>
                   </dd>
                 ) : null}
               </div>
               <div>
                 <dt className="eyebrow-muted">Reading time</dt>
-                <dd className="mt-2 font-display text-xl text-ivory">{readingLabel(post.readingMinutes)}</dd>
-                <dd className="mt-0.5 text-sm text-bone">
-                  <a href="#comments" className="link-underline">
+                <dd className="mt-2 font-display text-xl text-ink">{readingLabel(post.readingMinutes)}</dd>
+                <dd className="mt-1 font-mono text-[0.62rem] uppercase tracking-[0.18em] text-ash">
+                  <a href="#comments" className="link-underline transition-colors hover:text-lapis">
                     {commentCount ? pluralise(commentCount, "comment") : "No comments yet"}
                   </a>
                 </dd>
@@ -128,7 +128,7 @@ export default async function ArticlePage({ params }: Props) {
 
             {post.isDemo ? (
               <Notice className="mt-10 max-w-3xl">
-                <span className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-seal-2">Demo content · </span>
+                <span className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-seal">Demo content · </span>
                 {siteConfig.disclaimer.demoContent}
               </Notice>
             ) : null}
@@ -137,8 +137,8 @@ export default async function ArticlePage({ params }: Props) {
 
         {/* Hero image, full bleed */}
         {hero ? (
-          <figure className="relative bg-ink">
-            <div className="relative aspect-[16/9] max-h-[78vh] w-full overflow-hidden bg-charcoal md:aspect-[21/9]">
+          <figure className="relative">
+            <div className="relative aspect-[16/9] max-h-[78vh] w-full overflow-hidden bg-vellum md:aspect-[21/9]">
               <Image src={hero.src} alt={hero.alt} fill priority unoptimized={hero.unoptimized} sizes="100vw" className="object-cover" />
             </div>
             {hero.caption || hero.alt ? (
@@ -148,14 +148,14 @@ export default async function ArticlePage({ params }: Props) {
         ) : null}
 
         {/* The body, on paper */}
-        <section className="paper relative grain">
-          <div className="container-prose relative z-[2] py-16 md:py-24">
+        <section className="relative">
+          <div className="container-prose relative py-16 md:py-24">
             <div className="prose-editorial" dangerouslySetInnerHTML={{ __html: post.bodyHtml }} />
 
             <footer className="mt-20">
               {post.tags.length ? (
-                <div className="border-t border-current/20 pt-8">
-                  <p className="eyebrow">Tags</p>
+                <div className="border-t pt-8">
+                  <p className="eyebrow eyebrow-mark">Tags</p>
                   <ul className="mt-4 flex flex-wrap gap-2">
                     {post.tags.map((t) => (
                       <li key={t.id}>
@@ -168,11 +168,11 @@ export default async function ArticlePage({ params }: Props) {
 
               <Attachments documents={post.documents} />
 
-              <div className="mt-16 border-t border-current/20 pt-8">
+              <div className="mt-16 border-t pt-8">
                 <ShareBar url={url} title={post.title} />
               </div>
 
-              <div className="mt-14 space-y-3 border-t border-current/20 pt-8 text-xs leading-relaxed text-current/60">
+              <div className="mt-14 space-y-3 border-t pt-8 text-xs leading-relaxed text-ash">
                 {post.isDemo ? <p>{siteConfig.disclaimer.demoContent}</p> : null}
                 <p>{siteConfig.disclaimer.general}</p>
               </div>

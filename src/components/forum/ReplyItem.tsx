@@ -30,23 +30,23 @@ export function ReplyItem({
   return (
     <article id={`reply-${reply.id}`} className="scroll-mt-28" aria-labelledby={`${id}-author`}>
       <header className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        {number ? <span className="mr-1 font-mono text-[0.62rem] tracking-[0.22em] text-bronze-2">{number}</span> : null}
-        <p id={`${id}-author`} className={cn("font-display text-ivory", depth === 0 ? "text-xl md:text-2xl" : "text-lg md:text-xl")}>
+        {number ? <span className="mr-1 font-mono text-[0.62rem] tracking-[0.22em] text-lapis">{number}</span> : null}
+        <p id={`${id}-author`} className={cn("font-display text-ink", depth === 0 ? "text-xl md:text-2xl" : "text-lg md:text-xl")}>
           {reply.author}
         </p>
-        {reply.inReplyTo ? <p className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-bone/70">replying to {reply.inReplyTo}</p> : null}
+        {reply.inReplyTo ? <p className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-ash">replying to {reply.inReplyTo}</p> : null}
         <time dateTime={reply.whenIso} title={reply.whenFull} className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-ash">
           {reply.when}
         </time>
       </header>
 
-      <div className="prose-ugc mt-3 max-w-[64ch] break-words text-parchment/90" dangerouslySetInnerHTML={{ __html: reply.bodyHtml }} />
+      <div className="prose-ugc mt-3 max-w-[64ch] break-words text-charcoal" dangerouslySetInnerHTML={{ __html: reply.bodyHtml }} />
 
       <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2">
         {locked ? null : (
           <button
             type="button"
-            className="link-underline font-mono text-[0.66rem] uppercase tracking-[0.2em] text-bronze-2 transition-colors hover:text-ivory"
+            className="btn btn-sm btn-ghost -ml-[0.6rem] text-lapis"
             aria-expanded={replying}
             aria-controls={formId}
             onClick={() => setReplying((v) => !v)}

@@ -17,7 +17,7 @@ export function SubmissionReviewForm({ action, status, adminNotes }: { action: (
   const uid = useId();
 
   return (
-    <form action={formAction} className="space-y-6" noValidate>
+    <form action={formAction} className="plate space-y-6 p-6" noValidate>
       {state.status === "error" ? <Notice tone="error">{state.message}</Notice> : null}
       {state.status === "success" ? <Notice tone="success">{state.message}</Notice> : null}
       <FormField label="Status" htmlFor={`${uid}-status`}>

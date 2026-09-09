@@ -24,12 +24,12 @@ export function AdminNav({ items }: { items: NavItem[] }) {
                   active ? "border-bronze-2 text-ivory" : "border-transparent text-bone hover:text-ivory",
                 )}
               >
-                <span className={cn("hidden w-5 text-[0.62rem] md:inline", active ? "text-bronze-2" : "text-ash group-hover:text-bone")} aria-hidden="true">
+                <span className={cn("hidden w-5 text-[0.62rem] md:inline", active ? "text-bronze-2" : "text-bone/60 group-hover:text-bone")} aria-hidden="true">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span>{item.label}</span>
                 {item.count ? (
-                  <span className="ml-auto inline-flex min-w-[1.4rem] items-center justify-center border border-bronze/50 px-1.5 py-0.5 text-[0.6rem] text-bronze-2" aria-label={`${item.count} awaiting attention`}>
+                  <span className="ml-auto inline-flex min-w-[1.4rem] items-center justify-center rounded-full border border-bronze-2/60 px-1.5 py-0.5 text-[0.6rem] text-bronze-2 tabular-nums" aria-label={`${item.count} awaiting attention`}>
                     {item.count > 99 ? "99+" : item.count}
                   </span>
                 ) : null}

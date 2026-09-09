@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
  */
 export function Thumb({ src, alt, size = 56, className }: { src: string; alt: string; size?: number; className?: string }) {
   return (
-    <span className={cn("block shrink-0 overflow-hidden border border-bronze/25 bg-charcoal", className)} style={{ width: size, height: size }}>
+    <span className={cn("block shrink-0 overflow-hidden border bg-vellum", className)} style={{ width: size, height: size }}>
       <Image src={src} alt={alt} width={size} height={size} unoptimized className="h-full w-full object-cover" />
     </span>
   );
@@ -17,7 +17,7 @@ export function Thumb({ src, alt, size = 56, className }: { src: string; alt: st
 export function FileGlyph({ label, size = 56 }: { label: string; size?: number }) {
   return (
     <span
-      className="flex shrink-0 items-center justify-center border border-bronze/25 bg-charcoal font-mono text-[0.58rem] uppercase tracking-[0.12em] text-bronze-2"
+      className="flex shrink-0 items-center justify-center border bg-vellum font-mono text-[0.58rem] uppercase tracking-[0.12em] text-lapis"
       style={{ width: size, height: size }}
       aria-hidden="true"
     >

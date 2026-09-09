@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function ForumError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
     <section className="container-editorial flex min-h-[60vh] flex-col justify-center py-24 md:py-32" aria-labelledby="forum-error-title">
-      <p className="eyebrow">Objection.</p>
+      <p className="eyebrow eyebrow-mark">Objection.</p>
       <h1 id="forum-error-title" className="display-lg mt-6">
         The forum could not be convened.
       </h1>

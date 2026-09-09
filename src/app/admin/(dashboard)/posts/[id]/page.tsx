@@ -74,7 +74,7 @@ export default async function EditPostPage({ params, searchParams }: Props) {
         }
         title={post.title}
         lede={
-          <span className="font-mono text-[0.7rem] not-italic tracking-[0.08em] text-bone">
+          <span className="font-mono text-[0.7rem] not-italic tracking-[0.08em] text-slate">
             /blog/{post.slug} · {post.readingMinutes} min read · created {formatDateTime(post.createdAt)} · last saved {formatDateTime(post.updatedAt)}
           </span>
         }
@@ -118,18 +118,18 @@ export default async function EditPostPage({ params, searchParams }: Props) {
 
       <section className="mt-20" aria-labelledby="attachments-heading">
         <SectionHeading number="02" title={<span id="attachments-heading">Attached documents</span>} aside={`${post.documents.length} attached`} />
-        <p className="mb-6 max-w-2xl text-sm text-bone/80">PDFs and Word files listed at the end of the article for readers to download — the full case note, an order, a chart. Attachments save immediately, separately from the article form above.</p>
+        <p className="mb-6 max-w-2xl text-sm text-slate">PDFs and Word files listed at the end of the article for readers to download — the full case note, an order, a chart. Attachments save immediately, separately from the article form above.</p>
 
         {post.documents.length ? (
-          <ol className="mb-10 divide-y divide-bronze/15 border-y border-bronze/20">
+          <ol className="mb-10 divide-y border-y">
             {post.documents.map((doc, i) => (
               <li key={doc.id} className="flex flex-wrap items-center gap-4 py-4">
-                <span className="font-mono text-[0.66rem] tracking-[0.2em] text-bronze-2" aria-hidden="true">
+                <span className="font-mono text-[0.66rem] tracking-[0.2em] text-lapis" aria-hidden="true">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <FileGlyph label={doc.kind === "pdf" ? "PDF" : "DOC"} size={44} />
                 <div className="min-w-0 flex-1">
-                  <p className="font-display text-lg leading-snug text-ivory">{doc.label || doc.title || doc.filename}</p>
+                  <p className="font-display text-lg leading-snug text-ink">{doc.label || doc.title || doc.filename}</p>
                   <p className="font-mono text-[0.62rem] tracking-[0.06em] text-ash">
                     {doc.filename} · {formatBytes(doc.sizeBytes)} · {formatDateTime(doc.createdAt)}
                   </p>
@@ -146,7 +146,7 @@ export default async function EditPostPage({ params, searchParams }: Props) {
             ))}
           </ol>
         ) : (
-          <p className="mb-10 border-y border-bronze/20 py-6 text-sm text-bone/70">No documents attached yet. The file stays in the library even after you remove it from an article.</p>
+          <p className="mb-10 border-y py-6 text-sm text-slate">No documents attached yet. The file stays in the library even after you remove it from an article.</p>
         )}
 
         <div className="max-w-3xl">
