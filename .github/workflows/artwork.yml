@@ -35,11 +35,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install sharp
-        run: mkdir -p /tmp/art && cd /tmp/art && npm init -y >/dev/null && npm i --no-audit --no-fund sharp@0.34.3
+      - name: Install sharp (only sharp — the site itself is not built here)
+        run: npm i --no-save --no-audit --no-fund sharp@0.34.3
       - name: Fetch and convert
         env:
-          NODE_PATH: /tmp/art/node_modules
           WITH_CANDIDATES: ${{ github.event_name == 'push' || inputs.candidates }}
         run: node scripts/fetch-artwork.mjs
       - name: Commit the converted files
