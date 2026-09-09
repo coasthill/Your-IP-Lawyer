@@ -6,8 +6,8 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   {
-    // Imperative Three.js / canvas code mutates scene objects by design.
-    files: ["src/components/hero/webgl/**", "src/components/hero/canvas/**"],
+    // Imperative WebGL / canvas render loops mutate their own state by design.
+    files: ["src/components/hero/painted/**"],
     rules: { "react-hooks/immutability": "off" },
   },
   // Override default ignores of eslint-config-next.

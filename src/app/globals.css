@@ -2,32 +2,48 @@
 
 /* ------------------------------------------------------------------
    YOURIPLAWYER — design tokens
-   Palette: old legal manuscript + charcoal + aged paper + black gown + metal.
+
+   Palette: lapis (the saturated ultramarine of a painted backdrop), gallery
+   white, ink, gold leaf and one crimson — a neoclassical painting hung in a
+   bright room, annotated with the fine mono labels of a technical drawing.
+
+   Two surfaces carry the site: the page itself is paper (white, ink text);
+   `.surface-lapis` sections are blue with light text and gold accents.
+   Every component below is written for both.
    ------------------------------------------------------------------ */
 @theme {
+  /* Blues */
+  --color-lapis: #1b5ad6;
+  --color-lapis-2: #1748b0;
+  --color-lapis-3: #0f2f7c;
+  --color-lapis-4: #081b48;
+  --color-lapis-tint: #e6edfb;
+
+  /* Whites (paper) */
+  --color-ivory: #fbfaf7;
+  --color-paper: #f5f3ee;
+  --color-vellum: #eeebe4;
+  --color-paper-2: #e6e2d9;
+
+  /* Light text for blue surfaces */
+  --color-parchment: #edf1fb;
+  --color-bone: #c4d0ee;
+
   /* Darks */
-  --color-ink: #09090b;
-  --color-ink-2: #0f0f12;
-  --color-charcoal: #16161a;
-  --color-graphite: #202025;
-  --color-smoke: #2c2c33;
-  --color-slate: #3d3d45;
+  --color-ink: #121418;
+  --color-ink-2: #1a1d24;
+  --color-charcoal: #262a33;
+  --color-graphite: #3a3f4b;
+  --color-smoke: #565c6b;
+  --color-slate: #6e7484;
+  --color-ash: #858a96;
 
-  /* Lights (paper) */
-  --color-ash: #77736b;
-  --color-bone: #b6ad9b;
-  --color-parchment: #e3d9c3;
-  --color-ivory: #f1eadb;
-  --color-vellum: #ebe2cf;
-  --color-paper: #e9dfca;
-  --color-paper-2: #dfd4bc;
-
-  /* Metals & ink */
-  --color-bronze: #a67e56;
-  --color-bronze-2: #c8a274;
-  --color-bronze-dim: #6b5238;
-  --color-seal: #8b2e2e;
-  --color-seal-2: #a83a3a;
+  /* Gold leaf & the seal */
+  --color-bronze: #b08d3c;
+  --color-bronze-2: #d9b653;
+  --color-bronze-dim: #7d6328;
+  --color-seal: #b2271f;
+  --color-seal-2: #d6392f;
 
   /* Typography */
   --font-display: var(--font-display), Georgia, "Times New Roman", serif;
@@ -40,24 +56,25 @@
   --ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
-  --shadow-plate: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 30px 60px -30px rgba(0, 0, 0, 0.8);
+  --shadow-plate: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 24px 48px -28px rgba(18, 20, 24, 0.28);
 }
 
 :root {
   --header-height: 4.5rem;
   --page-x: clamp(1.25rem, 4vw, 3.5rem);
   --measure: 68ch;
-  --grain-opacity: 0.045;
-  color-scheme: dark;
+  --grain-opacity: 0.03;
+  --hairline: color-mix(in srgb, var(--color-ink) 12%, transparent);
+  color-scheme: light;
 }
 
 @layer base {
   * {
-    border-color: color-mix(in srgb, var(--color-bronze) 22%, transparent);
+    border-color: var(--hairline);
   }
   html {
-    background: var(--color-ink);
-    color: var(--color-parchment);
+    background: var(--color-paper);
+    color: var(--color-ink);
     font-family: var(--font-body);
     font-optical-sizing: auto;
     -webkit-font-smoothing: antialiased;
@@ -80,14 +97,14 @@
   }
   body {
     min-height: 100dvh;
-    background: var(--color-ink);
+    background: var(--color-paper);
     line-height: 1.6;
     font-size: 1rem;
     overflow-x: clip;
   }
   ::selection {
-    background: color-mix(in srgb, var(--color-bronze) 55%, transparent);
-    color: var(--color-ivory);
+    background: color-mix(in srgb, var(--color-lapis) 22%, transparent);
+    color: var(--color-ink);
   }
   h1,
   h2,
@@ -98,7 +115,7 @@
     line-height: 1.05;
     letter-spacing: -0.01em;
     text-wrap: balance;
-    color: var(--color-ivory);
+    color: var(--color-ink);
   }
   p {
     text-wrap: pretty;
@@ -109,7 +126,7 @@
     text-underline-offset: 0.2em;
   }
   :focus-visible {
-    outline: 2px solid var(--color-bronze-2);
+    outline: 2px solid var(--color-lapis);
     outline-offset: 3px;
     border-radius: 2px;
   }
@@ -123,12 +140,12 @@
   input,
   select,
   textarea {
-    background: color-mix(in srgb, var(--color-ivory) 4%, transparent);
-    border: 1px solid color-mix(in srgb, var(--color-bronze) 32%, transparent);
+    background: var(--color-ivory);
+    border: 1px solid color-mix(in srgb, var(--color-ink) 20%, transparent);
     padding: 0.7rem 0.9rem;
     border-radius: 2px;
     width: 100%;
-    transition: border-color 0.2s ease, background 0.2s ease;
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
   }
   input::placeholder,
   textarea::placeholder {
@@ -138,19 +155,20 @@
   select:focus,
   textarea:focus {
     outline: none;
-    border-color: var(--color-bronze-2);
-    background: color-mix(in srgb, var(--color-ivory) 6%, transparent);
+    border-color: var(--color-lapis);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-lapis) 16%, transparent);
+    background: #fff;
   }
   select {
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23c8a274' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%231b5ad6' stroke-width='1.5'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 0.9rem center;
     padding-right: 2.4rem;
   }
   hr {
     border: 0;
-    border-top: 1px solid color-mix(in srgb, var(--color-bronze) 25%, transparent);
+    border-top: 1px solid var(--hairline);
   }
   img,
   video,
@@ -189,20 +207,125 @@
     padding-inline: var(--page-x);
   }
 
-  /* Typography utilities */
+  /* ---------- Surfaces ---------- */
+
+  /* The page is paper by default; `.paper` is kept for sections that must stay light inside a blue context. */
+  .paper {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    --hairline: color-mix(in srgb, var(--color-ink) 12%, transparent);
+    color-scheme: light;
+  }
+  .paper h1,
+  .paper h2,
+  .paper h3,
+  .paper h4 {
+    color: var(--color-ink);
+  }
+
+  /* Lapis: the painted backdrop. Light text, gold accents, hairlines in white. */
+  .surface-lapis {
+    background: var(--color-lapis);
+    color: var(--color-parchment);
+    --hairline: color-mix(in srgb, var(--color-ivory) 22%, transparent);
+    color-scheme: dark;
+  }
+  .surface-deep {
+    background: var(--color-lapis-3);
+    color: var(--color-parchment);
+    --hairline: color-mix(in srgb, var(--color-ivory) 18%, transparent);
+    color-scheme: dark;
+  }
+  .surface-lapis h1,
+  .surface-lapis h2,
+  .surface-lapis h3,
+  .surface-lapis h4,
+  .surface-deep h1,
+  .surface-deep h2,
+  .surface-deep h3,
+  .surface-deep h4 {
+    color: var(--color-ivory);
+  }
+  .surface-lapis ::selection,
+  .surface-deep ::selection {
+    background: color-mix(in srgb, var(--color-bronze-2) 55%, transparent);
+    color: var(--color-ink);
+  }
+  .surface-lapis :focus-visible,
+  .surface-deep :focus-visible {
+    outline-color: var(--color-bronze-2);
+  }
+  .surface-lapis input,
+  .surface-lapis select,
+  .surface-lapis textarea,
+  .surface-deep input,
+  .surface-deep select,
+  .surface-deep textarea {
+    background: color-mix(in srgb, var(--color-ivory) 8%, transparent);
+    border-color: color-mix(in srgb, var(--color-ivory) 28%, transparent);
+    color: var(--color-ivory);
+  }
+  .surface-lapis input::placeholder,
+  .surface-lapis textarea::placeholder,
+  .surface-deep input::placeholder,
+  .surface-deep textarea::placeholder {
+    color: var(--color-bone);
+  }
+  .surface-lapis input:focus,
+  .surface-lapis select:focus,
+  .surface-lapis textarea:focus,
+  .surface-deep input:focus,
+  .surface-deep select:focus,
+  .surface-deep textarea:focus {
+    border-color: var(--color-bronze-2);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-bronze-2) 20%, transparent);
+    background: color-mix(in srgb, var(--color-ivory) 12%, transparent);
+  }
+  .surface-lapis select,
+  .surface-deep select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23d9b653' stroke-width='1.5'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- Typography ---------- */
   .eyebrow {
     font-family: var(--font-mono);
-    font-size: 0.68rem;
+    font-size: 0.66rem;
     letter-spacing: var(--tracking-eyebrow);
     text-transform: uppercase;
-    color: var(--color-bronze-2);
+    color: var(--color-lapis);
   }
   .eyebrow-muted {
     font-family: var(--font-mono);
-    font-size: 0.68rem;
+    font-size: 0.66rem;
     letter-spacing: var(--tracking-eyebrow);
     text-transform: uppercase;
     color: var(--color-ash);
+  }
+  .surface-lapis .eyebrow,
+  .surface-deep .eyebrow {
+    color: var(--color-bronze-2);
+  }
+  .surface-lapis .eyebrow-muted,
+  .surface-deep .eyebrow-muted {
+    color: var(--color-bone);
+  }
+  /* A registration mark before a label: the technical-drawing detail of the house style. */
+  .eyebrow-mark::before {
+    content: "";
+    display: inline-block;
+    width: 0.45em;
+    height: 0.45em;
+    margin-right: 0.9em;
+    vertical-align: 0.05em;
+    border: 1px solid currentColor;
+    transform: rotate(45deg);
+  }
+  .display-hero {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(3rem, 8.5vw, 8rem);
+    line-height: 0.92;
+    letter-spacing: -0.025em;
   }
   .display-xl {
     font-family: var(--font-display);
@@ -234,7 +357,7 @@
     font-family: var(--font-display);
     font-size: clamp(1.2rem, 1.9vw, 1.55rem);
     line-height: 1.4;
-    color: var(--color-parchment);
+    color: color-mix(in srgb, currentColor 88%, transparent);
     font-weight: 400;
   }
   .small-caps {
@@ -248,28 +371,29 @@
   /* Hairline rules */
   .rule {
     height: 1px;
-    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-bronze) 55%, transparent), transparent);
+    background: linear-gradient(90deg, transparent, var(--hairline), transparent);
   }
   .rule-solid {
     height: 1px;
-    background: color-mix(in srgb, var(--color-bronze) 28%, transparent);
+    background: var(--hairline);
   }
 
-  /* Buttons */
+  /* ---------- Buttons: mono pills ---------- */
   .btn {
     display: inline-flex;
     align-items: center;
     gap: 0.6rem;
     font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.18em;
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    padding: 0.85rem 1.4rem;
-    border: 1px solid color-mix(in srgb, var(--color-bronze) 55%, transparent);
-    color: var(--color-ivory);
-    border-radius: 2px;
+    padding: 0.8rem 1.35rem;
+    border: 1px solid color-mix(in srgb, currentColor 40%, transparent);
+    color: inherit;
+    border-radius: 999px;
     background: transparent;
     cursor: pointer;
+    line-height: 1;
     transition:
       background 0.25s var(--ease-cinematic),
       border-color 0.25s var(--ease-cinematic),
@@ -278,8 +402,8 @@
     white-space: nowrap;
   }
   .btn:hover {
-    background: color-mix(in srgb, var(--color-bronze) 16%, transparent);
-    border-color: var(--color-bronze-2);
+    background: color-mix(in srgb, currentColor 8%, transparent);
+    border-color: currentColor;
   }
   .btn:active {
     transform: translateY(1px);
@@ -289,29 +413,48 @@
     cursor: not-allowed;
   }
   .btn-solid {
+    background: var(--color-ink);
+    color: var(--color-ivory);
+    border-color: var(--color-ink);
+  }
+  .btn-solid:hover {
+    background: var(--color-lapis);
+    border-color: var(--color-lapis);
+    color: var(--color-ivory);
+  }
+  .surface-lapis .btn-solid,
+  .surface-deep .btn-solid {
     background: var(--color-ivory);
     color: var(--color-ink);
     border-color: var(--color-ivory);
   }
-  .btn-solid:hover {
-    background: var(--color-parchment);
-    border-color: var(--color-parchment);
+  .surface-lapis .btn-solid:hover,
+  .surface-deep .btn-solid:hover {
+    background: var(--color-bronze-2);
+    border-color: var(--color-bronze-2);
+    color: var(--color-ink);
   }
   .btn-seal {
-    border-color: color-mix(in srgb, var(--color-seal-2) 70%, transparent);
-    color: var(--color-ivory);
+    border-color: color-mix(in srgb, var(--color-seal) 70%, transparent);
+    color: var(--color-seal);
   }
   .btn-seal:hover {
-    background: color-mix(in srgb, var(--color-seal) 40%, transparent);
-    border-color: var(--color-seal-2);
+    background: var(--color-seal);
+    border-color: var(--color-seal);
+    color: var(--color-ivory);
+  }
+  .surface-lapis .btn-seal,
+  .surface-deep .btn-seal {
+    color: var(--color-ivory);
+    border-color: color-mix(in srgb, var(--color-seal-2) 80%, transparent);
   }
   .btn-ghost {
     border-color: transparent;
     padding-inline: 0.6rem;
   }
   .btn-sm {
-    padding: 0.55rem 0.9rem;
-    font-size: 0.66rem;
+    padding: 0.55rem 0.95rem;
+    font-size: 0.62rem;
   }
   .link-underline {
     background-image: linear-gradient(currentColor, currentColor);
@@ -325,99 +468,106 @@
     background-size: 100% 1px;
   }
 
-  /* Surfaces */
+  /* ---------- Cards and plates ---------- */
   .plate {
-    background: linear-gradient(180deg, color-mix(in srgb, var(--color-ivory) 4%, transparent), color-mix(in srgb, var(--color-ivory) 2%, transparent));
-    border: 1px solid color-mix(in srgb, var(--color-bronze) 22%, transparent);
+    background: var(--color-ivory);
+    border: 1px solid var(--hairline);
     box-shadow: var(--shadow-plate);
     border-radius: 2px;
   }
-  .paper {
-    background: var(--color-paper);
-    color: var(--color-ink);
-    color-scheme: light;
-  }
-  .paper h1,
-  .paper h2,
-  .paper h3,
-  .paper h4 {
-    color: var(--color-ink);
-  }
-  .paper .eyebrow {
-    color: var(--color-seal);
-  }
-  .paper .eyebrow-muted {
-    color: color-mix(in srgb, var(--color-ink) 55%, transparent);
-  }
-  .paper * {
-    border-color: color-mix(in srgb, var(--color-ink) 16%, transparent);
-  }
-  .paper input,
-  .paper select,
-  .paper textarea {
-    background: color-mix(in srgb, #fff 45%, transparent);
-    border-color: color-mix(in srgb, var(--color-ink) 22%, transparent);
-  }
-  .paper input:focus,
-  .paper select:focus,
-  .paper textarea:focus {
-    border-color: var(--color-seal);
-    background: color-mix(in srgb, #fff 65%, transparent);
-  }
-  .paper ::selection {
-    background: color-mix(in srgb, var(--color-seal) 25%, transparent);
-    color: var(--color-ink);
-  }
-  .paper .btn {
-    color: var(--color-ink);
-    border-color: color-mix(in srgb, var(--color-ink) 45%, transparent);
-  }
-  .paper .btn:hover {
-    background: color-mix(in srgb, var(--color-ink) 8%, transparent);
-    border-color: var(--color-ink);
-  }
-  .paper .btn-solid {
-    background: var(--color-ink);
-    color: var(--color-ivory);
-    border-color: var(--color-ink);
-  }
-  .paper .btn-solid:hover {
-    background: var(--color-charcoal);
-    border-color: var(--color-charcoal);
-  }
-  .paper .plate {
-    background: color-mix(in srgb, #fff 30%, transparent);
-    border-color: color-mix(in srgb, var(--color-ink) 14%, transparent);
-    box-shadow: 0 20px 40px -30px rgba(0, 0, 0, 0.35);
-  }
-  .paper :focus-visible {
-    outline-color: var(--color-seal);
+  .surface-lapis .plate,
+  .surface-deep .plate {
+    background: color-mix(in srgb, var(--color-ivory) 7%, transparent);
+    border-color: color-mix(in srgb, var(--color-ivory) 22%, transparent);
+    box-shadow: 0 30px 60px -40px rgba(8, 27, 72, 0.8);
   }
 
-  /* Grain / texture overlay (paper & film) */
+  /* Faint canvas grain (used sparingly: the hero and a few plates) */
   .grain::before {
     content: "";
     position: absolute;
     inset: 0;
     pointer-events: none;
     opacity: var(--grain-opacity);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.6 0 0 0 0 0.55 0 0 0 0 0.45 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     background-size: 220px 220px;
-    mix-blend-mode: overlay;
+    mix-blend-mode: multiply;
     z-index: 1;
   }
+  .surface-lapis.grain::before,
+  .surface-deep.grain::before {
+    mix-blend-mode: overlay;
+  }
   .grain-strong::before {
-    opacity: 0.09;
+    opacity: 0.07;
   }
 
-  /* Vignette */
+  /* Vignette for images */
   .vignette::after {
     content: "";
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background: radial-gradient(120% 90% at 50% 40%, transparent 40%, rgba(0, 0, 0, 0.55) 100%);
+    background: radial-gradient(120% 90% at 50% 40%, transparent 45%, rgba(8, 27, 72, 0.45) 100%);
     z-index: 1;
+  }
+
+  /* The pinned homepage stage: its scroll length comes from story.ts via two custom properties. */
+  .stage-height {
+    height: var(--stage-h-mobile, 760vh);
+  }
+  @media (min-width: 768px) {
+    .stage-height {
+      height: var(--stage-h-desktop, 1000vh);
+    }
+  }
+
+  /* ---------- Technical-drawing furniture ---------- */
+  /* Hairline frame lines at the page margins, with a small tick at the top. */
+  .frame-lines {
+    position: relative;
+  }
+  .frame-lines::before,
+  .frame-lines::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--hairline);
+    pointer-events: none;
+  }
+  .frame-lines::before {
+    left: var(--page-x);
+  }
+  .frame-lines::after {
+    right: var(--page-x);
+  }
+  /* A crosshair registration mark, 11px, drawn from the current colour. */
+  .reg-mark {
+    position: relative;
+    width: 11px;
+    height: 11px;
+    display: inline-block;
+    opacity: 0.7;
+  }
+  .reg-mark::before,
+  .reg-mark::after {
+    content: "";
+    position: absolute;
+    background: currentColor;
+  }
+  .reg-mark::before {
+    left: 5px;
+    top: 0;
+    width: 1px;
+    height: 11px;
+  }
+  .reg-mark::after {
+    top: 5px;
+    left: 0;
+    height: 1px;
+    width: 11px;
   }
 
   /* Tags / chips */
@@ -425,20 +575,17 @@
     display: inline-flex;
     align-items: center;
     font-family: var(--font-mono);
-    font-size: 0.64rem;
+    font-size: 0.62rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    padding: 0.3rem 0.6rem;
-    border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
-    border-radius: 2px;
-    color: var(--color-bone);
+    padding: 0.32rem 0.7rem;
+    border: 1px solid color-mix(in srgb, currentColor 32%, transparent);
+    border-radius: 999px;
+    color: color-mix(in srgb, currentColor 75%, transparent);
     line-height: 1.2;
   }
-  .paper .chip {
-    color: color-mix(in srgb, var(--color-ink) 70%, transparent);
-  }
 
-  /* Editorial prose (articles) */
+  /* ---------- Editorial prose (articles) ---------- */
   .prose-editorial {
     font-size: 1.08rem;
     line-height: 1.75;
@@ -454,7 +601,7 @@
     padding-right: 0.12em;
     margin-top: 0.08em;
     font-weight: 500;
-    color: var(--color-seal);
+    color: var(--color-lapis);
   }
   .prose-editorial h2 {
     font-size: clamp(1.7rem, 2.6vw, 2.2rem);
@@ -475,6 +622,7 @@
     margin-top: 2em;
   }
   .prose-editorial a {
+    color: var(--color-lapis);
     text-decoration: underline;
     text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
     text-decoration-thickness: 1px;
@@ -488,7 +636,7 @@
     font-size: 1.45em;
     line-height: 1.35;
     padding-left: 1.4rem;
-    border-left: 2px solid var(--color-seal);
+    border-left: 2px solid var(--color-lapis);
     font-style: italic;
     margin-block: 2em;
   }
@@ -509,7 +657,7 @@
     margin-top: 0.5em;
   }
   .prose-editorial li::marker {
-    color: var(--color-seal);
+    color: var(--color-lapis);
   }
   .prose-editorial code {
     font-family: var(--font-mono);
@@ -565,13 +713,13 @@
   .prose-editorial hr {
     margin-block: 3em;
     width: 6rem;
-    border-top-color: var(--color-seal);
+    border-top-color: var(--color-lapis);
   }
   .prose-editorial sup a {
     text-decoration: none;
     font-family: var(--font-mono);
     font-size: 0.72em;
-    color: var(--color-seal);
+    color: var(--color-lapis);
     padding-inline: 0.15em;
   }
   .prose-editorial section[data-footnotes],
@@ -596,7 +744,7 @@
     padding-left: 1.2rem;
   }
   .prose-editorial mark {
-    background: color-mix(in srgb, var(--color-bronze) 35%, transparent);
+    background: color-mix(in srgb, var(--color-bronze-2) 45%, transparent);
     color: inherit;
   }
 
@@ -621,23 +769,28 @@
     padding: 0.1em 0.3em;
   }
   .prose-ugc a {
+    color: var(--color-lapis);
     text-decoration: underline;
     text-underline-offset: 0.2em;
     overflow-wrap: anywhere;
   }
+  .surface-lapis .prose-ugc a,
+  .surface-deep .prose-ugc a,
+  .surface-lapis .prose-editorial a,
+  .surface-deep .prose-editorial a {
+    color: var(--color-bronze-2);
+  }
 
-  /* Engraved text effect (used on metal plates) */
+  /* Engraved text effect (kept for the few plates that use it) */
   .engraved {
-    color: color-mix(in srgb, var(--color-ivory) 82%, transparent);
-    text-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.08),
-      0 -1px 0 rgba(0, 0, 0, 0.8);
+    color: color-mix(in srgb, currentColor 82%, transparent);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
   }
 }
 
 @layer utilities {
   .text-shadow-soft {
-    text-shadow: 0 2px 30px rgba(0, 0, 0, 0.6);
+    text-shadow: 0 2px 28px rgba(8, 27, 72, 0.45);
   }
   .no-scrollbar::-webkit-scrollbar {
     display: none;

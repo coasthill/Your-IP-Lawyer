@@ -30,7 +30,6 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },
-  transpilePackages: ["three"],
 };
 
 export default nextConfig;

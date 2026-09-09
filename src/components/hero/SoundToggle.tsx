@@ -13,10 +13,7 @@ export function SoundToggle({ className }: { className?: string }) {
       onClick={() => sound.toggle()}
       aria-pressed={on}
       aria-label={on ? "Turn sound off" : "Turn sound on"}
-      className={cn(
-        "flex items-center gap-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-bone transition-colors hover:text-ivory",
-        className,
-      )}
+      className={cn("flex items-center gap-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] opacity-75 transition-opacity hover:opacity-100", className)}
     >
       <span className="flex h-3 items-end gap-[2px]" aria-hidden="true">
         {[0.4, 0.9, 0.6, 1].map((h, i) => (

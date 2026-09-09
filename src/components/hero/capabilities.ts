@@ -2,8 +2,9 @@
 
 /**
  * Decides which renderer the visitor gets.
- *   webgl  → full Three.js experience (desktop-class devices with a capable GPU)
- *   canvas → 2.5D canvas renderer (phones, tablets, weak GPUs, WebGL unavailable)
+ *   webgl  → the painted stage: a full-screen shader that dissolves one still into the next.
+ *            Cheap enough for phones, so it is the default wherever WebGL works.
+ *   canvas → 2D canvas cross-fades (no WebGL, software GL, or save-data)
  *   static → no animation (prefers-reduced-motion, or explicitly requested)
  */
 export type RenderTier = "webgl" | "canvas" | "static";
@@ -17,15 +18,8 @@ export function detectTier(): RenderTier {
   const forced = params.get("render");
   if (forced === "webgl" || forced === "canvas" || forced === "static") return forced;
 
-  const width = Math.min(window.innerWidth, window.innerHeight * 1.8);
-  const coarse = window.matchMedia("(pointer: coarse)").matches;
-  const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8;
-  const cores = navigator.hardwareConcurrency ?? 8;
   const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
-
   if (saveData) return "canvas";
-  if (width < 900 || coarse) return "canvas";
-  if (memory < 4 || cores < 4) return "canvas";
 
   const gl = probeWebGL();
   if (!gl.ok) return "canvas";
@@ -49,9 +43,15 @@ function probeWebGL(): { ok: boolean; software: boolean; renderer: string } {
   }
 }
 
-/** Device pixel ratio cap to keep fill-rate sane. */
+/** Device pixel ratio cap to keep fill-rate sane (the dissolve shader samples noise per pixel). */
 export function dprCap(tier: RenderTier): number {
   if (typeof window === "undefined") return 1;
   const dpr = window.devicePixelRatio || 1;
-  return tier === "webgl" ? Math.min(dpr, 1.75) : Math.min(dpr, 2);
+  return tier === "webgl" ? Math.min(dpr, 1.5) : Math.min(dpr, 2);
+}
+
+/** Phones and small tablets get the smaller image files. */
+export function wantsSmallArt(): boolean {
+  if (typeof window === "undefined") return false;
+  return Math.max(window.innerWidth, window.innerHeight) * Math.min(window.devicePixelRatio || 1, 2) <= 1400;
 }
