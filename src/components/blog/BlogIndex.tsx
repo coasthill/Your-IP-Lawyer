@@ -31,8 +31,8 @@ export type BlogIndexProps = {
 
 /**
  * Shared layout for /blog, /blog/category/[slug] and /blog/tag/[slug]:
- * dark masthead + category chips → lead article on ink → the rest of the record on paper.
- * The turn from ink to paper is the editorial move: the cover, then the pages.
+ * a framed masthead + category pills → the lead article on a wide ivory plate → the rest of the
+ * record as a grid of plates. All of it on gallery white; hairlines and whitespace do the work.
  */
 export function BlogIndex({
   eyebrow,
@@ -58,19 +58,22 @@ export function BlogIndex({
   return (
     <>
       {/* Masthead */}
-      <section className="relative bg-ink" aria-labelledby="blog-title">
+      <section className="frame-lines relative" aria-labelledby="blog-title">
         <div className="container-editorial pt-10 pb-10 md:pt-16 md:pb-12">
           <div className="grid gap-10 md:grid-cols-12 md:items-end">
             <div className="md:col-span-8">
-              <p className="eyebrow">{eyebrow}</p>
+              <div className="flex items-center gap-4">
+                <p className="eyebrow eyebrow-mark">{eyebrow}</p>
+                <span className="reg-mark text-lapis" aria-hidden="true" />
+              </div>
               <h1 id="blog-title" className={cn("mt-5", titleSize === "xl" ? "display-xl" : "display-lg")}>
                 {title}
               </h1>
-              {lede ? <p className="lede mt-6 max-w-2xl">{lede}</p> : null}
+              {lede ? <p className="lede mt-6 max-w-2xl text-graphite">{lede}</p> : null}
             </div>
             <div className="md:col-span-4 md:text-right">
               <p className="font-mono text-[0.62rem] uppercase tracking-[0.22em] text-ash">Record</p>
-              <p className="mt-2 font-display text-xl text-parchment">{recordLabel ?? siteConfig.name}</p>
+              <p className="mt-2 font-display text-xl text-ink">{recordLabel ?? siteConfig.name}</p>
               <p className="mt-1 font-mono text-[0.62rem] uppercase tracking-[0.22em] text-ash">
                 {siteConfig.author.location} · {editionLabel()}
               </p>
@@ -81,35 +84,35 @@ export function BlogIndex({
         </div>
       </section>
 
-      {/* Lead article, still on ink */}
+      {/* Lead article, on a wide plate */}
       {lead ? (
-        <section className="relative bg-ink" aria-labelledby="lead-heading">
-          <div className="container-editorial pt-8 pb-20 md:pt-12 md:pb-28">
-            <div className="flex items-baseline justify-between gap-4 border-t border-bronze/20 pt-5">
+        <section className="relative" aria-labelledby="lead-heading">
+          <div className="container-editorial pt-8 pb-16 md:pt-12 md:pb-24">
+            <div className="flex items-baseline justify-between gap-4 border-t pt-5">
               <p id="lead-heading" className="eyebrow-muted">
                 {page > 1 ? "First on this page" : "Lead article"}
               </p>
-              <p className="font-mono text-[0.62rem] tracking-[0.22em] text-bronze-2">01</p>
+              <p className="font-mono text-[0.62rem] tracking-[0.22em] text-bronze">01</p>
             </div>
-            <div className="mt-10 md:mt-14">
+            <div className="mt-8 md:mt-10">
               <PostCard post={lead} variant="featured" priority />
             </div>
           </div>
         </section>
       ) : null}
 
-      {/* The rest of the record, on paper */}
-      <section className="paper relative grain" aria-labelledby="grid-heading">
-        <div className="container-editorial relative z-[2] py-20 md:py-28">
+      {/* The rest of the record */}
+      <section className="relative" aria-labelledby="grid-heading">
+        <div className="container-editorial pt-12 pb-20 md:pt-16 md:pb-28">
           <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
             <div>
-              <p className="eyebrow">The record</p>
+              <p className="eyebrow eyebrow-mark">The record</p>
               <h2 id="grid-heading" className="display-md mt-3">
                 {gridHeading}
               </h2>
             </div>
             {hasDemo ? (
-              <div className="flex max-w-md items-start gap-3 text-xs leading-relaxed text-current/70">
+              <div className="flex max-w-md items-start gap-3 text-xs leading-relaxed text-slate">
                 <DemoBadge className="mt-0.5 shrink-0" />
                 <p>{siteConfig.disclaimer.demoContent}</p>
               </div>
@@ -120,16 +123,16 @@ export function BlogIndex({
           {status === "error" ? (
             <Notice tone="error">The archive could not be reached just now. Please try again in a moment.</Notice>
           ) : posts.length ? (
-            <ol className="grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+            <ol className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
               {posts.map((post, i) => (
                 <li key={post.id} className="flex flex-col">
-                  <span className="eyebrow mb-4">No. {String(i + firstIndex).padStart(2, "0")}</span>
+                  <span className="eyebrow-muted mb-3">No. {String(i + firstIndex).padStart(2, "0")}</span>
                   <PostCard post={post} variant="standard" />
                 </li>
               ))}
             </ol>
           ) : lead ? (
-            <p className="max-w-xl font-display text-2xl text-current/80">That is the whole record so far. The next case note is probably being written.</p>
+            <p className="max-w-xl font-display text-2xl text-graphite">That is the whole record so far. The next case note is probably being written.</p>
           ) : (
             <EmptyState
               title={emptyTitle}

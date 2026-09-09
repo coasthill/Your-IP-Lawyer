@@ -48,7 +48,7 @@ async function shoot(browser: Browser, name: keyof typeof VIEWPORTS) {
   }
 
   // Homepage scroll frames (forces the tier appropriate for the viewport)
-  const tier = name === "desktop" ? "webgl" : "canvas";
+  const tier = "webgl"; // the painted stage runs in WebGL on every device; ?render=canvas|static exercises the fallbacks
   try {
     await page.goto(`${BASE}/?render=${tier}&snap`, { waitUntil: "networkidle", timeout: 60_000 });
     await page.waitForTimeout(4500);
