@@ -359,6 +359,111 @@
       "poster": "/art/film/disclosure/poster.webp",
       "posterSmall": "/art/film/disclosure/poster-sm.webp",
       "lqip": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAABQBACdASoYABAAPu1iqU2ppaQiMAgBMB2JZACdMoAC/sp8ZaRynIXyPe9gAPwwudmvDItdGrd9uqZr6VN6bPtkVpDktS0CDOBPawlQQh/34ffhbv42X8w9/Is1hBNV5FYOFX8YllC5YAAA"
+    },
+    "bridge-gown": {
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_231635_f738931f-fa02-4f7f-ab05-ba71c38e8a13.mp4",
+      "width": 2168,
+      "height": 1440,
+      "aspect": 1.5056,
+      "duration": 4.042,
+      "fps": 24,
+      "reverse": false,
+      "trim": null,
+      "loop": false,
+      "impactAt": null,
+      "video": {
+        "webm": "/art/film/bridge-gown/clip.webm",
+        "mp4": "/art/film/bridge-gown/clip.mp4",
+        "webmSmall": "/art/film/bridge-gown/clip-sm.webm",
+        "mp4Small": "/art/film/bridge-gown/clip-sm.mp4"
+      },
+      "poster": "/art/film/bridge-gown/poster.webp",
+      "posterSmall": "/art/film/bridge-gown/poster-sm.webp",
+      "lqip": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAAAwBACdASoYABAAPu1orU2ppqSiMAgBMB2JbACdMoADTpp9rZRxm9JNCuAA/uMtIDrpKgm6unlCD3x+mojldz50VraV36x4zHTvXtvIY4TuIxKbnfaIiqbQvWFmdOsCY2B9VZ0tq1aslDAAAAA="
+    },
+    "bridge-strike": {
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_225053_cbed1b78-85d1-4e76-ae30-7d0c4b199eaa.mp4",
+      "width": 2168,
+      "height": 1440,
+      "aspect": 1.5056,
+      "duration": 4.042,
+      "fps": 24,
+      "reverse": false,
+      "trim": null,
+      "loop": false,
+      "impactAt": null,
+      "video": {
+        "webm": "/art/film/bridge-strike/clip.webm",
+        "mp4": "/art/film/bridge-strike/clip.mp4",
+        "webmSmall": "/art/film/bridge-strike/clip-sm.webm",
+        "mp4Small": "/art/film/bridge-strike/clip-sm.mp4"
+      },
+      "poster": "/art/film/bridge-strike/poster.webp",
+      "posterSmall": "/art/film/bridge-strike/poster-sm.webp",
+      "lqip": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACQAwCdASoYABAAPu1iqU2ppaOiMAgBMB2JQBOgBH50c1+A1yYAAP7O95WikGTkdDn0w9vjDfB6UFTxO7/nzILnleSqPuZ5TSzrba0qCg2wGY/0AAA="
+    },
+    "bridge-disclosure": {
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_233440_a6752ee5-d919-4c1e-b05d-c5091df526d6.mp4",
+      "width": 2168,
+      "height": 1440,
+      "aspect": 1.5056,
+      "duration": 4.042,
+      "fps": 24,
+      "reverse": false,
+      "trim": null,
+      "loop": false,
+      "impactAt": null,
+      "video": {
+        "webm": "/art/film/bridge-disclosure/clip.webm",
+        "mp4": "/art/film/bridge-disclosure/clip.mp4",
+        "webmSmall": "/art/film/bridge-disclosure/clip-sm.webm",
+        "mp4Small": "/art/film/bridge-disclosure/clip-sm.mp4"
+      },
+      "poster": "/art/film/bridge-disclosure/poster.webp",
+      "posterSmall": "/art/film/bridge-disclosure/poster-sm.webp",
+      "lqip": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JaAC2yCHgmXVPrAEeXyBfAAD+7oNBMHHnB+YAbkpgX2bVAegfJCQpdYVSmvqO+Fe1ePge9OLrf3KOs3s2iOC//EiU/oI/7qKnrjXQrafQAA=="
+    },
+    "bridge-certificate": {
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_225937_51abd4ad-e662-4784-ae82-b7217b61f3c1.mp4",
+      "width": 2168,
+      "height": 1440,
+      "aspect": 1.5056,
+      "duration": 4.042,
+      "fps": 24,
+      "reverse": false,
+      "trim": null,
+      "loop": false,
+      "impactAt": null,
+      "video": {
+        "webm": "/art/film/bridge-certificate/clip.webm",
+        "mp4": "/art/film/bridge-certificate/clip.mp4",
+        "webmSmall": "/art/film/bridge-certificate/clip-sm.webm",
+        "mp4Small": "/art/film/bridge-certificate/clip-sm.mp4"
+      },
+      "poster": "/art/film/bridge-certificate/poster.webp",
+      "posterSmall": "/art/film/bridge-certificate/poster-sm.webp",
+      "lqip": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAACwBACdASoYABAAPu1kqU2ppaOiMAgBMB2JYwC7AYuu3HjtucC3kgPhe0fsx/CmAP7ez9qXY1HKLYXZMEFB6jqdJ7CPvqL13ikvwjgZSK/3rsEaOR8d26C6R21xRthLhQu9Pve+hhnUcw3w61uFTToEVGubfDm0+mAAAA=="
+    },
+    "bridge-water": {
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_233627_07ba5db4-22dc-41ce-885a-d53ce3c05a6f.mp4",
+      "width": 2168,
+      "height": 1440,
+      "aspect": 1.5056,
+      "duration": 4.042,
+      "fps": 24,
+      "reverse": false,
+      "trim": null,
+      "loop": false,
+      "impactAt": null,
+      "video": {
+        "webm": "/art/film/bridge-water/clip.webm",
+        "mp4": "/art/film/bridge-water/clip.mp4",
+        "webmSmall": "/art/film/bridge-water/clip-sm.webm",
+        "mp4Small": "/art/film/bridge-water/clip-sm.mp4"
+      },
+      "poster": "/art/film/bridge-water/poster.webp",
+      "posterSmall": "/art/film/bridge-water/poster-sm.webp",
+      "lqip": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAABQBACdASoYABAAPu1krU6ppaSiMAgBMB2JYgCdMoADRGh3rIof8UmyYNOIAP7r9c6VN5rdIs7xqxhEoZii6j1NgzwAdEsgf+P8IzHFyZ1ypN327/LGjgyk+6CaZi6dmHvn+kD8wTvU7JoM5RS4j+xg/fcDzuNwXPPn1yD5JSkfGFdH1a+Fw8jW+hvabYrzJQN/3gAA"
     }
   }
 }
