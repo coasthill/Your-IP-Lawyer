@@ -36,7 +36,8 @@ This README is written for a non-technical owner. Technical readers should also 
 | --- | --- | --- |
 | The website itself | **Next.js 16** (React, TypeScript) | A modern framework that renders pages fast and securely. |
 | Look and feel | **Tailwind CSS** + custom design tokens | Colours, typography and spacing are defined in one place. |
-| Homepage animation | **Three.js**, **React Three Fiber**, **GSAP ScrollTrigger**, **Lenis** | 3D graphics on desktop; a lighter 2D version on phones; a still version for people who prefer reduced motion. |
+| Homepage artwork | **Eight painted stills** generated with **Higgsfield** (GPT Image 2), prepared by a **GitHub Action** | Oil-painting-style pictures — the advocate, his gown, the gavel, a brass mechanism, a vase, a wax seal, a still life, the advocate at the window. A small robot on GitHub converts them to web sizes (section 11). |
+| Homepage animation | A small **WebGL shader**, **GSAP ScrollTrigger**, **Lenis** | As you scroll, one painting dissolves into the next. There is no 3D library any more. Phones use the same shader; a simpler cross-fade stands in where WebGL is missing; a still version is shown to people who prefer reduced motion. |
 | Database | **PostgreSQL** (via Drizzle ORM) | Stores posts, comments, forum threads, submissions and uploaded-file records. For local use it runs an embedded copy automatically — nothing to install. |
 | File storage | Local disk, **Vercel Blob**, or any **S3-compatible** bucket | Feature images and PDFs are stored here, never in the code repository. |
 | Admin dashboard | Built in, at `/admin` | Password-protected. This is where you manage everything. |
@@ -180,13 +181,49 @@ Open `src/app/(site)/about/page.tsx` and edit the text between the tags (it is o
 
 ## 11. How to replace the homepage artwork
 
-The homepage figure is an original, generic advocate drawn in code (no photograph), so there is nothing to license and nothing to leak. If you later want a custom portrait or generated artwork:
+The homepage is a sequence of **eight paintings** — oil-painting-style stills generated with **Higgsfield** — that dissolve into one another as you scroll. Each painting has a short name (its `id`) that is used everywhere:
 
-- **Desktop (3D):** the figure lives in `src/components/hero/webgl/figure/`. A textured plane or a 3D model can replace the procedural figure there; the gown, lights and camera keep working.
-- **Phones / no WebGL:** the 2D version is in `src/components/hero/canvas/`.
-- **Reduced motion / no animation:** the still composition is in `src/components/hero/static/`.
-- **Text of the story** (captions, order, timing of every scene): `src/components/hero/story.ts` — change the words there and every version updates.
-- **Social sharing image:** `src/app/opengraph-image.tsx`.
+| # | Scene | `id` | The painting |
+| --- | --- | --- | --- |
+| 1 | The Lawyer | `advocate` | the advocate in his gown, seen from behind, against the blue wall |
+| 2 | The Gown Moves | `gown` | the black silk of the gown billowing |
+| 3 | The Gavel | `gavel` | a gavel raised above its block (the scene ends with a dark curtain wipe) |
+| 4 | The Patent Machine | `patent` | a brass mechanism of gears on marble |
+| 5 | Design | `design` | a porcelain vase on a lathe |
+| 6 | Trade Mark | `trademark` | a brass seal pressed into crimson wax |
+| 7 | Geographical Indication | `gi` | a still life of Indian GI goods (the map of India is drawn by the site, not painted) |
+| 8 | The Legal World | `legal-world` | the advocate walking toward the window |
+
+**Where things live**
+
+- `content/artwork/manifest.json` — the list of the eight scenes. Each has an `id`, a `source` (the web address of the picture) and a `focal` point. **This is the only file you edit to change a painting.**
+- `content/artwork/prompts.json` — the exact prompt used for every painting, plus the shared *style sentence* that makes the eight look like one set.
+- `public/art/scenes/` — the converted pictures the site actually shows (`<id>.webp` for desktops, `<id>-sm.webp` for phones). Never edit these by hand; a robot makes them.
+- `src/components/hero/art-manifest.json` — sizes, focal points and tiny blurred placeholders. Also written by the robot.
+- `src/components/hero/story.ts` — the words: captions, the order of scenes, timing, and which transition plays between them. Change the text there and every version of the homepage updates.
+- `src/app/opengraph-image.tsx` — the social sharing image (separate from the paintings).
+
+**A word about credits before you generate anything.** Each still costs about **2 Higgsfield credits** (model GPT Image 2, 3:2, 2K, medium quality) and the account is on the basic plan. Generate **one still at a time**, look at it, and only then decide whether to try again. **Never generate video** for the homepage — the site does not use video anywhere, and a single clip can cost more than all eight paintings together.
+
+**To replace one painting**
+
+1. Open `content/artwork/prompts.json`, find the scene and copy its prompt. Keep the style sentence and the "no text" sentence exactly as they are — they are what keep the paintings matching. If you write a new prompt, paste it back into `prompts.json` so the picture can be made again later.
+2. In Higgsfield choose **Image → GPT Image 2**, aspect ratio **3:2**, resolution **2K**, medium quality, paste the prompt and generate **one** still. Scene 8 (`legal-world`) was made with the scene 1 painting attached as an *image reference* so the same advocate appears in both — do the same if you redo scene 8, and if you replace scene 1, redo scene 8 afterwards.
+3. When you are happy with a picture, open it in your Higgsfield **library** and **copy the image URL** (a long address ending in `.png`).
+4. On GitHub, open `content/artwork/manifest.json`, click the pencil to edit (the web editor is enough — nothing needs to be installed), and paste the address as the `source` of that scene. Leave the `id` alone.
+   - Optionally change `focal`: two numbers between 0 and 1, measured from the **top-left** corner (`[0, 0]` is top-left, `[1, 1]` bottom-right, `[0.5, 0.5]` the centre). It marks the point that must stay in frame when the picture is cropped on phones — the figure's shoulders, the gavel head, the seal. Changing only `focal` is free: nothing is downloaded again.
+5. Click **Commit changes**.
+6. Open the **Actions** tab. The workflow **"Fetch artwork"** starts by itself whenever `manifest.json` changes, on any branch. Wait for the green tick (a minute or two). It downloads the picture, converts it to the two web sizes, updates `art-manifest.json` and **commits the result on the same branch** with the message "Artwork: fetch and convert scene stills". You do not need to commit anything else.
+7. The site shows the new painting on the next deploy. Vercel deploys the robot's commit automatically; if it does not, redeploy from the Vercel dashboard.
+
+**If the workflow fails** (a red cross in the Actions tab): open the run and read the log. Nine times out of ten the cause is a bad URL — a `404` or `403` in the log means the address was copied incompletely or has expired. Fix the `source` in `manifest.json` and commit again. Nothing is broken on the live site in the meantime: the old pictures stay until a run succeeds. If the log complains about `sharp` or Node rather than a URL, something else changed in the repository — ask for help rather than re-running.
+
+**Other things worth knowing**
+
+- **Running the workflow by hand:** Actions tab → **Fetch artwork** → **Run workflow** (the button appears once the workflow file is on the default branch). Its "candidates" box also converts the addresses in `content/artwork/candidates.json` into small review copies under `public/art/candidates/` — a way to compare a few tries side by side without touching the live scenes. Delete candidates once you have chosen.
+- **Running it on your computer:** after `npm install`, run `node scripts/fetch-artwork.mjs` (the image tool it needs, `sharp`, is already installed with the site). It writes the same files; commit them yourself.
+- **Going back:** everything is versioned. Revert the robot's commit (or your manifest change) and the previous painting returns.
+- **Ownership:** the eight paintings are AI-generated artwork owned by the site owner's Higgsfield account. They depict no real person and no real place.
 
 ## 12. How to update the domain
 
@@ -226,12 +263,14 @@ Passwords are stored as scrypt hashes (never in plain text). Sign-in is rate-lim
 
 `npm run db:seed` imports the articles in `content/demo-posts/*.md` and the threads in `content/demo-forum.json`. They are labelled **Demo content** on the site and are not legal advice. Delete them from `/admin` whenever you like. You can also drop your own `.md` files into `content/demo-posts` and re-run the seed to import them (existing slugs are skipped; use `npm run db:seed -- --reset-demo` to re-import).
 
+**The homepage paintings are not demo content.** The eight stills in `public/art/scenes/` are AI-generated artwork made with Higgsfield (GPT Image 2) from the prompts in `content/artwork/prompts.json`, and they belong to the site owner's Higgsfield account. They show a generic advocate seen from behind (no likeness of anyone) and no real place. Section 11 explains how to replace them.
+
 ## 17. Troubleshooting
 
 - **"Cannot sign in"** — create an account (section 13). Five wrong attempts pause sign-in for 15 minutes.
 - **Uploads fail on Vercel** — set `STORAGE_DRIVER=vercel-blob` and connect a Blob store; the `local` driver cannot write to Vercel's read-only filesystem.
 - **Images from another site do not display** — add their hostname to `NEXT_PUBLIC_IMAGE_HOSTS` (comma separated).
-- **The homepage shows the 2D version on my laptop** — the site chooses the 3D version only on capable devices; add `?render=webgl` to the address to force it, `?render=canvas` for the 2D version, `?render=static` for the still version. (`&snap` additionally removes the scroll easing, which is useful for screenshots.)
+- **The homepage shows a plain cross-fade (or the still version) on my laptop** — the site uses the WebGL version wherever WebGL works and is not software-rendered; add `?render=webgl` to the address to force it, `?render=canvas` for the 2D cross-fade, `?render=static` for the still version. (`&snap` additionally removes the scroll easing, which is useful for screenshots.)
 - **Start over locally** — stop the site, delete the `.data` folder, then run `npm run db:migrate && npm run db:seed` again.
 
 ---
