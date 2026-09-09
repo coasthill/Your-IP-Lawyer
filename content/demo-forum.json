@@ -1,0 +1,158 @@
+[
+  {
+    "title": "Welcome to the forum: what this place is for, and the house rules",
+    "body": "Welcome. This forum sits alongside the articles on YourIPLawyer and exists for the conversations the articles cannot have: questions from students, notes from juniors, arguments from practitioners, and the occasional puzzle from someone who simply owns a brand and wants to understand it.\n\nA few house rules, kept short on purpose.\n\n1. **No legal advice.** Nothing posted here, by me or by anyone else, is advice on your matter. If you have a live dispute, consult a lawyer who can see the papers. Please do not post confidential facts about a pending case.\n2. **No real parties.** Discuss principles, hypotheticals and reported judgments. Do not name clients, opponents, judges or firms in a way that could identify a matter or embarrass a person.\n3. **Opinions are opinions.** Mark them as such. Disagreement is welcome; discourtesy is not.\n4. **Pseudonyms are fine.** Many participants post under a role rather than a name, and that is encouraged for students and juniors.\n5. **Moderation.** Threads and replies are reviewed before they appear. Spam, solicitation and anything defamatory will be removed without discussion.\n\nViews expressed by forum participants are their own and do not necessarily represent the views of YourIPLawyer or its contributors.\n\nPick a category, ask the question you were afraid was too basic, and let us see where it goes.",
+    "category": "general",
+    "tags": ["welcome", "house rules", "moderation"],
+    "author": "Adv. Rohit Pradhan",
+    "pinned": true,
+    "replies": [
+      {
+        "author": "Guest Contributor",
+        "body": "Thank you for opening this up. One request: could there be a tag for discussion of reported judgments, so that threads dissecting a public decision are easy to find? It would help those of us reading from outside Delhi keep up with what is being argued."
+      },
+      {
+        "author": "Adv. Rohit Pradhan",
+        "body": "Good idea. Use the tag _case-discussion_ for now. If it gets traction we will promote it to a category."
+      }
+    ]
+  },
+  {
+    "title": "Preparing for my first IP moot with no IP course yet: where do I start?",
+    "body": "I am in my second year and have been selected for an intra-college moot on a trade mark problem. The catch is that IP is an elective offered only in fourth year, so I have never studied it formally. The problem involves a registered mark, a defendant using a similar-sounding name on related goods, and an argument about whether the plaintiff waited too long before suing.\n\nI have about five weeks. I have started reading a textbook chapter on infringement, but it is enormous and I do not know what actually matters for a moot. Should I be reading the statute first, or cases first, or the textbook? How many cases is a reasonable number to rely on in a memorial at this level? And is there a sensible way to divide work between the two speakers so that we do not both prepare the same half?\n\nAny practical advice from people who have done this, or who have judged these rounds, would be very welcome. I would rather be told the hard truths now than in the oral round.",
+    "category": "law-school",
+    "tags": ["moots", "trade marks", "law school"],
+    "author": "Second-year, Pune",
+    "pinned": false,
+    "replies": [
+      {
+        "author": "Junior at a Delhi chamber",
+        "body": "Statute first, then the problem, then cases, in that order. Read the definitions and the infringement and passing off provisions until you can paraphrase them without looking. Then read the moot problem three times and list every fact that could matter, because moot problems are written so that the facts cut both ways. Only then go to cases, and go to the ones that are actually about your facts, not the ones with the most famous names.\n\nOn numbers: for an intra-college memorial, eight to twelve well-understood cases beat forty cited from headnotes. Judges can tell within two questions whether you have read the judgment.\n\nDivide by issue, not by side. One speaker takes similarity and infringement, the other takes delay and relief. Each of you should still be able to answer a question on the other's issue."
+      },
+      {
+        "author": "Adv. Rohit Pradhan",
+        "body": "One addition. Most teams lose because they argue the law they found rather than the facts they were given. Every proposition in your speech should end with _and on these facts that means_. If it does not, cut it. Good luck with the rounds."
+      },
+      {
+        "author": "Anonymous User",
+        "body": "Practise being interrupted. In my first moot I had a beautiful eight-minute speech and the bench asked a question at minute one that I never recovered from. Get a friend to interrupt you every thirty seconds. It feels rude and it is the most useful thing you can do in the last week."
+      }
+    ]
+  },
+  {
+    "title": "Specialise early, or stay general? And does starting in a chamber close the door to firms?",
+    "body": "I graduated last year and joined a litigation chamber in Delhi that does a mix of commercial and IP work. I like the IP side much more than the rest, and my senior has hinted that I could focus on it if I want. Two worries.\n\nFirst, everyone older than me says that specialising in your first two years is a mistake and that you should learn general civil procedure and evidence properly before narrowing down. Is that still true, or is it advice from a time when IP was a smaller field?\n\nSecond, and more selfishly: several of my batchmates went to firms and are already earning considerably more. I am not planning to leave, but I would like to know whether the chamber-to-firm door stays open, or whether after three or four years at the bar a firm will see me as unemployable in their model. Conversely, do firm juniors ever move to litigation chambers, and how does that go?\n\nI know this is partly a question about temperament and there is no single answer. I am asking for honest opinions, not reassurance.",
+    "category": "career",
+    "tags": ["career", "litigation", "law firms", "specialisation"],
+    "author": "Junior at a Delhi chamber",
+    "pinned": false,
+    "replies": [
+      {
+        "author": "Guest Contributor",
+        "body": "Firm-side view, and an opinion only. The chamber-to-firm door is open for longer than people think, particularly in IP, where firms value juniors who have actually stood up in court and know how an interim application goes wrong. What closes the door is not years at the bar but a lack of drafting discipline and an inability to work to a client's timetable. If you keep both sharp, you will have options at year four. The salary gap is real and it usually narrows, but not immediately."
+      },
+      {
+        "author": "Anonymous User",
+        "body": "I would push back gently on the advice to stay general. Procedure and evidence are not learned by doing a bit of everything; they are learned by doing something properly, and IP litigation involves plenty of both. The risk of specialising early is not that you miss the fundamentals. It is that you become a person who only knows one statute and cannot see the case as a whole. That is a habit of mind, and it can be avoided while doing mostly IP."
+      },
+      {
+        "author": "Adv. Rohit Pradhan",
+        "body": "Both of the above are fair. My own view: the first two years are for learning how a court works, and it matters less which subject teaches you that. If your chamber lets you lean towards IP while still sending you to the odd recovery suit and the odd cross-examination, take that arrangement and do not overthink it. Firms and chambers are not two doors; they are two rooms in the same house, and people move between them more often than the juniors in either believe."
+      }
+    ]
+  },
+  {
+    "title": "Passing off vs infringement: if the mark is registered, why plead both?",
+    "body": "A question from a final-year student trying to understand why plaints in trade mark matters almost always contain both an infringement claim and a passing off claim. If the plaintiff has a registration, infringement seems the stronger and simpler cause of action: prove the registration, prove the defendant's use of a deceptively similar mark on the same or similar goods, and the court does not need to hear about goodwill at all.\n\nSo what does the passing off claim add? Is it just belt and braces in case the registration is attacked, or does it actually give the plaintiff something the infringement claim cannot? And on the other side, are there situations where the passing off claim succeeds and the infringement claim fails, or the reverse?\n\nI have read the article on this site about similarity in passing off, which helped, but I am still unsure about the strategic reason for the double plea.",
+    "category": "trade-marks",
+    "tags": ["passing off", "infringement", "pleadings"],
+    "author": "Final-year, Bengaluru",
+    "pinned": false,
+    "replies": [
+      {
+        "author": "Junior at a Delhi chamber",
+        "body": "Three practical reasons, at least. First, registration can be attacked, and a plaintiff whose mark is cancelled mid-suit still has a passing off claim if the goodwill is real. Second, passing off reaches things registration does not: get-up, trade dress, colour schemes, the overall look of packaging, none of which may be within the registered mark. Third, the two claims can cut differently on the same facts. A defendant with a genuinely earlier reputation in a territory may defeat passing off while still being caught by infringement, and vice versa where the plaintiff's registration is narrow but its reputation is broad.\n\nSo it is not merely belt and braces. They are different rights with different evidence, and a careful plaint keeps them separate."
+      },
+      {
+        "author": "Guest Contributor",
+        "body": "Opinion: the double plea also shapes the interim hearing. Infringement is argued from the register; passing off is argued from the market. A judge who is unpersuaded that the marks are deceptively similar on paper may still be persuaded that customers are actually being confused, and the passing off evidence is what gets that in."
+      }
+    ]
+  },
+  {
+    "title": "Can a producer inside the GI region use the place name without being a registered authorised user?",
+    "body": "My family has produced a traditional foodstuff in a district that is now covered by a registered geographical indication. The registration was obtained some years ago by a producers' association that we were not part of at the time. We have always sold our product under the name of the place, because that is where it comes from and that is what customers call it.\n\nRecently a distributor told us that we cannot use the place name on our labels unless we are registered as an authorised user under the GI, and that the association could take action against us. Nobody has written to us; this is just what the distributor said.\n\nI am not asking for advice on our situation, which I understand this forum cannot give. I am asking how the system is supposed to work in general. Does a GI registration take the name away from producers who are genuinely from the place? Is being an authorised user a formality for someone who qualifies, or can the association keep people out? And is there a difference between using the name as a GI and simply stating truthfully where a product was made?",
+    "category": "geographical-indications",
+    "tags": ["geographical indications", "authorised user", "producers"],
+    "author": "Guest Contributor",
+    "pinned": false,
+    "replies": [
+      {
+        "author": "Anonymous User",
+        "body": "General principles only, and others should correct me. A GI is registered in the name of an association or organisation representing the producers, and the right to use the GI as such is exercised through registration as an authorised user. A producer in the area who meets the specification can apply to be an authorised user; the association is not meant to be a gatekeeper on grounds unrelated to the standard. Whether a producer from the region who is not registered infringes by using the name is contested. One view is that the statute confines the right of use to authorised users; the other is that truthful indication of origin by a genuine producer is not the kind of misleading use the law was aimed at. The safe route, which most people take, is to apply as an authorised user rather than test the point."
+      },
+      {
+        "author": "Junior at a Delhi chamber",
+        "body": "Adding to the above: the practical value of being an authorised user is not just protection from the association. It is standing. An authorised user can act against outsiders who misuse the name, which matters more as the product becomes known. And a distributor who is nervous about labels will usually stop being nervous once the registration certificate is in the file."
+      }
+    ]
+  },
+  {
+    "title": "Realistic timelines for interim relief in a trade mark matter: what should a small brand expect?",
+    "body": "I am in-house at a small consumer brand, not a litigator, and I am trying to set expectations internally before we decide whether to sue over a copycat product that has appeared on marketplaces in the last month. The founders have read about ex parte injunctions and assume that we will file on Monday and the copies will be gone by Friday. I suspect that is optimistic and I would like a more honest picture.\n\nIn general terms: how quickly can an ex parte order be obtained if the papers are in order, and what makes a court unwilling to grant one? Once the other side is served, how long does the contested hearing typically take to come on, and what happens to the ex parte order in the meantime? Does sending a cease-and-desist letter first help or hurt the timeline? And is there a point at which our own delay in acting starts to count against us?\n\nI understand every court and every matter is different and that this is not advice. I am looking for the shape of the thing, from people who do this.",
+    "category": "ip-litigation",
+    "tags": ["interim injunctions", "ex parte", "timelines", "marketplaces"],
+    "author": "In-house counsel, small brand",
+    "pinned": false,
+    "replies": [
+      {
+        "author": "Junior at a Delhi chamber",
+        "body": "Shape of the thing, from a junior's seat. An ex parte order can come on the first hearing if the case is urgent, the title is clean, the copying is obvious from the documents, and the affidavit is candid about everything, including your own delay. Courts refuse when any of those is missing, and increasingly they prefer to issue notice on a short date and hear both sides rather than proceed ex parte on a merely arguable case.\n\nAfter service, the rules push the court to hear the application within weeks. In practice the contested hearing can take longer to conclude, and the ex parte order usually continues until it is decided, which is why the other side fights hard to have it vacated early.\n\nOn the letter: it can help, because it shows you acted promptly and gives the defendant a chance to stop. It can hurt if it tips off a defendant who then moves stock or files first elsewhere. Which risk matters more depends on who the defendant is."
+      },
+      {
+        "author": "Anonymous User",
+        "body": "On delay: a month is not a problem. Six months of watching the listings and doing nothing starts to be one, because you will be asked why the harm became irreparable only when you decided to sue. Document when you found out and what you did about it."
+      },
+      {
+        "author": "Adv. Rohit Pradhan",
+        "body": "Nothing to add on timelines, which the replies above describe fairly. One point of emphasis. The founders should understand that an ex parte order is obtained on your word alone, and that the fastest way to lose it, and the court's confidence, is to leave something out of the affidavit. Speed and candour are not in tension; the second is what makes the first possible. As always, this is a general observation and not advice on your matter."
+      }
+    ]
+  },
+  {
+    "title": "Product shape: register the design, or rely on copyright in the drawings?",
+    "body": "I am an industrial designer working with a small manufacturer on a range of home products. We have detailed drawings, renders and a prototype. The client's view is that because the drawings are original artistic works, copyright already protects the product shape and design registration is an unnecessary expense. I have a vague sense that this is wrong for products made in quantity, but I cannot explain why in a way the client accepts.\n\nCan someone explain, in general terms, how the design and copyright regimes interact for a mass-produced product in India? Specifically: does copyright in the drawings survive once the product is in production? Does showing the prototype at a trade fair before filing cause a problem for registration? And if we do register, what does the registration actually stop a competitor doing that copyright would not?\n\nI am asking so that I can have an informed conversation with the client, not for advice on this project.",
+    "category": "designs",
+    "tags": ["designs", "copyright", "product design"],
+    "author": "Product designer, Mumbai",
+    "pinned": false,
+    "replies": [
+      {
+        "author": "Guest Contributor",
+        "body": "General position, as I understand it. Copyright in the drawings does not disappear, but it stops being useful against product copies once the article has been reproduced by an industrial process beyond a small number of copies (fifty, under the present statute) if the design was capable of registration and was not registered. So for anything made in quantity, the drawings will not save you. A registered design, by contrast, gives a right against anyone who applies the design or an obvious imitation of it to that class of article, without any need to prove copying.\n\nOn the trade fair: prior publication is a ground for cancellation, so the working rule is file first, show later. There are limited exceptions for certain exhibitions, but I would not plan around them."
+      },
+      {
+        "author": "Junior at a Delhi chamber",
+        "body": "One more thing to tell the client. A design registration is examined against the prior art at the enforcement stage, not just at filing. If the shape is a small variation on what is already on the market, the registration may be granted and still fail when it is tested. So the money is well spent on a genuinely new look and less well spent on a routine one. That is a judgment the designer is better placed to make than the lawyer."
+      }
+    ]
+  },
+  {
+    "title": "Arbitration clause in a software licence: does it cover an infringement claim after termination?",
+    "body": "We licensed our software to a customer under an agreement with a fairly standard arbitration clause covering disputes arising out of or in connection with the agreement. We terminated for non-payment. The customer has continued to use the software after termination, which in our view is both a breach of the surviving obligations and an infringement of our copyright.\n\nOur question is about forum, not merits. Do we have to go to arbitration for the whole thing, including the infringement claim, because of the clause? Or can we sue for infringement in court on the footing that after termination there is no contract and the clause no longer applies? Counsel we have spoken to informally are split, and one of them said that copyright claims are in rem and therefore never arbitrable, which seems too strong.\n\nWe would also like to understand whether a tribunal could grant an injunction against continued use, or whether that is something only a court can do. Hypothetically speaking, of course; I am not looking for advice on this contract.",
+    "category": "arbitration",
+    "tags": ["arbitration", "licensing", "copyright", "arbitrability"],
+    "author": "Anonymous User",
+    "pinned": false,
+    "replies": [
+      {
+        "author": "Guest Contributor",
+        "body": "Opinion, not advice. The in rem objection is at its strongest where the dispute is about whether the right exists or should be on a register. It is at its weakest where the parties are in a licensing relationship and the question is whether one of them is using the work outside the terms they agreed. A claim that a former licensee is continuing to use the software after termination is, in substance, a dispute arising out of the licence, and a broadly worded clause will generally be read to catch it. Termination does not kill the clause; arbitration agreements are ordinarily treated as surviving the contract they sit in.\n\nAs to injunctions, a tribunal can restrain a party from acting in breach of contract, and courts can grant interim measures in aid of arbitration. Whether the interim relief is quicker in court is a practical question and often the decisive one."
+      },
+      {
+        "author": "Adv. Rohit Pradhan",
+        "body": "The article on this site on arbitrability goes through the reasoning in more detail. Two cautions. First, the position that infringement claims between contracting parties are referable to arbitration is a reasonable reading of the authorities, not a settled rule, and a determined opponent can make it expensive to establish. Second, if the other side raises validity or ownership as a defence, be ready for an argument that the dispute has become non-arbitrable. Neither is a reason to avoid arbitration; both are reasons to have counsel look at the clause before choosing the forum."
+      }
+    ]
+  }
+]
