@@ -7,12 +7,20 @@
 name: Fetch artwork
 
 on:
+  # Runs on its own whenever the manifests change (on any branch) …
+  push:
+    paths:
+      - "content/artwork/manifest.json"
+      - "content/artwork/candidates.json"
+      - "scripts/fetch-artwork.mjs"
+      - ".github/workflows/artwork.yml"
+  # … and can also be started by hand from the Actions tab.
   workflow_dispatch:
     inputs:
       candidates:
         description: "Also convert content/artwork/candidates.json into public/art/candidates (review copies)"
         type: boolean
-        default: false
+        default: true
 
 permissions:
   contents: write
@@ -32,7 +40,7 @@ jobs:
       - name: Fetch and convert
         env:
           NODE_PATH: /tmp/art/node_modules
-          WITH_CANDIDATES: ${{ inputs.candidates }}
+          WITH_CANDIDATES: ${{ github.event_name == 'push' || inputs.candidates }}
         run: node scripts/fetch-artwork.mjs
       - name: Commit the converted files
         run: |
