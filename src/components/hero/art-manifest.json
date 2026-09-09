@@ -6,7 +6,7 @@
       "height": 1328,
       "aspect": 1.506,
       "focal": [
-        0.7,
+        0.68,
         0.5
       ],
       "lqip": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAADwAwCdASoYABAALrV2u12jqampiYC0S2AE6ZQYwASadoEWdyhweFUgAP7r+2YaI9snSxODCyvsW2qpbK7TwEoEodBZE+Lglzo9iV73CjMHMRxYYZy54f36B3xK3Bfr8TC2EoIgtAAAAA==",
@@ -19,7 +19,7 @@
       "height": 1328,
       "aspect": 1.506,
       "focal": [
-        0.45,
+        0.4,
         0.5
       ],
       "lqip": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACwAwCdASoYABAAPu1iqU2ppaOiMAgBMB2JYwCdACPzo1w1OCkbHAD+zveVopBkz5fVIkSCMYZDExuLssfJXXzhvmCf0LZjDNMG240tcDi9OShIAAA=",
@@ -32,8 +32,8 @@
       "height": 1328,
       "aspect": 1.506,
       "focal": [
-        0.42,
-        0.6
+        0.58,
+        0.55
       ],
       "lqip": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAAAQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JagCdK78AvxIH5U7ewqObhAD+6eqwLsbHGXBlw8XLHhCcaDT0u3ZLJecCsI7+BJHs+GmwdnfaCa3ESbfEBVz09xMe2VPcT8Y94pZAwLcjDxCgAAA=",
       "sourceWidth": 2048,
@@ -45,8 +45,8 @@
       "height": 1328,
       "aspect": 1.506,
       "focal": [
-        0.36,
-        0.55
+        0.32,
+        0.5
       ],
       "lqip": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAACQAwCdASoYABAAPu1iqU2ppaOiMAgBMB2JYwCdAAxT08iQGmBAAJ7igoWSHsr3KpEX32YuWh9R6xbxJFXj7h0Dcjlq4e9pWiqV/DklaLFsZgAA",
       "sourceWidth": 2048,
@@ -58,8 +58,8 @@
       "height": 1328,
       "aspect": 1.506,
       "focal": [
-        0.64,
-        0.55
+        0.66,
+        0.5
       ],
       "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAAAwBACdASoYABAAPu1iqk2ppaQiMAgBMB2JZQC/OB4UVLb881G/tb2WEwAA/uc/KyyCChPZrymtlJ3ZD/An3XFE9wJvRdccNd07o5itT+59a/vcRHW/VWCj5VEXgGZkKOWxno3uLpETGwrvslfVgAAA",
       "sourceWidth": 2048,
@@ -71,7 +71,7 @@
       "height": 1328,
       "aspect": 1.506,
       "focal": [
-        0.38,
+        0.35,
         0.55
       ],
       "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAABwBACdASoYABAAPu1iqU2ppaOiMAgBMB2JYgCdMoADZYPqDN04gc/Vs9W8AAD+8rCSU8kxP6o6eAGJxUqFtFPRmMCoZcur3N7Ss4G8GxCkDVTQFggjThLnoZZhqeflGexSNA92sK2xNtX7OvO6/YIA",
@@ -84,8 +84,8 @@
       "height": 1328,
       "aspect": 1.506,
       "focal": [
-        0.3,
-        0.6
+        0.35,
+        0.65
       ],
       "lqip": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAABwBACdASoYABAAPu1iqU2ppaOiMAgBMB2JagCdMoACtbKRjnMSHL7MO6yoAAD+7qFeA0D4SsOUpVcLePOpjToG0gu7ZFQK/WvIsQ4iuPkSY578VGXvJ6VYtV138WisLVCHe0V27OHYu9GfQ0G3RQ2HpdzfdetP91AAAA==",
       "sourceWidth": 2048,
@@ -97,8 +97,8 @@
       "height": 1328,
       "aspect": 1.506,
       "focal": [
-        0.62,
-        0.5
+        0.68,
+        0.55
       ],
       "lqip": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAAAQBACdASoYABAAPu1kqk2ppaQiMAgBMB2JYgCdMoADQIidN/70xNOuAAD+6+Nc+vbWtL/QQ+C6uIuoBeES8uoNTo04AB0SyB/fxgpVD649EYM4boNYe954UPkvMIHkv3eYUvkxpHDL4P2ehY0i2DtQfeD810pzHeFRFD6/tAr3/5J8/utwz6o/MwCkANLOk2swQ9gzewAAAA==",
       "sourceWidth": 2048,
