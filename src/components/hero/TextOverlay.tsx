@@ -21,10 +21,15 @@ export function TextOverlay({ className }: { className?: string }) {
     const root = rootRef.current;
     if (!root) return;
     const nodes = Array.from(root.querySelectorAll<HTMLElement>("[data-caption]"));
+    // The closing title card takes the stage to itself: while it is visible, the other captions of
+    // its scene fade out with it instead of showing through underneath.
+    const wordmarkIndex = captions.findIndex((c) => c.style === "wordmark");
     const apply = (progress: number) => {
+      const wordmarkO = wordmarkIndex >= 0 ? captionOpacity(progress, captions[wordmarkIndex]) : 0;
       nodes.forEach((node, i) => {
         const c = captions[i];
-        const o = captionOpacity(progress, c);
+        let o = captionOpacity(progress, c);
+        if (wordmarkO > 0 && i !== wordmarkIndex && c.sceneId === captions[wordmarkIndex].sceneId) o *= 1 - wordmarkO;
         node.style.opacity = o.toFixed(3);
         const dir = c.align === "right" ? -1 : 1;
         const drift = (1 - o) * 18 * dir;
@@ -51,13 +56,16 @@ export function TextOverlay({ className }: { className?: string }) {
 function CaptionBlock({ caption, first }: { caption: Caption & { sceneId: string }; first: boolean }) {
   const align = caption.align ?? "left";
   const wordmark = caption.style === "wordmark";
+  // A "scrim" side caption is a footnote to the scene's main caption: it sits low so the two never overlap.
+  const footnote = caption.style === "scrim" && align === "left";
   return (
     <section
       data-caption
       data-scene={caption.sceneId}
       className={cn(
         "absolute flex w-[min(34rem,82vw)] flex-col will-change-[opacity,transform]",
-        align === "left" && "left-[var(--page-x)] bottom-[15vh] items-start text-left md:bottom-auto md:top-1/2 md:-translate-y-1/2",
+        footnote && "left-[var(--page-x)] bottom-[15vh] w-[min(26rem,82vw)] items-start text-left md:bottom-[12vh]",
+        align === "left" && !footnote && "left-[var(--page-x)] bottom-[15vh] items-start text-left md:bottom-auto md:top-1/2 md:-translate-y-1/2",
         align === "right" && "right-[var(--page-x)] bottom-[15vh] items-end text-right md:bottom-auto md:top-1/2 md:-translate-y-1/2",
         align === "center" && !wordmark && "left-1/2 top-[17vh] -translate-x-1/2 items-center text-center md:top-[21vh]",
         // The closing title card sits in the middle of the stage, clear of the caption above it.
@@ -80,7 +88,7 @@ function CaptionBlock({ caption, first }: { caption: Caption & { sceneId: string
       ) : wordmark ? (
         <h2 className="font-display text-shadow-soft text-[clamp(1.75rem,7.4vw,6.5rem)] font-normal uppercase leading-none tracking-[0.18em]">{caption.title}</h2>
       ) : (
-        <h2 className={cn("text-shadow-soft", align === "center" ? "display-lg" : "display-md")}>{caption.title}</h2>
+        <h2 className={cn("text-shadow-soft", align === "center" ? "display-lg" : footnote ? "display-sm" : "display-md")}>{caption.title}</h2>
       )}
       {caption.body ? (
         <p className={cn("lede mt-5 max-w-md text-shadow-soft", first && "font-body text-sm tracking-[0.06em] uppercase opacity-80")}>{caption.body}</p>
