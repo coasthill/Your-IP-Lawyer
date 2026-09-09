@@ -1,4 +1,13 @@
 {
   "note": "Scene stills for the homepage. Each 'source' is a URL the Fetch artwork workflow downloads and converts; 'focal' is the x,y point (0–1, from the top-left) that must stay in frame when the picture is cropped on narrow screens. The prompts used to make them are in prompts.json.",
-  "scenes": []
+  "scenes": [
+    { "id": "advocate", "focal": [0.7, 0.5], "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_041020_ca2e181f-7e15-441f-bccf-39bee590c202.png" },
+    { "id": "gown", "focal": [0.45, 0.5], "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_074721_c9baa5d7-f554-4b16-bb4f-342870dcf430.png" },
+    { "id": "gavel", "focal": [0.42, 0.6], "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_074721_59d17a81-608f-4e29-b2f4-c37dfc949b12.png" },
+    { "id": "patent", "focal": [0.36, 0.55], "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_074721_f546f63b-cbcc-4461-a5a7-6a5346193c9e.png" },
+    { "id": "design", "focal": [0.64, 0.55], "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_074720_590cf39d-989e-487c-ad06-ea57a51c6eb2.png" },
+    { "id": "trademark", "focal": [0.38, 0.55], "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_074721_ecc66a6f-c23b-4d5b-b988-6555f02d7739.png" },
+    { "id": "gi", "focal": [0.3, 0.6], "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_074932_e60e0093-3767-474a-a7aa-a5218bea5584.png" },
+    { "id": "legal-world", "focal": [0.62, 0.5], "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_074721_d474ab3a-9ead-4a81-8c6b-fbfbce1148a6.png" }
+  ]
 }
