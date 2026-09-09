@@ -55,7 +55,12 @@ export function CopyAddressButton({ value, className, label = "Copy address" }: 
 
   return (
     <>
-      <button type="button" onClick={copy} className={cn("btn btn-sm", state === "copied" && "border-bronze-2 text-bronze-2", className)} aria-label={`${label}: ${value}`}>
+      <button
+        type="button"
+        onClick={copy}
+        className={cn("btn btn-sm", state === "copied" && "border-lapis text-lapis in-[.surface-lapis]:border-bronze-2 in-[.surface-lapis]:text-bronze-2 in-[.surface-deep]:border-bronze-2 in-[.surface-deep]:text-bronze-2", className)}
+        aria-label={`${label}: ${value}`}
+      >
         {text}
       </button>
       <span role="status" aria-live="polite" className="sr-only">

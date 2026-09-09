@@ -3,8 +3,8 @@ import type { Category } from "@/db/schema";
 import { cn } from "@/lib/utils";
 
 /**
- * Horizontal chip row of blog categories. Bleeds to the viewport edge on small screens and
- * scrolls inside itself, so it never widens the page.
+ * Horizontal row of category pills. Bleeds to the viewport edge on small screens and
+ * scrolls inside itself, so it never widens the page. The active pill is solid ink.
  *
  * `current`: a category slug highlights that chip; `null` highlights "All"; `undefined` highlights nothing (tag pages).
  */
@@ -25,7 +25,7 @@ export function CategoryNav({ categories, current, className }: { categories: Ca
                 aria-current={active ? "page" : undefined}
                 className={cn(
                   "chip whitespace-nowrap transition-colors duration-300",
-                  active ? "border-bronze-2 bg-bronze/15 text-ivory" : "hover:border-current hover:text-ivory",
+                  active ? "border-ink bg-ink text-ivory" : "hover:border-current hover:text-lapis",
                 )}
               >
                 {item.name}

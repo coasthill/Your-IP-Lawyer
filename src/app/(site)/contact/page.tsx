@@ -17,7 +17,7 @@ const SUBJECTS: RecordItem[] = [
     body: (
       <>
         You read a judgment and think it was wrongly decided, or rightly decided for the wrong reasons. Say so in eight hundred words. The{" "}
-        <Link href="/submission-guidelines" className="link-underline text-parchment">
+        <Link href="/submission-guidelines" className="link-underline text-ivory">
           submission guidelines
         </Link>{" "}
         will save us both a round of emails.
@@ -29,7 +29,7 @@ const SUBJECTS: RecordItem[] = [
     body: (
       <>
         If other people would benefit from seeing the answer, put it to{" "}
-        <Link href="/forum" className="link-underline text-parchment">
+        <Link href="/forum" className="link-underline text-ivory">
           the forum
         </Link>{" "}
         rather than to this inbox. If it is a question about how the forum itself works, or something you would rather raise quietly, write.
@@ -46,10 +46,16 @@ export default function ContactPage() {
   const email = siteConfig.contactEmail;
   return (
     <>
-      <PageMasthead size="xl" eyebrow="Contact" title="Have something to say?" lede="No form, no ticket number, no auto-reply. One address, read by one person." />
+      <PageMasthead
+        size="xl"
+        eyebrow="Contact"
+        title="Have something to say?"
+        lede="No form, no ticket number, no auto-reply. One address, read by one person."
+        className="surface-lapis"
+      />
 
-      {/* The address */}
-      <section className="relative bg-ink" aria-labelledby="address-heading">
+      {/* The address, on the lapis wall */}
+      <section className="surface-lapis relative" aria-labelledby="address-heading">
         <div className="container-editorial pt-4 pb-20 md:pt-8 md:pb-28">
           <p id="address-heading" className="eyebrow-muted">
             The address
@@ -69,8 +75,8 @@ export default function ContactPage() {
 
           <div className="mt-12 grid gap-14 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-7">
-              <p className="eyebrow">What to write about</p>
-              <RecordList items={SUBJECTS} className="mt-6" />
+              <p className="eyebrow eyebrow-mark">What to write about</p>
+              <RecordList items={SUBJECTS} tone="ink" className="mt-6" />
             </div>
 
             <aside className="lg:col-span-4 lg:col-start-9" aria-labelledby="replies-heading">
@@ -83,7 +89,7 @@ export default function ContactPage() {
               </p>
               <p className="mt-4 text-sm leading-relaxed text-bone">If a fortnight passes in silence, a short reminder is entirely in order.</p>
 
-              <div className="mt-12 border-t border-bronze/15 pt-8">
+              <div className="mt-12 border-t pt-8">
                 <p className="eyebrow-muted">A necessary note</p>
                 <p className="mt-4 text-sm leading-relaxed text-bone">
                   Please do not send confidential information about any matter by email: no pleadings, no documents, no facts of a live dispute. Writing to

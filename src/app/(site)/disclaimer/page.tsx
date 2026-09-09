@@ -68,7 +68,7 @@ const TERMS: RecordItem[] = [
   {
     id: "jurisdiction",
     title: siteConfig.footer.jurisdictionHeading,
-    body: <p className="font-display text-lg italic leading-relaxed text-parchment/85">{siteConfig.footer.jurisdiction}</p>,
+    body: <p className="font-display text-lg italic leading-relaxed text-graphite">{siteConfig.footer.jurisdiction}</p>,
   },
 ];
 
@@ -77,22 +77,22 @@ export default function DisclaimerPage() {
     <>
       <PageMasthead eyebrow="Disclaimer" title="A few necessary words." lede="Short, because you have better things to read. Meant, because we do." />
 
-      <section className="relative bg-ink" aria-labelledby="terms-heading">
+      <section className="relative" aria-labelledby="terms-heading">
         <div className="container-editorial pt-4 pb-24 md:pt-8 md:pb-32">
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-3">
-              <p id="terms-heading" className="eyebrow">
+              <p id="terms-heading" className="eyebrow eyebrow-mark">
                 The terms
               </p>
-              <p className="mt-4 max-w-xs text-sm leading-relaxed text-bone">
+              <p className="mt-4 max-w-xs text-sm leading-relaxed text-graphite">
                 Six points. They apply to every page of {siteConfig.name}, to the forum, and to anything sent to its address.
               </p>
             </div>
             <div className="lg:col-span-8 lg:col-start-5">
               <RecordList items={TERMS} bodyClassName="text-base [&_p]:max-w-2xl" />
-              <p className="mt-10 text-sm text-bone">
+              <p className="mt-10 text-sm text-graphite">
                 A question about any of this?{" "}
-                <Link href="/contact" className="link-underline text-parchment">
+                <Link href="/contact" className="link-underline text-lapis">
                   Write.
                 </Link>
               </p>

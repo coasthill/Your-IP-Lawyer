@@ -40,33 +40,33 @@ const PURPOSES = [
 
 function Purpose() {
   return (
-    <section className="relative border-t border-bronze/15 bg-ink" aria-labelledby="purpose-heading">
+    <section className="relative border-t" aria-labelledby="purpose-heading">
       <div className="container-editorial py-24 md:py-36">
         <div className="grid gap-14 md:grid-cols-12">
           <div className="md:col-span-7">
-            <Eyebrow className="mb-6">The website</Eyebrow>
+            <Eyebrow className="eyebrow-mark mb-6">The website</Eyebrow>
             <h2 id="purpose-heading" className="display-lg">
               Intellectual property.
               <br />
-              <span className="italic text-parchment/80">Without the boring part.</span>
+              <span className="italic text-lapis">Without the boring part.</span>
             </h2>
             <p className="lede mt-8 max-w-xl">
               {siteConfig.name} is a platform for thinking out loud about intellectual property law in India: commentary, case analysis, practical insight,
               discussion, and the long process of learning how the law behaves in a courtroom.
             </p>
-            <p className="mt-6 max-w-xl text-base text-bone">
+            <p className="mt-6 max-w-xl text-base text-graphite">
               It is written by a practising IP litigation lawyer and open to anyone who wants to read, argue, or write. Nothing here is legal advice. Everything here is
               meant to be worth your time.
             </p>
           </div>
           <div className="md:col-span-5">
-            <ol className="divide-y divide-bronze/15 border-y border-bronze/15">
+            <ol className="divide-y border-y">
               {PURPOSES.map(([title, body], i) => (
                 <li key={title} className="grid grid-cols-[3rem_1fr] gap-4 py-4">
-                  <span className="font-mono text-[0.62rem] tracking-[0.2em] text-bronze-2 pt-1">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="font-mono text-[0.62rem] tracking-[0.2em] text-lapis pt-1">{String(i + 1).padStart(2, "0")}</span>
                   <div>
-                    <p className="font-display text-xl text-ivory">{title}</p>
-                    <p className="mt-1 text-sm text-bone/80">{body}</p>
+                    <p className="font-display text-xl text-ink">{title}</p>
+                    <p className="mt-1 text-sm text-slate">{body}</p>
                   </div>
                 </li>
               ))}
@@ -89,15 +89,15 @@ async function FromTheBlog() {
     /* database unavailable — render the invitation only */
   }
   return (
-    <section className="paper relative grain" aria-labelledby="blog-heading">
-      <div className="container-editorial relative z-[2] py-24 md:py-32">
+    <section className="paper relative border-t" aria-labelledby="blog-heading">
+      <div className="container-editorial py-24 md:py-32">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <Eyebrow className="mb-4">The publication</Eyebrow>
+            <Eyebrow className="eyebrow-mark mb-4">The publication</Eyebrow>
             <h2 id="blog-heading" className="display-md">
               From the blog
             </h2>
-            <p className="mt-3 text-sm opacity-70">Filed under: things worth reading.</p>
+            <p className="mt-3 text-sm text-ash">Filed under: things worth reading.</p>
           </div>
           <ButtonLink href="/blog" size="sm">
             All articles <Arrow />
@@ -108,7 +108,7 @@ async function FromTheBlog() {
           <>
             <PostCard post={featured} variant="featured" priority />
             {latest.length ? (
-              <div className="mt-14 grid gap-10 border-t border-ink/10 pt-10 md:grid-cols-3">
+              <div className="mt-14 grid gap-10 border-t pt-10 md:grid-cols-3">
                 {latest.map((p) => (
                   <PostCard key={p.id} post={p} variant="standard" />
                 ))}
@@ -131,11 +131,11 @@ async function FromTheForum() {
     /* database unavailable */
   }
   return (
-    <section className="relative border-t border-bronze/15 bg-ink" aria-labelledby="forum-heading">
+    <section className="surface-lapis relative" aria-labelledby="forum-heading">
       <div className="container-editorial py-24 md:py-32">
         <div className="grid gap-12 md:grid-cols-12">
           <div className="md:col-span-4">
-            <Eyebrow className="mb-4">The community</Eyebrow>
+            <Eyebrow className="eyebrow-mark mb-4">The community</Eyebrow>
             <h2 id="forum-heading" className="display-md">
               The IP Forum
             </h2>
@@ -155,7 +155,7 @@ async function FromTheForum() {
           </div>
           <div className="md:col-span-8">
             {threads.length ? (
-              <div className="border-t border-bronze/15">
+              <div className="border-t">
                 {threads.map((t) => (
                   <ThreadRow key={t.id} thread={t} compact />
                 ))}
@@ -175,16 +175,21 @@ async function FromTheForum() {
 
 function AboutTeaser() {
   return (
-    <section className="relative border-t border-bronze/15 bg-ink-2" aria-labelledby="about-heading">
+    <section className="relative" aria-labelledby="about-heading">
       <div className="container-editorial py-24 md:py-32">
         <div className="grid gap-12 md:grid-cols-12 md:items-center">
           <div className="md:col-span-3">
-            <div className="relative aspect-[3/4] overflow-hidden border border-bronze/20 bg-charcoal grain vignette">
+            <div className="relative aspect-[3/4] overflow-hidden border bg-lapis-3 shadow-[var(--shadow-plate)] grain vignette">
               <svg viewBox="0 0 300 400" className="absolute inset-0 h-full w-full" aria-hidden="true">
                 <defs>
+                  <linearGradient id="about-wall" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stopColor="#1b5ad6" />
+                    <stop offset="1" stopColor="#0f2f7c" />
+                  </linearGradient>
                   <radialGradient id="about-key" cx="30%" cy="18%" r="70%">
-                    <stop offset="0" stopColor="#f2d9b4" stopOpacity="0.32" />
-                    <stop offset="1" stopColor="#09090b" stopOpacity="0" />
+                    <stop offset="0" stopColor="#fbfaf7" stopOpacity="0.42" />
+                    <stop offset="0.5" stopColor="#f6ecd2" stopOpacity="0.1" />
+                    <stop offset="1" stopColor="#0f2f7c" stopOpacity="0" />
                   </radialGradient>
                   <linearGradient id="about-gown" x1="0" y1="0" x2="1" y2="1">
                     <stop offset="0" stopColor="#2a2a31" />
@@ -192,23 +197,24 @@ function AboutTeaser() {
                     <stop offset="1" stopColor="#050506" />
                   </linearGradient>
                 </defs>
-                <rect width="300" height="400" fill="#0f0f12" />
+                <rect width="300" height="400" fill="url(#about-wall)" />
                 <rect width="300" height="400" fill="url(#about-key)" />
+                <rect x="30" y="40" width="240" height="280" fill="none" stroke="#d9b653" strokeOpacity="0.22" />
                 <path d="M150 112c-26 0-44 18-52 44l-44 210c-2 10 4 18 14 18h164c10 0 16-8 14-18l-44-210c-8-26-26-44-52-44z" fill="url(#about-gown)" />
                 <path d="M118 126c8-10 20-14 32-14s24 4 32 14l-6 12c-8-6-16-9-26-9s-18 3-26 9z" fill="#1c1c22" />
                 <ellipse cx="150" cy="86" rx="26" ry="32" fill="#141417" />
                 <path d="M126 74c8-14 40-14 48 0-4-10-14-16-24-16s-20 6-24 16z" fill="#1a1a1f" />
-                <path d="M141 122l4 30 5-30zM159 122l-4 30-5-30z" fill="#f1eadb" opacity="0.92" />
+                <path d="M141 122l4 30 5-30zM159 122l-4 30-5-30z" fill="#fbfaf7" opacity="0.94" />
                 <path d="M150 112c-26 0-44 18-52 44l-44 210c-2 10 4 18 14 18h20L98 172c6-24 22-40 44-46z" fill="#3a3a44" opacity="0.28" />
               </svg>
             </div>
           </div>
           <div className="md:col-span-8 md:col-start-5">
-            <Eyebrow className="mb-4">About</Eyebrow>
+            <Eyebrow className="eyebrow-mark mb-4">About</Eyebrow>
             <h2 id="about-heading" className="display-md">
               {siteConfig.author.name}
             </h2>
-            <p className="mt-2 font-mono text-[0.68rem] uppercase tracking-[0.2em] text-bone">
+            <p className="mt-2 font-mono text-[0.68rem] uppercase tracking-[0.2em] text-ash">
               {siteConfig.author.title} · {siteConfig.author.location}
             </p>
             <p className="lede mt-6 max-w-2xl">
@@ -229,9 +235,9 @@ function AboutTeaser() {
 
 function ContactTeaser() {
   return (
-    <section className="relative border-t border-bronze/15 bg-ink" aria-labelledby="contact-heading">
+    <section className="surface-lapis relative" aria-labelledby="contact-heading">
       <div className="container-editorial py-24 md:py-32">
-        <Eyebrow className="mb-6">Contact</Eyebrow>
+        <Eyebrow className="eyebrow-mark mb-6">Contact</Eyebrow>
         <h2 id="contact-heading" className="display-xl">
           Have something
           <br />
@@ -242,7 +248,7 @@ function ContactTeaser() {
           {siteConfig.contactEmail}
         </a>
         <div className="mt-10 flex flex-wrap gap-3">
-          <ButtonLink href="/contact" size="sm">
+          <ButtonLink href="/contact" variant="solid" size="sm">
             Contact page
           </ButtonLink>
           <Link href="/submission-guidelines" className="btn btn-sm btn-ghost">
@@ -256,7 +262,7 @@ function ContactTeaser() {
 
 function SectionSkeleton({ paper }: { paper?: boolean }) {
   return (
-    <section className={paper ? "paper" : "bg-ink"} aria-hidden="true">
+    <section className={paper ? "paper" : "surface-lapis"} aria-hidden="true">
       <div className="container-editorial py-24 md:py-32">
         <div className="h-3 w-24 rounded-sm bg-current opacity-10" />
         <div className="mt-6 h-10 w-2/3 rounded-sm bg-current opacity-10" />

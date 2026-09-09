@@ -61,7 +61,7 @@ function CaptionBlock({ caption, first }: { caption: Caption & { sceneId: string
         align === "right" && "right-[var(--page-x)] bottom-[15vh] items-end text-right md:bottom-auto md:top-1/2 md:-translate-y-1/2",
         align === "center" && !wordmark && "left-1/2 top-[17vh] -translate-x-1/2 items-center text-center md:top-[21vh]",
         // The closing title card sits in the middle of the stage, clear of the caption above it.
-        wordmark && "left-1/2 top-[58%] w-[min(60rem,94vw)] -translate-x-1/2 -translate-y-1/2 items-center text-center",
+        wordmark && "left-1/2 top-[76%] w-[min(60rem,94vw)] -translate-x-1/2 -translate-y-1/2 items-center text-center",
       )}
       style={{ opacity: first ? 1 : 0 }}
     >

@@ -26,7 +26,7 @@ export function Turnstile({ className }: { className?: string }) {
     let widgetId: string | undefined;
     const render = () => {
       if (!ref.current || !window.turnstile) return;
-      widgetId = window.turnstile.render(ref.current, { sitekey: siteKey, theme: "dark", size: "flexible" });
+      widgetId = window.turnstile.render(ref.current, { sitekey: siteKey, theme: "light", size: "flexible" });
     };
     if (window.turnstile) render();
     else {

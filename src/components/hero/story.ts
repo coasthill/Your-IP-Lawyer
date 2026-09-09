@@ -234,7 +234,7 @@ export const FILM: Beat[] = [
     start: 0.34,
     end: 0.42,
     tone: "lapis",
-    media: { kind: "clip", clip: "strike", fallback: "gavel", keyframes: [[0, 0], [(GAVEL_STRIKE_AT - 0.34) / 0.08, 0.68], [1, 1]] },
+    media: { kind: "clip", clip: "strike", fallback: "gavel", keyframes: [[0, 0], [(GAVEL_STRIKE_AT - 0.34) / 0.08, 0.74], [1, 1]] }, // 0.74 × 49 → frame 37 (f037.webp), the moment of contact; f034 is still the raised gavel, f038 the dust
     alt: "A wooden gavel with a brass band is raised above its sound block on a marble table and comes down.",
   },
   {

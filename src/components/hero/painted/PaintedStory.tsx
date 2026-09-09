@@ -118,6 +118,7 @@ export function PaintedStory({ onReady, onFail }: { onReady: () => void; onFail:
     let lastT = performance.now();
     let raf = 0;
     let readySent = false;
+    let disposed = false;
     let lastRender = 0;
     let lastFrameKey = "";
 
@@ -186,18 +187,20 @@ export function PaintedStory({ onReady, onFail }: { onReady: () => void; onFail:
     raf = requestAnimationFrame(render);
     // Never keep the loader waiting on a slow network: the placeholder counts as a first frame after 4s.
     void set.first.then(() => {
-      if (!readySent) {
+      if (!disposed && !readySent) {
         readySent = true;
         onReady();
       }
     });
 
     return () => {
+      disposed = true;
       cancelAnimationFrame(raf);
       ro.disconnect();
       io.disconnect();
       set.cancel();
       slots.forEach((s) => gl.deleteTexture(s.tex));
+      gl.deleteProgram(program);
       // The context is deliberately not "lost" here: React's development double-mount would
       // re-acquire the same (dead) context from the canvas and every shader would fail to compile.
     };

@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 export const size = { width: 64, height: 64 };
 export const contentType = "image/png";
 
-/** Browser-tab icon: a bronze ® on ink. */
+/** Browser-tab icon: a gold ® on lapis. */
 export default async function Icon() {
   const fonts = await loadOgFonts();
   return new ImageResponse(<IconMark size={size.width} />, { ...size, fonts });

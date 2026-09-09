@@ -112,7 +112,7 @@ vec3 pick(sampler2D tex, vec2 uv, vec2 size, vec2 focal, vec3 drift) {
   // the surround: the same picture, cover-fitted, far down the mip chain and darkened to 35 %
   vec2 q = coverUv(uv, size, focal, vec3(1.15, 0.0, 0.0));
   vec3 amb = texture2D(tex, q, 6.0).rgb * 0.5 + texture2D(tex, q + vec2(0.03, 0.02), 6.0).rgb * 0.25 + texture2D(tex, q - vec2(0.03, 0.02), 6.0).rgb * 0.25;
-  return mix(amb * 0.35, c, inside);
+  return mix(amb * 0.45, c, inside);
 }
 vec3 pickA(vec2 uv) { return pick(uTexA, uv, uSizeA, uFocalA, uDriftA); }
 vec3 pickB(vec2 uv) { return pick(uTexB, uv, uSizeB, uFocalB, uDriftB); }
@@ -184,7 +184,8 @@ void main() {
     vec2 c = radial(uv);
     float d = length(c);
     float front = t2 * 1.2 - 0.05;
-    float band = exp(-pow((d - front) * 5.0, 2.0));
+    float bd = (d - front) * 5.0;                    // (pow() is undefined for a negative base in GLSL ES)
+    float band = exp(-bd * bd);
     float ring = sin(d * 34.0 - t2 * 14.0) * 0.016 * sin(t2 * PI) * band;
     vec2 disp = (t < 0.5) ? vec2(0.0) : normalize(c + 1e-5) * ring;
     vec3 pic = (t < 0.5) ? pickA(uv) : pickB(uv + disp);
@@ -208,9 +209,12 @@ void main() {
     vec2 c = radial(uv);
     float d = length(c);
     vec2 dir = normalize(c + 1e-5);
-    float front = t * 1.25 - 0.08;                    // the wavefront radius, growing outward
-    float band = exp(-pow((d - front) * 4.5, 2.0));   // the main wave around the front
-    float ribbon = exp(-pow((d - front + 0.16) * 14.0, 2.0));   // a thinner ribbon trailing it
+    float maxR = length(radial(vec2(1.0)));           // the corner of the frame, whatever the aspect
+    float front = t * (maxR + 0.2) - 0.08;            // the wavefront radius, growing outward past the corners
+    float bd = (d - front) * 4.5;                     // (pow() is undefined for a negative base in GLSL ES)
+    float band = exp(-bd * bd);                       // the main wave around the front
+    float rd = (d - front + 0.16) * 14.0;
+    float ribbon = exp(-rd * rd);                     // a thinner ribbon trailing it
     float amp = 0.028 * bell;
     float wave = sin(d * 42.0 - uTime * 6.0) * amp * band + sin(d * 90.0 - uTime * 9.0) * amp * 0.4 * ribbon;
     vec2 disp = dir * wave;

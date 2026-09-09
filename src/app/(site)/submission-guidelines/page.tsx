@@ -41,7 +41,7 @@ const WORD_COUNTS = [
 function Guideline({ n, id, title, children }: { n: number; id: string; title: string; children: ReactNode }) {
   const num = String(n).padStart(2, "0");
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className="scroll-mt-28 border-t border-ink/15 py-10 first:border-t-0 first:pt-0 md:py-12">
+    <section id={id} aria-labelledby={`${id}-title`} className="scroll-mt-28 border-t py-10 first:border-t-0 first:pt-0 md:py-12">
       <div className="grid gap-x-6 gap-y-3 md:grid-cols-[4rem_minmax(0,1fr)]">
         <span aria-hidden="true" className="font-display text-[1.9rem] leading-none tabular-nums text-seal">
           {num}
@@ -75,8 +75,8 @@ export default function SubmissionGuidelinesPage() {
       />
 
       {/* The guidelines, on paper */}
-      <section className="paper relative grain" aria-labelledby="guidelines-heading">
-        <div className="container-editorial relative z-[2] py-16 md:py-24">
+      <section className="relative" aria-labelledby="guidelines-heading">
+        <div className="container-editorial py-16 md:py-24">
           <h2 id="guidelines-heading" className="sr-only">
             The guidelines
           </h2>
@@ -172,7 +172,7 @@ export default function SubmissionGuidelinesPage() {
                 <p>Limits are guidance, not statute. A piece that needs 3,800 words will not be refused for it; a piece that is 3,800 words because it was not edited will.</p>
                 <table className="w-full border-collapse text-left">
                   <thead>
-                    <tr className="border-b border-ink/20">
+                    <tr className="border-b border-ink/30">
                       <th scope="col" className="eyebrow-muted pb-3 pr-4 font-normal">
                         Kind
                       </th>
@@ -186,7 +186,7 @@ export default function SubmissionGuidelinesPage() {
                   </thead>
                   <tbody>
                     {WORD_COUNTS.map((row) => (
-                      <tr key={row.kind} className="border-b border-ink/12 align-baseline">
+                      <tr key={row.kind} className="border-b align-baseline">
                         <th scope="row" className="py-4 pr-4 font-display text-xl font-medium text-ink">
                           {row.kind}
                         </th>
@@ -224,11 +224,11 @@ export default function SubmissionGuidelinesPage() {
         </div>
       </section>
 
-      {/* Submission method, on ink */}
-      <section id="submission-method" className="relative scroll-mt-20 border-t border-bronze/15 bg-ink" aria-labelledby="submission-method-title">
+      {/* Submission method, on paper */}
+      <section id="submission-method" className="relative scroll-mt-20 border-t" aria-labelledby="submission-method-title">
         <div className="container-editorial py-20 md:py-28">
           <div className="grid gap-x-6 gap-y-3 md:grid-cols-[4rem_minmax(0,1fr)]">
-            <span aria-hidden="true" className="engraved font-display text-[1.9rem] leading-none tabular-nums text-bronze-2">
+            <span aria-hidden="true" className="font-display text-[1.9rem] leading-none tabular-nums text-seal">
               08
             </span>
             <div>
@@ -243,29 +243,29 @@ export default function SubmissionGuidelinesPage() {
           <div className="mt-14 grid gap-16 lg:grid-cols-12 lg:gap-12">
             {/* (a) Email */}
             <div className="lg:col-span-5">
-              <p className="eyebrow">(a) By email</p>
-              <p className="mt-4 text-sm leading-relaxed text-bone">
+              <p className="eyebrow eyebrow-mark">(a) By email</p>
+              <p className="mt-4 text-sm leading-relaxed text-graphite">
                 Send the manuscript, as .docx or .pdf, with the abstract and your AI-assistance note in the body of the email, to
               </p>
-              <a href={mailto} className="link-underline mt-4 inline-block max-w-full font-display text-[clamp(1.5rem,2.6vw,2.2rem)] leading-tight text-ivory [overflow-wrap:anywhere]">
+              <a href={mailto} className="link-underline mt-4 inline-block max-w-full font-display text-[clamp(1.5rem,2.6vw,2.2rem)] leading-tight text-lapis [overflow-wrap:anywhere]">
                 {submissionsEmail}
               </a>
               <div className="mt-5">
                 <CopyAddressButton value={submissionsEmail} />
               </div>
 
-              <div className="mt-10 border-t border-bronze/15 pt-6">
+              <div className="mt-10 border-t pt-6">
                 <p className="eyebrow-muted">Subject line</p>
-                <p className="mt-3 font-mono text-[0.8rem] leading-relaxed text-parchment">
-                  Submission — <span className="text-bronze-2">[Case note / Article / Commentary]</span> — <span className="text-bronze-2">Working title</span>
+                <p className="mt-3 font-mono text-[0.8rem] leading-relaxed text-ink">
+                  Submission — <span className="text-lapis">[Case note / Article / Commentary]</span> — <span className="text-lapis">Working title</span>
                 </p>
-                <p className="mt-3 text-xs leading-relaxed text-bone/70">
-                  For instance: <span className="font-mono text-parchment/80">{subjectExample}</span>. The convention lets a submission be found in an inbox that
+                <p className="mt-3 text-xs leading-relaxed text-ash">
+                  For instance: <span className="font-mono text-graphite">{subjectExample}</span>. The convention lets a submission be found in an inbox that
                   also receives everything else.
                 </p>
               </div>
 
-              <div className="mt-10 space-y-3 border-t border-bronze/15 pt-6 text-xs leading-relaxed text-bone/60">
+              <div className="mt-10 space-y-3 border-t pt-6 text-xs leading-relaxed text-ash">
                 <p>Submissions are stored securely and read only by the editor. Nothing is published without your agreement to the final text.</p>
                 <p>{siteConfig.disclaimer.general}</p>
               </div>
@@ -274,8 +274,8 @@ export default function SubmissionGuidelinesPage() {
             {/* (b) The form */}
             <div className="lg:col-span-7">
               <div className="plate px-5 py-8 sm:px-8 sm:py-10">
-                <p className="eyebrow">(b) Through the form</p>
-                <p className="mt-3 max-w-lg text-sm leading-relaxed text-bone">
+                <p className="eyebrow eyebrow-mark">(b) Through the form</p>
+                <p className="mt-3 max-w-lg text-sm leading-relaxed text-graphite">
                   The essentials, filed directly. Attach the manuscript if it is ready; if not, the abstract is enough to start the conversation.
                 </p>
                 <div className="mt-8">

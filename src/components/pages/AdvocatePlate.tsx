@@ -1,10 +1,10 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Portrait plate for the About page. Not a photograph: an original tenebrist composition —
- * a generic advocate in a black gown with white bands, face in shadow, one warm key light from
- * the upper left and a faint cool rim from the right — in the manner of the homepage artwork.
- * Nobody in particular is depicted.
+ * Portrait plate for the About page. Not a photograph: an original composition — a generic
+ * advocate in a black gown with white bands, face in shadow, against a painted lapis wall, one
+ * warm ivory key light from the upper left and a faint cool rim from the right — in the manner
+ * of the homepage artwork. Nobody in particular is depicted.
  */
 export function AdvocatePlate({
   className,
@@ -13,24 +13,28 @@ export function AdvocatePlate({
 }: {
   className?: string;
   caption?: string;
-  /** Caption colour: `paper` inside a `.paper` section, `ink` elsewhere. */
+  /** Caption colour: `paper` on the page, `ink` inside a blue surface. */
   tone?: "ink" | "paper";
 }) {
   return (
     <figure className={cn("w-full", className)}>
-      <div className="relative aspect-[3/4] overflow-hidden border border-bronze/25 bg-charcoal grain vignette">
+      <div className="relative aspect-[3/4] overflow-hidden border bg-lapis-3 shadow-[var(--shadow-plate)] grain vignette">
         <svg viewBox="0 0 600 800" className="absolute inset-0 h-full w-full" role="img" aria-labelledby="advocate-plate-title advocate-plate-desc">
           <title id="advocate-plate-title">An advocate in a black gown with white bands</title>
           <desc id="advocate-plate-desc">A dark, painterly silhouette of a lawyer in court dress, lit from the upper left, face in shadow.</desc>
           <defs>
+            <linearGradient id="ap-wall" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#1b5ad6" />
+              <stop offset="1" stopColor="#0f2f7c" />
+            </linearGradient>
             <radialGradient id="ap-key" cx="24%" cy="14%" r="78%">
-              <stop offset="0" stopColor="#f2d9b4" stopOpacity="0.34" />
-              <stop offset="0.45" stopColor="#c8a274" stopOpacity="0.08" />
-              <stop offset="1" stopColor="#09090b" stopOpacity="0" />
+              <stop offset="0" stopColor="#fbfaf7" stopOpacity="0.44" />
+              <stop offset="0.45" stopColor="#f6ecd2" stopOpacity="0.1" />
+              <stop offset="1" stopColor="#0f2f7c" stopOpacity="0" />
             </radialGradient>
             <radialGradient id="ap-rim" cx="92%" cy="40%" r="60%">
-              <stop offset="0" stopColor="#8ea0c4" stopOpacity="0.14" />
-              <stop offset="1" stopColor="#09090b" stopOpacity="0" />
+              <stop offset="0" stopColor="#c4d0ee" stopOpacity="0.18" />
+              <stop offset="1" stopColor="#0f2f7c" stopOpacity="0" />
             </radialGradient>
             <linearGradient id="ap-gown" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0" stopColor="#2d2d35" />
@@ -42,37 +46,37 @@ export function AdvocatePlate({
               <stop offset="1" stopColor="#070708" />
             </linearGradient>
             <linearGradient id="ap-floor" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#0c0c0f" stopOpacity="0" />
-              <stop offset="1" stopColor="#040405" stopOpacity="0.9" />
+              <stop offset="0" stopColor="#0f2f7c" stopOpacity="0" />
+              <stop offset="1" stopColor="#081b48" stopOpacity="0.9" />
             </linearGradient>
             <linearGradient id="ap-rimstroke" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#8ea0c4" stopOpacity="0" />
-              <stop offset="0.25" stopColor="#8ea0c4" stopOpacity="0.4" />
-              <stop offset="0.8" stopColor="#8ea0c4" stopOpacity="0.12" />
-              <stop offset="1" stopColor="#8ea0c4" stopOpacity="0" />
+              <stop offset="0" stopColor="#c4d0ee" stopOpacity="0" />
+              <stop offset="0.25" stopColor="#c4d0ee" stopOpacity="0.5" />
+              <stop offset="0.8" stopColor="#c4d0ee" stopOpacity="0.14" />
+              <stop offset="1" stopColor="#c4d0ee" stopOpacity="0" />
             </linearGradient>
             <linearGradient id="ap-keystroke" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#f2d9b4" stopOpacity="0.55" />
-              <stop offset="0.6" stopColor="#c8a274" stopOpacity="0.15" />
-              <stop offset="1" stopColor="#c8a274" stopOpacity="0" />
+              <stop offset="0" stopColor="#fbfaf7" stopOpacity="0.6" />
+              <stop offset="0.6" stopColor="#f6ecd2" stopOpacity="0.18" />
+              <stop offset="1" stopColor="#f6ecd2" stopOpacity="0" />
             </linearGradient>
             <linearGradient id="ap-band" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#f6f0e2" />
-              <stop offset="1" stopColor="#cfc6b2" />
+              <stop offset="0" stopColor="#fbfaf7" />
+              <stop offset="1" stopColor="#dfe6f5" />
             </linearGradient>
           </defs>
 
-          {/* Room */}
-          <rect width="600" height="800" fill="#101013" />
+          {/* Room: a painted lapis wall */}
+          <rect width="600" height="800" fill="url(#ap-wall)" />
           <rect width="600" height="800" fill="url(#ap-key)" />
           <rect width="600" height="800" fill="url(#ap-rim)" />
           {/* A suggestion of a wall panel behind the figure */}
-          <rect x="60" y="80" width="480" height="560" fill="none" stroke="#c8a274" strokeOpacity="0.08" />
-          <line x1="60" y1="360" x2="540" y2="360" stroke="#c8a274" strokeOpacity="0.05" />
+          <rect x="60" y="80" width="480" height="560" fill="none" stroke="#d9b653" strokeOpacity="0.22" />
+          <line x1="60" y1="360" x2="540" y2="360" stroke="#d9b653" strokeOpacity="0.12" />
 
           {/* Floor and cast shadow */}
           <rect x="0" y="600" width="600" height="200" fill="url(#ap-floor)" />
-          <ellipse cx="318" cy="770" rx="190" ry="16" fill="#000" opacity="0.55" />
+          <ellipse cx="318" cy="770" rx="190" ry="16" fill="#081b48" opacity="0.6" />
 
           {/* Sleeves */}
           <path d="M236 250 C 196 310 146 430 122 530 C 116 552 136 562 150 546 C 192 480 232 392 256 306 Z" fill="url(#ap-sleeve)" />
@@ -94,18 +98,18 @@ export function AdvocatePlate({
           <path d="M266 206 L 300 286 L 334 206 C 322 216 278 216 266 206 Z" fill="#0a0a0c" />
           <path d="M283 208 L 288 266 C 291 274 297 274 299 266 L 300 214 Z" fill="url(#ap-band)" opacity="0.94" />
           <path d="M317 208 L 312 266 C 309 274 303 274 301 266 L 300 214 Z" fill="url(#ap-band)" opacity="0.88" />
-          <path d="M283 208 C 290 214 310 214 317 208" fill="none" stroke="#f6f0e2" strokeOpacity="0.9" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M283 208 C 290 214 310 214 317 208" fill="none" stroke="#fbfaf7" strokeOpacity="0.9" strokeWidth="2.5" strokeLinecap="round" />
 
           {/* Head, in shadow */}
           <ellipse cx="300" cy="140" rx="46" ry="58" fill="#141418" />
           <path d="M254 128 C 262 92 338 92 346 128 C 336 108 316 98 300 98 C 284 98 264 108 254 128 Z" fill="#0d0d10" />
-          <path d="M262 112 C 258 140 262 168 276 190" fill="none" stroke="#e0bf96" strokeOpacity="0.22" strokeWidth="2" strokeLinecap="round" />
-          <path d="M342 118 C 348 146 344 172 330 192" fill="none" stroke="#8ea0c4" strokeOpacity="0.16" strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M262 112 C 258 140 262 168 276 190" fill="none" stroke="#f6ecd2" strokeOpacity="0.28" strokeWidth="2" strokeLinecap="round" />
+          <path d="M342 118 C 348 146 344 172 330 192" fill="none" stroke="#c4d0ee" strokeOpacity="0.2" strokeWidth="1.5" strokeLinecap="round" />
           {/* Neck */}
           <path d="M280 186 L 284 208 L 316 208 L 320 186 Z" fill="#101013" />
 
           {/* Dust in the key light */}
-          <g fill="#f2d9b4">
+          <g fill="#fbfaf7">
             <circle cx="118" cy="112" r="1.2" opacity="0.5" />
             <circle cx="164" cy="172" r="0.9" opacity="0.4" />
             <circle cx="96" cy="230" r="1.4" opacity="0.32" />
@@ -117,7 +121,7 @@ export function AdvocatePlate({
           </g>
 
           {/* Plate marks */}
-          <g stroke="#c8a274" strokeOpacity="0.45" strokeWidth="1">
+          <g stroke="#d9b653" strokeOpacity="0.7" strokeWidth="1">
             <path d="M18 34 V18 H34" fill="none" />
             <path d="M566 18 H582 V34" fill="none" />
             <path d="M18 766 V782 H34" fill="none" />
@@ -128,7 +132,7 @@ export function AdvocatePlate({
           Plate 01
         </span>
       </div>
-      <figcaption className={cn("mt-3 font-mono text-[0.62rem] uppercase leading-relaxed tracking-[0.18em]", tone === "paper" ? "text-ink/60" : "text-ash")}>{caption}</figcaption>
+      <figcaption className={cn("mt-3 font-mono text-[0.62rem] uppercase leading-relaxed tracking-[0.18em]", tone === "paper" ? "text-ash" : "text-bone")}>{caption}</figcaption>
     </figure>
   );
 }

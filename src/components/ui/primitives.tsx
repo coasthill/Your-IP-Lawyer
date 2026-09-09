@@ -27,7 +27,7 @@ export function SectionHeading({
 }) {
   return (
     <div className={cn("max-w-3xl", align === "center" && "mx-auto text-center", className)}>
-      {eyebrow ? <Eyebrow className="mb-4">{eyebrow}</Eyebrow> : null}
+      {eyebrow ? <Eyebrow className="eyebrow-mark mb-4">{eyebrow}</Eyebrow> : null}
       <Tag className="display-md">{title}</Tag>
       {lede ? <p className="lede mt-5 max-w-2xl opacity-90">{lede}</p> : null}
     </div>
@@ -84,7 +84,7 @@ export function Arrow({ className, direction = "right" }: { className?: string; 
 export function Chip({ children, className, href }: { children: ReactNode; className?: string; href?: string }) {
   if (href) {
     return (
-      <Link href={href} className={cn("chip transition-colors hover:border-current hover:text-bronze-2", className)}>
+      <Link href={href} className={cn("chip transition-colors hover:border-current hover:text-lapis in-[.surface-lapis]:hover:text-bronze-2 in-[.surface-deep]:hover:text-bronze-2", className)}>
         {children}
       </Link>
     );
@@ -99,7 +99,7 @@ export function Divider({ className, solid }: { className?: string; solid?: bool
 export function DemoBadge({ className }: { className?: string }) {
   return (
     <span
-      className={cn("chip border-seal-2/60 text-seal-2", className)}
+      className={cn("chip border-seal bg-seal text-ivory", className)}
       title="This is demonstration content created to illustrate the platform. It is not legal advice."
     >
       Demo content
@@ -113,9 +113,9 @@ export function Notice({ tone = "info", children, className }: { tone?: "info" |
       role={tone === "error" ? "alert" : "status"}
       className={cn(
         "border-l-2 px-4 py-3 text-sm",
-        tone === "info" && "border-bronze bg-bronze/8",
-        tone === "success" && "border-bronze-2 bg-bronze/10",
-        tone === "error" && "border-seal-2 bg-seal/15",
+        tone === "info" && "border-lapis bg-lapis-tint text-ink",
+        tone === "success" && "border-lapis-3 bg-lapis text-ivory",
+        tone === "error" && "border-seal-2 bg-seal text-ivory",
         className,
       )}
     >
@@ -127,6 +127,7 @@ export function Notice({ tone = "info", children, className }: { tone?: "info" |
 export function EmptyState({ title, body, action, className }: { title: ReactNode; body?: ReactNode; action?: ReactNode; className?: string }) {
   return (
     <div className={cn("plate px-8 py-16 text-center", className)}>
+      <span className="reg-mark mb-6" aria-hidden="true" />
       <p className="display-sm">{title}</p>
       {body ? <p className="mt-3 text-sm opacity-70">{body}</p> : null}
       {action ? <div className="mt-8 flex justify-center">{action}</div> : null}

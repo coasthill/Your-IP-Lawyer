@@ -51,9 +51,9 @@ export function SubmissionForm({ maxFileBytes }: { maxFileBytes: number }) {
       <div role="status" className="plate px-8 py-10">
         <p className="eyebrow">Filed</p>
         <p className="display-sm mt-3">Received. Counsel will revert.</p>
-        <p className="mt-4 max-w-md text-sm text-bone">
+        <p className="mt-4 max-w-md text-sm text-graphite">
           Your submission is on the record. You will hear from us at the address you gave; if a fortnight passes in silence, a polite reminder to{" "}
-          <a href={`mailto:${siteConfig.submissionsEmail}`} className="link-underline text-ivory">
+          <a href={`mailto:${siteConfig.submissionsEmail}`} className="link-underline text-lapis">
             {siteConfig.submissionsEmail}
           </a>{" "}
           is entirely in order.
@@ -146,7 +146,7 @@ export function SubmissionForm({ maxFileBytes }: { maxFileBytes: number }) {
           type="file"
           accept={ACCEPT}
           onChange={onFileChange}
-          className="file:mr-4 file:cursor-pointer file:border-0 file:border-r file:border-bronze/30 file:bg-transparent file:pr-4 file:font-mono file:text-[0.66rem] file:uppercase file:tracking-[0.18em] file:text-bronze-2"
+          className="file:mr-4 file:cursor-pointer file:border-0 file:border-r file:border-ink/20 file:bg-transparent file:pr-4 file:font-mono file:text-[0.66rem] file:uppercase file:tracking-[0.18em] file:text-lapis"
         />
       </Field>
 
@@ -158,7 +158,7 @@ export function SubmissionForm({ maxFileBytes }: { maxFileBytes: number }) {
         <Button type="submit" variant="solid" disabled={pending}>
           {pending ? "Filing…" : "File submission"}
         </Button>
-        <p id={`${id}-note`} className="max-w-md text-xs leading-relaxed text-bone/70">
+        <p id={`${id}-note`} className="max-w-md text-xs leading-relaxed text-ash">
           Submissions are stored securely and read by the editor. Nothing is published without your agreement.
         </p>
       </div>

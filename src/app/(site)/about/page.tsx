@@ -63,8 +63,8 @@ export default function AboutPage() {
       />
 
       {/* The biography, on paper */}
-      <section className="paper relative grain" aria-labelledby="bio-heading">
-        <div className="container-editorial relative z-[2] py-16 md:py-24">
+      <section className="relative" aria-labelledby="bio-heading">
+        <div className="container-editorial py-16 md:py-24">
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-4">
               <div className="mx-auto max-w-sm lg:sticky lg:top-28 lg:mx-0 lg:max-w-none">
@@ -72,7 +72,7 @@ export default function AboutPage() {
               </div>
             </div>
             <div className="lg:col-span-7 lg:col-start-6">
-              <p className="eyebrow">In my own words</p>
+              <p className="eyebrow eyebrow-mark">In my own words</p>
               <h2 id="bio-heading" className="display-md mt-4">
                 Learning the law where it is practised.
               </h2>
@@ -104,15 +104,15 @@ export default function AboutPage() {
       </section>
 
       {/* What this site is for */}
-      <section className="relative border-t border-bronze/15 bg-ink" aria-labelledby="purpose-heading">
+      <section className="relative border-t" aria-labelledby="purpose-heading">
         <div className="container-editorial py-24 md:py-32">
           <div className="grid gap-12 md:grid-cols-12 md:gap-16">
             <div className="md:col-span-4">
-              <p className="eyebrow">The website</p>
+              <p className="eyebrow eyebrow-mark">The website</p>
               <h2 id="purpose-heading" className="display-md mt-4">
                 What this site is for
               </h2>
-              <p className="mt-5 max-w-sm text-sm leading-relaxed text-bone">
+              <p className="mt-5 max-w-sm text-sm leading-relaxed text-graphite">
                 Eight things, in no particular order of importance. If a piece of writing here does none of them, it should not have been published.
               </p>
             </div>

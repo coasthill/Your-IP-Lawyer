@@ -11,11 +11,11 @@ export function PdfPreview({ url, title }: { url: string; title: string }) {
       <button type="button" className="btn btn-sm btn-ghost" aria-expanded={open} aria-controls={id} onClick={() => setOpen((v) => !v)}>
         {open ? "Hide preview" : "Preview"}
       </button>
-      <div id={id} hidden={!open} className="mt-4 border border-current/20 bg-current/5">
+      <div id={id} hidden={!open} className="mt-4 border bg-vellum">
         {open ? (
           <>
             <iframe src={url} title={`Preview of ${title}`} loading="lazy" className="block h-[70vh] w-full bg-white" />
-            <p className="px-4 py-3 text-xs text-current/60">If the preview does not render in your browser, use Open or Download above.</p>
+            <p className="px-4 py-3 text-xs text-ash">If the preview does not render in your browser, use Open or Download above.</p>
           </>
         ) : null}
       </div>

@@ -36,8 +36,8 @@ This README is written for a non-technical owner. Technical readers should also 
 | --- | --- | --- |
 | The website itself | **Next.js 16** (React, TypeScript) | A modern framework that renders pages fast and securely. |
 | Look and feel | **Tailwind CSS** + custom design tokens | Colours, typography and spacing are defined in one place. |
-| Homepage artwork | **Eight painted stills** generated with **Higgsfield** (GPT Image 2), prepared by a **GitHub Action** | Oil-painting-style pictures — the advocate, his gown, the gavel, a brass mechanism, a vase, a wax seal, a still life, the advocate at the window. A small robot on GitHub converts them to web sizes (section 11). |
-| Homepage animation | A small **WebGL shader**, **GSAP ScrollTrigger**, **Lenis** | As you scroll, one painting dissolves into the next. There is no 3D library any more. Phones use the same shader; a simpler cross-fade stands in where WebGL is missing; a still version is shown to people who prefer reduced motion. |
+| Homepage artwork | **A short painted film**: **nine Kling 3.0 clips** and **thirteen painted stills**, all generated with **Higgsfield**, prepared by a **GitHub Action** | Oil-painting scenes that move — the advocate assembling out of gold dust, the gown, the gavel, an orchard of rights, an idea splitting open, sculptors carving a column, a seal, a sapling, a constellation, water. A small robot on GitHub converts the stills to web sizes and cuts the clips into frames (section 11). |
+| Homepage animation | One **WebGL shader**, **GSAP ScrollTrigger**, **Lenis** | The scroll scrubs the film: clips play frame by frame, paintings drift like a slow camera, and each scene ripples or dissolves into the next. There is no video player and no 3D library. Phones use the same shader and always see the whole picture, never a crop; a simpler cross-fade stands in where WebGL is missing; a still version is shown to people who prefer reduced motion. |
 | Database | **PostgreSQL** (via Drizzle ORM) | Stores posts, comments, forum threads, submissions and uploaded-file records. For local use it runs an embedded copy automatically — nothing to install. |
 | File storage | Local disk, **Vercel Blob**, or any **S3-compatible** bucket | Feature images and PDFs are stored here, never in the code repository. |
 | Admin dashboard | Built in, at `/admin` | Password-protected. This is where you manage everything. |
@@ -181,49 +181,69 @@ Open `src/app/(site)/about/page.tsx` and edit the text between the tags (it is o
 
 ## 11. How to replace the homepage artwork
 
-The homepage is a sequence of **eight paintings** — oil-painting-style stills generated with **Higgsfield** — that dissolve into one another as you scroll. Each painting has a short name (its `id`) that is used everywhere:
+The homepage is a short **film** in the style of an oil painting — ten scenes, or *beats*, that the visitor scrubs through by scrolling. Seven beats are **clips** (five-second videos made with Kling on Higgsfield, cut into frames by the robot and played by the scroll), three are **paintings** under a slow camera drift, and each beat ripples or dissolves into the next. Every clip was generated *from* one of the paintings, so the two sets match. Each painting and each clip has a short name (its `id`) that is used everywhere:
 
-| # | Scene | `id` | The painting |
-| --- | --- | --- | --- |
-| 1 | The Lawyer | `advocate` | the advocate in his gown, seen from behind, against the blue wall |
-| 2 | The Gown Moves | `gown` | the black silk of the gown billowing |
-| 3 | The Gavel | `gavel` | a gavel raised above its block (the scene ends with a dark curtain wipe) |
-| 4 | The Patent Machine | `patent` | a brass mechanism of gears on marble |
-| 5 | Design | `design` | a porcelain vase on a lathe |
-| 6 | Trade Mark | `trademark` | a brass seal pressed into crimson wax |
-| 7 | Geographical Indication | `gi` | a still life of Indian GI goods (the map of India is drawn by the site, not painted) |
-| 8 | The Legal World | `legal-world` | the advocate walking toward the window |
+| # | Beat | What you see | Clip `id` | Painting `id` |
+| --- | --- | --- | --- | --- |
+| 1 | Assembly | the advocate assembles out of gold dust in front of the blue wall | `assembly` — made as "dissolves into dust" and played backwards | `advocate` |
+| 2 | The gown fills | the black silk billows; gold emblems surface in the folds and sink back | `gown-fills` | `gown` |
+| 3 | The strike | the gavel hangs a beat too long, then strikes | `strike` | `gavel` |
+| 4 | The orchard | a tree whose fruit are the emblems of IP (a painting with camera drift) | — | `orchard` |
+| 5 | The disclosure | a glowing idea in cupped hands splits open to reveal a drawing | `disclosure` | `idea` |
+| 6 | The structure | sculptors carve a column crowned with the scales of justice (a painting with camera drift) | — | `structure` |
+| 7 | The certificate | the seal is lifted, hesitates, and is stamped a second time | `certificate` | `trademark` |
+| 8 | The sapling | the advocate stands like a statue while a sapling grows beside him | `sapling` | `statue` |
+| 9 | The constellation | the advocate walks toward the window while nine gold stars form the scales of justice and fold into a tree (drawn by the site, not painted) | — | `legal-world` |
+| 10 | Water | a second figure waters the tree; the film ends on the YourIPLawyer wordmark | `water` | `water-still` |
+
+Three older paintings — `patent` (the brass mechanism), `design` (the vase) and `gi` (the still life) — stay in the set as **stand-ins**: if a clip's frames are ever missing (the robot has not run yet, or its run failed) the site shows a painting in that beat instead, so the homepage never breaks. The stand-ins are `advocate` for the assembly, `gown` for the gown, `gavel` for the strike, `patent` for the disclosure, `trademark` for the certificate, `gi` for the sapling and `water-still` for the water. Two more clips, `orchard` and `structure`, are cut and committed but not played yet — those beats show their paintings for now (switching a beat to its clip is a one-line change in `story.ts`; ask for it when you want it).
 
 **Where things live**
 
-- `content/artwork/manifest.json` — the list of the eight scenes. Each has an `id`, a `source` (the web address of the picture) and a `focal` point. **This is the only file you edit to change a painting.**
-- `content/artwork/prompts.json` — the exact prompt used for every painting, plus the shared *style sentence* that makes the eight look like one set.
-- `public/art/scenes/` — the converted pictures the site actually shows (`<id>.webp` for desktops, `<id>-sm.webp` for phones). Never edit these by hand; a robot makes them.
-- `src/components/hero/art-manifest.json` — sizes, focal points and tiny blurred placeholders. Also written by the robot.
-- `src/components/hero/story.ts` — the words: captions, the order of scenes, timing, and which transition plays between them. Change the text there and every version of the homepage updates.
-- `src/app/opengraph-image.tsx` — the social sharing image (separate from the paintings).
+- `content/artwork/manifest.json` — the list of the thirteen paintings (`scenes`: `id`, `source`, `focal`) and the nine clips (`clips`: `id`, `source` — the web address of the video — `fps`, always 10, and `reverse`). **This is the only file you edit to change a painting or a clip.**
+- `content/artwork/prompts.json` — the exact prompt used for every painting and every clip, the shared *style sentence* that makes the paintings look like one set, and a `clips_note` with the video settings.
+- `public/art/scenes/` — the converted paintings the site shows (`<id>.webp` for desktops, `<id>-sm.webp` for phones). Never edit these by hand; a robot makes them.
+- `public/art/film/<id>/` — one folder per clip: its frames (`f001.webp` … `f050.webp`), a `sm/` folder with phone-sized copies, and `sheet.jpg`, a strip of five frames for checking the clip at a glance. Also made by the robot.
+- `src/components/hero/art-manifest.json` — sizes, focal points, frame counts and tiny blurred placeholders. Also written by the robot.
+- `src/components/hero/story.ts` — the words and the timing: captions, the order of beats, which clip or painting each beat shows, which transition plays between them, and when the gavel lands. Change the text there and every version of the homepage updates.
+- `src/app/opengraph-image.tsx` — the social sharing image (separate from the artwork).
 
-**A word about credits before you generate anything.** Each still costs about **2 Higgsfield credits** (model GPT Image 2, 3:2, 2K, medium quality) and the account is on the basic plan. Generate **one still at a time**, look at it, and only then decide whether to try again. **Never generate video** for the homepage — the site does not use video anywhere, and a single clip can cost more than all eight paintings together.
+**A word about credits before you generate anything.** The account is on the basic Higgsfield plan. A painting costs about **2 credits** (GPT Image 2, 3:2, 2K, medium quality). A clip costs about **6.25 credits** (Kling 3.0, model `kling3_0`, *std* mode, sound off, 5 seconds, 16:9) — three paintings' worth — and the *pro* mode needs a Plus plan. Generate **one thing at a time**, look at it, and only then decide whether to try again. **Never generate video for anything other than these nine clips** — no other page uses video, and a few unnecessary clips can empty the account.
 
 **To replace one painting**
 
-1. Open `content/artwork/prompts.json`, find the scene and copy its prompt. Keep the style sentence and the "no text" sentence exactly as they are — they are what keep the paintings matching. If you write a new prompt, paste it back into `prompts.json` so the picture can be made again later.
-2. In Higgsfield choose **Image → GPT Image 2**, aspect ratio **3:2**, resolution **2K**, medium quality, paste the prompt and generate **one** still. Scene 8 (`legal-world`) was made with the scene 1 painting attached as an *image reference* so the same advocate appears in both — do the same if you redo scene 8, and if you replace scene 1, redo scene 8 afterwards.
+1. Open `content/artwork/prompts.json`, find the painting under `scenes` and copy its prompt. Keep the style sentence and the "no text" sentence exactly as they are — they are what keep the paintings matching. If you write a new prompt, paste it back into `prompts.json` so the picture can be made again later.
+2. In Higgsfield choose **Image → GPT Image 2**, aspect ratio **3:2**, resolution **2K**, medium quality, paste the prompt and generate **one** still. The paintings that show the advocate again (`legal-world`, `statue`, `water-still`) were made with the `advocate` painting attached as an *image reference* so the same man appears in all of them — do the same if you redo one of them, and if you replace `advocate`, redo those three afterwards.
 3. When you are happy with a picture, open it in your Higgsfield **library** and **copy the image URL** (a long address ending in `.png`).
-4. On GitHub, open `content/artwork/manifest.json`, click the pencil to edit (the web editor is enough — nothing needs to be installed), and paste the address as the `source` of that scene. Leave the `id` alone.
-   - Optionally change `focal`: two numbers between 0 and 1, measured from the **top-left** corner (`[0, 0]` is top-left, `[1, 1]` bottom-right, `[0.5, 0.5]` the centre). It marks the point that must stay in frame when the picture is cropped on phones — the figure's shoulders, the gavel head, the seal. Changing only `focal` is free: nothing is downloaded again.
+4. On GitHub, open `content/artwork/manifest.json`, click the pencil to edit (the web editor is enough — nothing needs to be installed), and paste the address as the `source` of that painting. Leave the `id` alone.
+   - Optionally change `focal`: two numbers between 0 and 1, measured from the **top-left** corner (`[0, 0]` is top-left, `[1, 1]` bottom-right, `[0.5, 0.5]` the centre). It marks the point that must stay in frame when the picture is cropped on wide screens — the figure's shoulders, the gavel head, the seal. (Phones show the whole picture and never crop it.) Changing only `focal` is free: nothing is downloaded again.
 5. Click **Commit changes**.
 6. Open the **Actions** tab. The workflow **"Fetch artwork"** starts by itself whenever `manifest.json` changes, on any branch. Wait for the green tick (a minute or two). It downloads the picture, converts it to the two web sizes, updates `art-manifest.json` and **commits the result on the same branch** with the message "Artwork: fetch and convert scene stills". You do not need to commit anything else.
 7. The site shows the new painting on the next deploy. Vercel deploys the robot's commit automatically; if it does not, redeploy from the Vercel dashboard.
+8. If the painting is the start image of a clip (the last column of the table), the clip still shows the old picture. Regenerate the clip from the new painting too (next list), or the beat will jump from one picture to another.
 
-**If the workflow fails** (a red cross in the Actions tab): open the run and read the log. Nine times out of ten the cause is a bad URL — a `404` or `403` in the log means the address was copied incompletely or has expired. Fix the `source` in `manifest.json` and commit again. Nothing is broken on the live site in the meantime: the old pictures stay until a run succeeds. If the log complains about `sharp` or Node rather than a URL, something else changed in the repository — ask for help rather than re-running.
+**To replace one clip**
+
+1. Open `content/artwork/prompts.json`, find the clip under `clips` and copy its prompt. Every clip prompt begins with *"Oil painting come to life, the painterly texture preserved throughout."* and ends with *"Static camera, no zoom, no text."* — keep both sentences; they keep the clips looking like the paintings. Its `from` field names the painting the clip starts from.
+2. In Higgsfield choose **Video → Kling 3.0** (`kling3_0`), mode **std**, **5 seconds**, **16:9**, sound **off**, and make it an *image-to-video* job with that painting as the **start image** (`start_image`) — that is how the clip matches the painting. Paste the prompt and generate **one** clip. If Higgsfield answers with a *preset recommendation* instead of starting the job, resubmit with the preset declined (`declined_preset_id`).
+3. Watch the result. The strike clip must show the gavel clearly coming down; the certificate clip must stamp twice; the assembly clip should show the advocate **dissolving into dust** — the site plays it backwards so that he assembles.
+4. In your Higgsfield **library**, **copy the video URL** (a long address ending in `.mp4`).
+5. On GitHub, open `content/artwork/manifest.json`, find the clip under `clips` and paste the address as its `source`. Leave the `id` alone and keep `"fps": 10`. Set `"reverse": true` **only** on the assembly clip (that is the backwards trick); every other clip has `"reverse": false`.
+6. **Commit changes** and wait for the **Fetch artwork** run (cutting a clip takes a few minutes longer than converting a painting). The robot downloads the video, cuts it into 50 frames plus phone-sized copies, writes the contact sheet, updates `art-manifest.json` and commits the lot on the same branch.
+7. Look at the contact sheet: open `public/art/film/<id>/sheet.jpg` on GitHub. It shows five frames of the clip *as the site will play it* — start, quarter, half, three-quarters, end. For the assembly clip the sheet should read left to right as dust → advocate. If it reads wrong, fix the prompt or the `reverse` flag and go again.
+8. Redeploy (or wait for Vercel's automatic deploy of the robot's commit).
+
+**The gavel's timing.** The film pins the moment of impact to a fixed point of the scroll (`GAVEL_STRIKE_AT` in `story.ts` — the flash and the sound happen there, and the caption reads just after it). For that to work the strike beat records *where in the clip* the gavel lands: the `keyframes` on the `strike` beat in `story.ts`, currently `0.68` (68 % of the way through the clip). A new strike clip will land at a different moment. Find the frame where the gavel hits (in `public/art/film/strike/` — 50 frames make 5 seconds, ten per second), divide its number by 50, and ask for that number to be put into the keyframe. Everything else about a clip needs no code change.
+
+**If the workflow fails** (a red cross in the Actions tab): open the run and read the log. Nine times out of ten the cause is a bad URL — a `404` or `403` in the log means the address was copied incompletely or has expired. Fix the `source` in `manifest.json` and commit again. A message about `ffmpeg` means the video could not be cut — usually the address is not a direct link to the `.mp4`. Nothing is broken on the live site in the meantime: the old pictures and frames stay until a run succeeds. If the log complains about `sharp` or Node rather than a URL, something else changed in the repository — ask for help rather than re-running.
 
 **Other things worth knowing**
 
 - **Running the workflow by hand:** Actions tab → **Fetch artwork** → **Run workflow** (the button appears once the workflow file is on the default branch). Its "candidates" box also converts the addresses in `content/artwork/candidates.json` into small review copies under `public/art/candidates/` — a way to compare a few tries side by side without touching the live scenes. Delete candidates once you have chosen.
-- **Running it on your computer:** after `npm install`, run `node scripts/fetch-artwork.mjs` (the image tool it needs, `sharp`, is already installed with the site). It writes the same files; commit them yourself.
-- **Going back:** everything is versioned. Revert the robot's commit (or your manifest change) and the previous painting returns.
-- **Ownership:** the eight paintings are AI-generated artwork owned by the site owner's Higgsfield account. They depict no real person and no real place.
+- **Running it on your computer:** after `npm install`, run `node scripts/fetch-artwork.mjs` (the image tool it needs, `sharp`, is already installed with the site). Paintings need nothing else; cutting clips needs **ffmpeg** installed on your computer — without it the clips are skipped with a message and only the paintings are converted. It writes the same files; commit them yourself.
+- **Size:** the frames are committed to the repository by the workflow — about **2 MB per clip** (50 frames, the phone copies and the sheet), about 21 MB for all nine — and every replacement adds another copy to the repository's history. That is fine at this scale; it is one more reason not to generate clips you do not need.
+- **Going back:** everything is versioned. Revert the robot's commit (or your manifest change) and the previous painting or clip returns.
+- **Ownership:** the paintings and the clips are AI-generated artwork owned by the site owner's Higgsfield account. They depict no real person and no real place.
 
 ## 12. How to update the domain
 
@@ -263,7 +283,7 @@ Passwords are stored as scrypt hashes (never in plain text). Sign-in is rate-lim
 
 `npm run db:seed` imports the articles in `content/demo-posts/*.md` and the threads in `content/demo-forum.json`. They are labelled **Demo content** on the site and are not legal advice. Delete them from `/admin` whenever you like. You can also drop your own `.md` files into `content/demo-posts` and re-run the seed to import them (existing slugs are skipped; use `npm run db:seed -- --reset-demo` to re-import).
 
-**The homepage paintings are not demo content.** The eight stills in `public/art/scenes/` are AI-generated artwork made with Higgsfield (GPT Image 2) from the prompts in `content/artwork/prompts.json`, and they belong to the site owner's Higgsfield account. They show a generic advocate seen from behind (no likeness of anyone) and no real place. Section 11 explains how to replace them.
+**The homepage paintings and clips are not demo content.** The thirteen stills in `public/art/scenes/` and the nine clips cut into frames under `public/art/film/` are AI-generated artwork made with Higgsfield (GPT Image 2 for the stills, Kling 3.0 for the clips) from the prompts in `content/artwork/prompts.json`, and they belong to the site owner's Higgsfield account. They show a generic advocate seen from behind, a second generic figure who waters the tree, and sculptors at work — no likeness of any real person — and no real place. Section 11 explains how to replace them.
 
 ## 17. Troubleshooting
 

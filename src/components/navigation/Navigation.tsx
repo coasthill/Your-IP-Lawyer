@@ -7,8 +7,9 @@ import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
 /**
- * Minimal fixed navigation. Transparent over the artwork, gains a hairline and a dark wash after scrolling.
- * Mobile: hamburger → full-screen overlay.
+ * Minimal fixed navigation. On the homepage it sits transparent over the painted artwork with light
+ * text, and becomes a deep-blue translucent bar once scrolled; on every other page it is a paper bar
+ * with ink text and a hairline. Mobile: hamburger → full-screen deep-blue overlay.
  */
 export function Navigation() {
   const pathname = usePathname();
@@ -16,6 +17,8 @@ export function Navigation() {
   const [open, setOpen] = useState(false);
   const menuId = useId();
   const isHome = pathname === "/";
+  /* Light text over the artwork and over the deep-blue overlay; ink text on the paper bar. */
+  const light = isHome || open;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -39,6 +42,14 @@ export function Navigation() {
     };
   }, [open]);
 
+  const bar = open
+    ? "border-b border-ivory/15 bg-lapis-4/70 backdrop-blur-md"
+    : isHome
+      ? scrolled
+        ? "border-b border-ivory/15 bg-lapis-4/70 backdrop-blur-md"
+        : "border-b border-transparent bg-transparent"
+      : "border-b bg-paper/85 backdrop-blur-md";
+
   return (
     <>
       <a
@@ -49,15 +60,12 @@ export function Navigation() {
       </a>
       <header
         data-nav
-        className={cn(
-          "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500",
-          scrolled || open ? "border-b border-bronze/15 bg-ink/75 backdrop-blur-md" : "border-b border-transparent bg-transparent",
-        )}
+        className={cn("fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,color,backdrop-filter] duration-500", light ? "text-ivory" : "text-ink", bar)}
       >
         <nav aria-label="Primary" className="container-editorial flex h-[var(--header-height)] items-center justify-between">
           <Link href="/" className="group flex flex-col leading-none" aria-label={`${siteConfig.author.name} — home`}>
-            <span className="eyebrow transition-colors group-hover:text-ivory">{siteConfig.author.name}</span>
-            <span className="mt-1 font-display text-[1.05rem] tracking-[0.18em] text-ivory/90 uppercase">{siteConfig.name}</span>
+            <span className={cn("eyebrow transition-colors", light ? "text-bronze-2 group-hover:text-ivory" : "group-hover:text-ink")}>{siteConfig.author.name}</span>
+            <span className={cn("mt-1 font-display text-[1.05rem] tracking-[0.18em] uppercase", light ? "text-ivory" : "text-ink")}>{siteConfig.name}</span>
           </Link>
 
           <ul className="hidden items-center gap-8 md:flex">
@@ -70,7 +78,7 @@ export function Navigation() {
                     aria-current={active ? "page" : undefined}
                     className={cn(
                       "link-underline font-mono text-[0.68rem] uppercase tracking-[0.2em] transition-colors",
-                      active ? "text-ivory" : "text-bone hover:text-ivory",
+                      light ? (active ? "text-ivory" : "text-bone hover:text-ivory") : active ? "text-ink" : "text-slate hover:text-lapis",
                     )}
                   >
                     {item.label}
@@ -90,8 +98,8 @@ export function Navigation() {
             onClick={() => setOpen((v) => !v)}
           >
             <span className="relative block h-3 w-6">
-              <span className={cn("absolute left-0 top-0 h-px w-6 bg-ivory transition-transform duration-300", open && "top-1.5 rotate-45")} />
-              <span className={cn("absolute left-0 top-3 h-px w-6 bg-ivory transition-transform duration-300", open && "top-1.5 -rotate-45")} />
+              <span className={cn("absolute left-0 top-0 h-px w-6 bg-current transition-transform duration-300", open && "top-1.5 rotate-45")} />
+              <span className={cn("absolute left-0 top-3 h-px w-6 bg-current transition-transform duration-300", open && "top-1.5 -rotate-45")} />
             </span>
           </button>
         </nav>
@@ -101,7 +109,7 @@ export function Navigation() {
       <div
         id={menuId}
         className={cn(
-          "fixed inset-0 z-40 flex flex-col justify-between bg-ink/95 px-[var(--page-x)] pb-10 pt-28 backdrop-blur-xl transition-opacity duration-500 md:hidden",
+          "surface-deep fixed inset-0 z-40 flex flex-col justify-between px-[var(--page-x)] pb-10 pt-28 transition-opacity duration-500 md:hidden",
           open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
         )}
         aria-hidden={!open}
@@ -123,7 +131,7 @@ export function Navigation() {
             );
           })}
         </ul>
-        <div className="space-y-3 border-t border-bronze/20 pt-6">
+        <div className="space-y-3 border-t pt-6">
           <p className="eyebrow">{siteConfig.author.title} · {siteConfig.author.location}</p>
           <a href={`mailto:${siteConfig.contactEmail}`} tabIndex={open ? 0 : -1} onClick={() => setOpen(false)} className="font-display text-lg text-ivory">
             {siteConfig.contactEmail}

@@ -5,16 +5,16 @@ import { siteConfig } from "@/config/site";
 
 /*
  * Global error boundary: replaces the root layout, so it must render <html> and <body> itself and
- * cannot rely on globals.css or the self-hosted fonts. Inline styles only, system serif and mono.
+ * cannot rely on globals.css or the self-hosted fonts. Inline styles only, system serif and mono,
+ * on the lapis wall with ivory text and a gold eyebrow.
  */
 
-const ink = "#09090b";
-const ivory = "#f1eadb";
-const parchment = "#e3d9c3";
-const bone = "#b6ad9b";
-const ash = "#77736b";
-const bronze = "#a67e56";
-const bronze2 = "#c8a274";
+const lapis = "#1b5ad6";
+const ink = "#121418";
+const ivory = "#fbfaf7";
+const parchment = "#edf1fb";
+const bone = "#c4d0ee";
+const gold = "#d9b653";
 
 const serif = 'Georgia, "Times New Roman", serif';
 const mono = 'ui-monospace, "SF Mono", Menlo, Consolas, "Courier New", monospace';
@@ -23,12 +23,12 @@ const button: React.CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
   fontFamily: mono,
-  fontSize: "0.72rem",
-  letterSpacing: "0.18em",
+  fontSize: "0.68rem",
+  letterSpacing: "0.16em",
   textTransform: "uppercase",
-  padding: "0.85rem 1.4rem",
-  border: `1px solid ${bronze}`,
-  borderRadius: 2,
+  padding: "0.8rem 1.35rem",
+  border: `1px solid ${ivory}66`,
+  borderRadius: 999,
   background: "transparent",
   color: ivory,
   cursor: "pointer",
@@ -41,14 +41,14 @@ export default function GlobalError({ error, reset, retry }: { error: Error & { 
   }, [error]);
 
   return (
-    <html lang="en-IN" style={{ background: ink, colorScheme: "dark" }}>
+    <html lang="en-IN" style={{ background: lapis, colorScheme: "dark" }}>
       <body
         style={{
           margin: 0,
           minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
-          background: ink,
+          background: lapis,
           color: parchment,
           fontFamily: serif,
           lineHeight: 1.6,
@@ -69,7 +69,7 @@ export default function GlobalError({ error, reset, retry }: { error: Error & { 
             boxSizing: "border-box",
           }}
         >
-          <p style={{ margin: 0, fontFamily: mono, fontSize: "0.68rem", letterSpacing: "0.22em", textTransform: "uppercase", color: bronze2 }}>
+          <p style={{ margin: 0, fontFamily: mono, fontSize: "0.66rem", letterSpacing: "0.22em", textTransform: "uppercase", color: gold }}>
             An internal error has occurred.
           </p>
           <h1 style={{ margin: "1.5rem 0 0", fontFamily: serif, fontWeight: 400, fontSize: "clamp(2.4rem, 5.5vw, 5rem)", lineHeight: 1, letterSpacing: "-0.015em", color: ivory, maxWidth: "20ch" }}>
@@ -89,11 +89,11 @@ export default function GlobalError({ error, reset, retry }: { error: Error & { 
             </a>
           </div>
           {error.digest ? (
-            <p style={{ margin: "2.5rem 0 0", fontFamily: mono, fontSize: "0.62rem", letterSpacing: "0.2em", textTransform: "uppercase", color: ash }}>Ref. {error.digest}</p>
+            <p style={{ margin: "2.5rem 0 0", fontFamily: mono, fontSize: "0.62rem", letterSpacing: "0.2em", textTransform: "uppercase", color: bone }}>Ref. {error.digest}</p>
           ) : null}
         </main>
         <footer style={{ width: "100%", maxWidth: "84rem", margin: "0 auto", padding: "0 clamp(1.25rem, 4vw, 3.5rem) 2rem", boxSizing: "border-box" }}>
-          <div style={{ height: 1, background: `${bronze}55`, marginBottom: "1.5rem" }} role="presentation" />
+          <div style={{ height: 1, background: `${ivory}38`, marginBottom: "1.5rem" }} role="presentation" />
           <p style={{ margin: 0, fontFamily: mono, fontSize: "0.62rem", letterSpacing: "0.2em", textTransform: "uppercase", color: bone }}>
             {siteConfig.name} · {siteConfig.author.name} · {siteConfig.author.location}
           </p>

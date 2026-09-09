@@ -39,7 +39,7 @@ export function ContentsNav({ items, className, tone = "paper" }: { items: Conte
   return (
     <nav aria-label="On this page" className={cn("lg:sticky lg:top-28", className)}>
       <p className={cn("eyebrow-muted mb-4")}>Contents</p>
-      <ol className={cn("flex flex-wrap gap-x-5 gap-y-1 lg:block lg:space-y-0 lg:border-l", paper ? "lg:border-ink/15" : "lg:border-bronze/20")}>
+      <ol className="flex flex-wrap gap-x-5 gap-y-1 lg:block lg:space-y-0 lg:border-l">
         {items.map((item, i) => {
           const current = active === item.id;
           return (
@@ -54,7 +54,7 @@ export function ContentsNav({ items, className, tone = "paper" }: { items: Conte
                       ? "border-seal text-ink"
                       : "border-bronze-2 text-ivory"
                     : paper
-                      ? "border-transparent text-ink/55 hover:text-ink"
+                      ? "border-transparent text-slate hover:text-ink"
                       : "border-transparent text-bone hover:text-ivory",
                 )}
               >

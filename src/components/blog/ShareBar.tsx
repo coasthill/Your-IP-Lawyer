@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 type CopyState = "idle" | "copied" | "failed";
 
-/** Plain intent links — no third-party scripts, nothing tracked. */
+/** Plain intent links as small pills — no third-party scripts, nothing tracked. */
 export function ShareBar({ url, title }: { url: string; title: string }) {
   const [copy, setCopy] = useState<CopyState>("idle");
   const timer = useRef<number | null>(null);
@@ -36,12 +36,12 @@ export function ShareBar({ url, title }: { url: string; title: string }) {
     { label: "Email", href: `mailto:?subject=${enc(title)}&body=${enc(`${title}\n${url}`)}`, external: false },
   ];
 
-  const linkClass = "link-underline font-mono text-[0.68rem] uppercase tracking-[0.2em] transition-colors hover:text-seal";
+  const linkClass = "btn btn-sm hover:border-lapis hover:text-lapis";
 
   return (
-    <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
-      <p className="eyebrow">Share</p>
-      <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
+    <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+      <p className="eyebrow eyebrow-mark">Share</p>
+      <ul className="flex flex-wrap items-center gap-2">
         <li>
           <button type="button" onClick={copyLink} className={linkClass}>
             {copy === "copied" ? "Copied." : copy === "failed" ? "Copy failed" : "Copy link"}

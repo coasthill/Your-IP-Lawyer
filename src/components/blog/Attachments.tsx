@@ -7,27 +7,27 @@ type Attachment = Document & { label: string | null };
 
 const KIND_LABEL: Record<string, string> = { pdf: "PDF", image: "Image", file: "File" };
 
-/** Documents attached to an article: judgments, orders, annexures. */
+/** Documents attached to an article: judgments, orders, annexures. Each one on its own ivory plate. */
 export function Attachments({ documents }: { documents: Attachment[] }) {
   if (!documents.length) return null;
   return (
-    <section aria-labelledby="attachments-heading" className="mt-16 border-t border-current/20 pt-8">
+    <section aria-labelledby="attachments-heading" className="mt-16 border-t pt-8">
       <div className="flex items-baseline justify-between gap-4">
-        <h2 id="attachments-heading" className="eyebrow">
+        <h2 id="attachments-heading" className="eyebrow eyebrow-mark">
           Attachments
         </h2>
-        <p className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-current/50">{pluralise(documents.length, "document")}</p>
+        <p className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ash">{pluralise(documents.length, "document")}</p>
       </div>
-      <ol className="mt-6 divide-y divide-current/10 border-y border-current/15">
+      <ol className="mt-6 space-y-4">
         {documents.map((doc) => {
           const title = doc.label || doc.title || doc.filename;
           return (
-            <li key={doc.id} className="py-5">
+            <li key={doc.id} className="plate p-5 sm:p-6">
               <div className="grid grid-cols-[2rem_1fr] gap-x-4 gap-y-4 sm:grid-cols-[2rem_1fr_auto] sm:items-center">
                 <KindIcon kind={doc.kind} />
                 <div className="min-w-0">
-                  <p className="break-words font-display text-xl leading-tight">{title}</p>
-                  <p className="mt-1 break-words font-mono text-[0.62rem] uppercase tracking-[0.18em] text-current/55">
+                  <p className="break-words font-display text-xl leading-tight text-ink">{title}</p>
+                  <p className="mt-1 break-words font-mono text-[0.62rem] uppercase tracking-[0.18em] text-ash">
                     {doc.filename}
                     <span aria-hidden="true"> · </span>
                     {KIND_LABEL[doc.kind] ?? "File"}
@@ -38,13 +38,13 @@ export function Attachments({ documents }: { documents: Attachment[] }) {
                       </>
                     ) : null}
                   </p>
-                  {doc.description ? <p className="mt-2 text-sm leading-relaxed text-current/75">{doc.description}</p> : null}
+                  {doc.description ? <p className="mt-2 text-sm leading-relaxed text-graphite">{doc.description}</p> : null}
                 </div>
                 <div className="col-start-2 flex flex-wrap gap-2 sm:col-start-3">
                   <a href={doc.url} target="_blank" rel="noopener noreferrer" className="btn btn-sm">
                     Open<span className="sr-only"> {title} in a new tab</span>
                   </a>
-                  <a href={doc.url} download={doc.filename} className="btn btn-sm btn-ghost">
+                  <a href={doc.url} download={doc.filename} className="btn btn-sm border-lapis bg-lapis text-ivory hover:border-lapis-2 hover:bg-lapis-2">
                     Download<span className="sr-only"> {title}</span>
                   </a>
                 </div>
@@ -60,7 +60,7 @@ export function Attachments({ documents }: { documents: Attachment[] }) {
 
 /** Small line-drawn document glyphs. Decorative; the kind is also written out in text. */
 function KindIcon({ kind }: { kind: string }) {
-  const common = { width: 22, height: 26, viewBox: "0 0 22 26", "aria-hidden": true as const, className: "mt-1 text-current/70" };
+  const common = { width: 22, height: 26, viewBox: "0 0 22 26", "aria-hidden": true as const, className: "mt-1 text-lapis" };
   const page = <path d="M3 1.5h10l6 6v17H3z M13 1.5v6h6" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinejoin="round" />;
   if (kind === "pdf") {
     return (
