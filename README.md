@@ -261,7 +261,7 @@ npm run admin:create -- --email you@example.com --name "Rohit Pradhan" --passwor
 
 Running it again with the same email **resets the password**. For the live site, run the same command with `DATABASE_URL="postgres://..."` in front of it so it reaches the production database, or add another admin from `/admin → Users` once you are signed in.
 
-Passwords are stored as scrypt hashes (never in plain text). Sign-in is rate-limited. Sessions live in a secure httpOnly cookie and expire after 30 days; **Sign out** ends them immediately.
+Passwords are stored as scrypt hashes (never in plain text). Sign-in is rate-limited: after five failed or repeated attempts from one connection within fifteen minutes, the page answers "Too many attempts" until the window passes. Sessions live in a secure httpOnly cookie and expire after 30 days; **Sign out** ends them immediately.
 
 ## 14. How to back up the database
 
