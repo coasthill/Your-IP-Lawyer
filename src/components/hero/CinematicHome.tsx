@@ -6,7 +6,8 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { detectTier, type RenderTier } from "./capabilities";
 import { progressStore } from "./progress-store";
-import { FILM, GAVEL_STRIKE_AT, STAGE_HEIGHT_VH, frameAt } from "./story";
+import { filmEvents } from "./film-events";
+import { FILM, STAGE_HEIGHT_VH, frameAt } from "./story";
 import { TextOverlay } from "./TextOverlay";
 import { Annotations } from "./Annotations";
 import { MapOverlay } from "./MapOverlay";
@@ -33,39 +34,39 @@ const CanvasStory = dynamic(() => import("./painted/CanvasStory").then((m) => m.
  * Nothing here scroll-jacks: the user scrolls normally, the painting follows.
  *
  * The stage switches between the lapis and paper surfaces as the beats of the film change, so
- * captions, annotations and controls always sit on the right colours.
+ * captions, annotations and controls always sit on the right colours. The gavel's sound follows
+ * the strike clip itself: the engine emits `impact` when the clip crosses its impact frame.
  */
 export function CinematicHome() {
   const detected = useSyncExternalStore(noopSubscribe, getClientTier, getServerTier);
   const [webglFailed, setWebglFailed] = useState(false);
   const tier: RenderTier | null = detected === "webgl" && webglFailed ? "canvas" : detected;
   const [ready, setReady] = useState(false);
+  const [revealed, setRevealed] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
-  const struckRef = useRef(false);
 
-  // Scroll → progress
+  // Scroll → progress (`?snap`, for QA captures, drops the smoothing so progress lands at once)
   useEffect(() => {
     const el = stageRef.current;
     if (!el || !tier) return;
+    const snap = new URLSearchParams(window.location.search).has("snap");
     const trigger = ScrollTrigger.create({
       trigger: el,
       start: "top top",
       end: "bottom bottom",
-      scrub: tier === "static" ? false : 0.6,
+      scrub: tier === "static" ? false : snap ? true : 0.6,
       onUpdate: (self) => {
         progressStore.set(self.progress);
         sound.update(self.progress, progressStore.get().velocity);
-        if (!struckRef.current && self.progress >= GAVEL_STRIKE_AT && self.progress < GAVEL_STRIKE_AT + 0.05) {
-          struckRef.current = true;
-          sound.gavel();
-        }
-        if (self.progress < GAVEL_STRIKE_AT - 0.03) struckRef.current = false;
       },
     });
     return () => trigger.kill();
   }, [tier]);
+
+  // The gavel: one sound per play of the strike clip, at the moment it meets the block.
+  useEffect(() => filmEvents.on("impact", () => sound.gavel()), []);
 
   // Surface tone follows the beat on screen (direct DOM update, no React state per frame).
   useEffect(() => {
@@ -108,15 +109,24 @@ export function CinematicHome() {
 
   return (
     <>
-      {!loaded && !isStatic ? <Loader ready={ready} onDone={() => setLoaded(true)} /> : null}
+      {!loaded && !isStatic ? (
+        <Loader
+          ready={ready}
+          onReveal={() => setRevealed(true)}
+          onDone={() => {
+            setRevealed(true);
+            setLoaded(true);
+          }}
+        />
+      ) : null}
       <div ref={stageRef} className={cn("relative w-full", !isStatic && "stage-height")} style={stageStyle} data-tier={tier ?? "pending"}>
         <div
           ref={stickyRef}
           data-tone="lapis"
           className={cn("group surface-lapis sticky top-0 h-[100dvh] w-full overflow-hidden", isStatic && "relative h-auto")}
         >
-          {tier === "webgl" ? <PaintedStory onReady={() => setReady(true)} onFail={() => setWebglFailed(true)} /> : null}
-          {tier === "canvas" ? <CanvasStory onReady={() => setReady(true)} /> : null}
+          {tier === "webgl" ? <PaintedStory revealed={revealed} onReady={() => setReady(true)} onFail={() => setWebglFailed(true)} /> : null}
+          {tier === "canvas" ? <CanvasStory revealed={revealed} onReady={() => setReady(true)} /> : null}
           {tier === "static" ? <StaticStory /> : null}
           {tier && !isStatic ? (
             <>

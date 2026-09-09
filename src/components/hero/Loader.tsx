@@ -6,8 +6,9 @@ import { cn } from "@/lib/utils";
 /**
  * Loading sequence: YOURIPLAWYER → INTELLECTUAL PROPERTY. LITIGATION. IDEAS. → the painting fades in.
  * Total ≈ 2.2s, and it never blocks longer than 3.5s even if the first painting is still arriving.
+ * `onReveal` fires the moment the fade begins (the film starts playing then); `onDone` once it is gone.
  */
-export function Loader({ ready, onDone }: { ready: boolean; onDone: () => void }) {
+export function Loader({ ready, onReveal, onDone }: { ready: boolean; onReveal?: () => void; onDone: () => void }) {
   const [phase, setPhase] = useState(0);
   const [gone, setGone] = useState(false);
 
@@ -22,8 +23,9 @@ export function Loader({ ready, onDone }: { ready: boolean; onDone: () => void }
 
   const finish = useCallback(() => {
     setGone(true);
+    onReveal?.();
     window.setTimeout(onDone, 900);
-  }, [onDone]);
+  }, [onReveal, onDone]);
 
   useEffect(() => {
     if (phase < 2) return;

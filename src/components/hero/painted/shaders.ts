@@ -1,9 +1,9 @@
 /**
  * The painted stage in one full-screen fragment shader.
  *
- * Two pictures (A, the one on screen; B, the one being revealed) — each a painted still or a frame
- * of a clip — are fitted to the viewport, drifted slowly like a camera on a dolly, and blended by
- * `uMix`:
+ * Two pictures (A, the one on screen; B, the one being revealed) — each a painted still or the
+ * current frame of a playing clip — are fitted to the viewport, drifted slowly like a camera on a
+ * dolly, and blended by `uMix`:
  *   kind 0 — DISSOLVE: the picture breaks up along a noise field into pigment grains and vertical
  *            streaks (the pixel-sort look), a few gold motes catch the light, and the next picture
  *            settles in behind.
@@ -14,7 +14,10 @@
  *            radius, with a thinner ribbon trailing it; B follows the wavefront outward.
  * Fit (`uFit`): 0 covers the viewport around the focal point (landscape screens); 1 contains the
  * whole picture (portrait screens — the film is never cropped on phones) and fills the surround
- * with the same picture sampled far down the mip chain, darkened: blurred ambient light.
+ * with the same picture blurred and darkened: ambient light. A still is sampled far down its mip
+ * chain for that; a video frame has no mip chain (`uBlurA` / `uBlurB`), so it is blurred with a
+ * wide ring of taps rotated per pixel — the ringing turns into fine grain, never a sharp copy.
+ * The gavel's flash (`uFlash`) is an envelope the renderer starts on the film's `impact` event.
  * Everything is procedural: no extra textures, no post-processing pass.
  */
 
@@ -48,6 +51,8 @@ uniform float uVel;       // |scroll velocity| 0–1
 uniform float uFlash;     // gavel flash 0–1
 uniform float uSeed;
 uniform float uHasB;
+uniform float uBlurA;     // 1 when A has no mip chain (a video frame): blur the surround with taps
+uniform float uBlurB;
 
 const float PI = 3.14159265;
 const vec3 GOLD = vec3(0.85, 0.71, 0.33);
@@ -103,19 +108,35 @@ vec2 containUv(vec2 uv, vec2 size, vec2 focal, vec3 drift, out float inside) {
   return clamp(p, vec2(0.002), vec2(0.998));
 }
 
+/* The blurred surround at picture uv q: the mip chain when there is one, else a ring of 16 taps
+   (two radii, rotated per pixel by a hash so the pattern reads as grain rather than ghosting). */
+vec3 ambient(sampler2D tex, vec2 q, float noMip) {
+  if (noMip < 0.5) {
+    return texture2D(tex, q, 6.0).rgb * 0.5 + texture2D(tex, q + vec2(0.03, 0.02), 6.0).rgb * 0.25 + texture2D(tex, q - vec2(0.03, 0.02), 6.0).rgb * 0.25;
+  }
+  float rot = hash(gl_FragCoord.xy * 0.37 + uSeed) * 6.2831853;
+  vec3 acc = texture2D(tex, q).rgb;
+  for (int i = 0; i < 8; i++) {
+    float a = rot + float(i) * 0.7853982;
+    acc += texture2D(tex, q + vec2(cos(a), sin(a)) * 0.035).rgb;
+    acc += texture2D(tex, q + vec2(cos(a + 0.3926991), sin(a + 0.3926991)) * 0.075).rgb;
+  }
+  return acc / 17.0;
+}
+
 /* One picture at a screen uv under the current fit: cover, or contain over blurred ambient light. */
-vec3 pick(sampler2D tex, vec2 uv, vec2 size, vec2 focal, vec3 drift) {
+vec3 pick(sampler2D tex, vec2 uv, vec2 size, vec2 focal, vec3 drift, float noMip) {
   if (uFit < 0.5) return texture2D(tex, coverUv(uv, size, focal, drift)).rgb;
   float inside;
   vec2 p = containUv(uv, size, focal, drift, inside);
   vec3 c = texture2D(tex, p).rgb;
-  // the surround: the same picture, cover-fitted, far down the mip chain and darkened to 35 %
+  if (inside > 0.999) return c;
+  // the surround: the same picture, cover-fitted, blurred and darkened to 45 %
   vec2 q = coverUv(uv, size, focal, vec3(1.15, 0.0, 0.0));
-  vec3 amb = texture2D(tex, q, 6.0).rgb * 0.5 + texture2D(tex, q + vec2(0.03, 0.02), 6.0).rgb * 0.25 + texture2D(tex, q - vec2(0.03, 0.02), 6.0).rgb * 0.25;
-  return mix(amb * 0.45, c, inside);
+  return mix(ambient(tex, q, noMip) * 0.45, c, inside);
 }
-vec3 pickA(vec2 uv) { return pick(uTexA, uv, uSizeA, uFocalA, uDriftA); }
-vec3 pickB(vec2 uv) { return pick(uTexB, uv, uSizeB, uFocalB, uDriftB); }
+vec3 pickA(vec2 uv) { return pick(uTexA, uv, uSizeA, uFocalA, uDriftA, uBlurA); }
+vec3 pickB(vec2 uv) { return pick(uTexB, uv, uSizeB, uFocalB, uDriftB, uBlurB); }
 
 vec3 splitA(vec2 uv, float split) {
   if (split < 0.0005) return pickA(uv);
@@ -231,9 +252,9 @@ void main() {
   // gavel flash
   col = mix(col, vec3(1.0, 0.98, 0.92), uFlash * 0.7);
 
-  // film grain and vignette
+  // film grain (light, so the clips' own texture reads clean) and vignette
   float fg = hash(gl_FragCoord.xy + fract(uTime) * 100.0) - 0.5;
-  col += fg * 0.035;
+  col += fg * 0.021;
   vec2 v = (uv - 0.5) * vec2(1.0, 0.85);
   float vig = 1.0 - smoothstep(0.55, 1.35, length(v) * 1.6) * 0.32;
   col *= vig;

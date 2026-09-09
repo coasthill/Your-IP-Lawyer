@@ -1,27 +1,45 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { clipFrameCount } from "../art";
-import { dprCap, wantsSmallArt } from "../capabilities";
+import { dprCap, snapTime, wantsSmallArt, wantsSmallVideo, wantsVideo } from "../capabilities";
+import { filmEvents } from "../film-events";
 import { progressStore } from "../progress-store";
-import { GAVEL_STRIKE_AT, frameAt } from "../story";
+import { frameAt } from "../story";
 import { createContext, createFullscreenTriangle, createProgram, createTexture, uniformLocations, uploadTexture } from "./gl";
-import { loadMedia, type FrameDebug, type MediaSet } from "./media";
+import { loadMedia, videoDebug, type FrameDebug, type MediaSet, type Source } from "./media";
 import { FRAG, VERT } from "./shaders";
 
-const UNIFORMS = ["uTexA", "uTexB", "uSizeA", "uSizeB", "uFocalA", "uFocalB", "uDriftA", "uDriftB", "uRes", "uMix", "uKind", "uFit", "uTime", "uVel", "uFlash", "uSeed", "uHasB"] as const;
+const UNIFORMS = ["uTexA", "uTexB", "uSizeA", "uSizeB", "uFocalA", "uFocalB", "uDriftA", "uDriftB", "uRes", "uMix", "uKind", "uFit", "uTime", "uVel", "uFlash", "uSeed", "uHasB", "uBlurA", "uBlurB"] as const;
 
 const KIND = { dissolve: 0, curtain: 1, ripple: 2 } as const;
 
+/** The gavel's flash: 1 on the `impact` event, gone this many milliseconds later. */
+const FLASH_MS = 600;
+/** QA (`?snap`): a jump in progress counts as settled after this long at rest. */
+const SETTLE_MS = 150;
+
 /**
- * The WebGL renderer: the film scrubbed under the scroll — stills drifting, clips playing frame
- * by frame, one dissolving/rippling into the next. Progress eases toward the scroll target every
- * frame (`?snap` disables the easing for QA screenshots). Nothing here touches React state per
- * frame. Two texture slots (A on screen, B being revealed) are re-uploaded only when the drawable
- * behind them changes; when A becomes what B was, the slots swap instead of re-uploading.
+ * The WebGL renderer: the film under the scroll — stills drifting, clips playing as video while
+ * their beat is on screen, one dissolving/rippling/curtaining into the next. Progress eases toward
+ * the scroll target every frame (`?snap` disables the easing for QA screenshots and replays the
+ * clips on screen once a jump has settled, so captures are deterministic; `?t=<s>` freezes them at
+ * that second instead). Nothing here touches React state per frame.
+ * Two texture slots (A on screen, B being revealed) hold whatever each side draws: a picture is
+ * uploaded once and moved between the slots as the film advances or rewinds; a video is
+ * re-uploaded whenever it has presented a new frame — with no mipmaps, so the shader is told
+ * (`uBlurA/B`) to blur the ambient surround with taps instead. The loop runs continuously while a
+ * clip plays or the flash decays, otherwise only when something changed.
  */
-export function PaintedStory({ onReady, onFail }: { onReady: () => void; onFail: () => void }) {
+export function PaintedStory({ revealed, onReady, onFail }: { revealed: boolean; onReady: () => void; onFail: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const setRef = useRef<MediaSet | null>(null);
+  const revealedRef = useRef(false);
+
+  // The loader is lifting: the clips may start (until then they only preload).
+  useEffect(() => {
+    revealedRef.current = revealed;
+    if (revealed) setRef.current?.reveal();
+  }, [revealed]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -45,43 +63,69 @@ export function PaintedStory({ onReady, onFail }: { onReady: () => void; onFail:
     gl.uniform1i(u.uTexA, 0);
     gl.uniform1i(u.uTexB, 1);
     gl.uniform1f(u.uSeed, Math.random());
+    const isGl2 = typeof WebGL2RenderingContext !== "undefined" && gl instanceof WebGL2RenderingContext;
 
     let dirty = true;
     const snap = new URLSearchParams(window.location.search).has("snap");
-    const dpr = dprCap("webgl");
+    const dpr = dprCap();
     const set: MediaSet = loadMedia({
       small: wantsSmallArt(),
+      smallVideo: wantsSmallVideo(),
+      video: wantsVideo(),
+      holdAt: snapTime(),
+      host: canvas.parentElement,
       onUpdate: () => {
         dirty = true;
       },
     });
+    setRef.current = set;
+    if (revealedRef.current) set.reveal();
 
-    // Slot 0 is bound to TEXTURE0 (A), slot 1 to TEXTURE1 (B). Each remembers the drawable it holds,
-    // so a picture is uploaded once and then moved between the slots as the film advances or rewinds.
-    const slots = [
-      { tex: createTexture(gl), image: null as TexImageSource | null },
-      { tex: createTexture(gl), image: null as TexImageSource | null },
+    // Slot 0 is bound to TEXTURE0 (A), slot 1 to TEXTURE1 (B). Each remembers the drawable it holds
+    // (and, for a video, which frame), so a picture is uploaded once and then moved between the
+    // slots as the film advances or rewinds, and a video only when it has a new frame.
+    type Slot = { tex: WebGLTexture; image: TexImageSource | null; stamp: number | undefined; mip: boolean };
+    const slots: Slot[] = [
+      { tex: createTexture(gl), image: null, stamp: undefined, mip: false },
+      { tex: createTexture(gl), image: null, stamp: undefined, mip: false },
     ];
     const swap = () => {
       const t = slots[0];
       slots[0] = slots[1];
       slots[1] = t;
     };
-    const upload = (slot: number, image: TexImageSource) => {
-      uploadTexture(gl, slots[slot].tex, image);
-      slots[slot].image = image;
+    const isVideo = (image: TexImageSource): image is HTMLVideoElement => typeof HTMLVideoElement !== "undefined" && image instanceof HTMLVideoElement;
+    /** A video frame: non-power-of-two, clamped, linear, no mipmaps (createTexture already clamps). */
+    const uploadVideo = (tex: WebGLTexture, video: HTMLVideoElement) => {
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     };
-    /** Puts A into slot 0 and B into slot 1 with as few uploads as possible; returns the texture to sample B from. */
-    const assign = (imgA: TexImageSource, imgB: TexImageSource): WebGLTexture => {
-      const same = imgA === imgB;
-      if (slots[0].image !== imgA && slots[1].image === imgA) swap(); // the transition ended: A takes over what B held
-      else if (!same && slots[1].image !== imgB && slots[0].image === imgB) swap(); // rewinding into a transition
-      if (slots[0].image !== imgA) upload(0, imgA);
+    const upload = (slot: Slot, s: Source) => {
+      if (isVideo(s.image)) {
+        uploadVideo(slot.tex, s.image);
+        slot.mip = false;
+      } else {
+        uploadTexture(gl, slot.tex, s.image);
+        slot.mip = isGl2;
+      }
+      slot.image = s.image;
+      slot.stamp = s.stamp;
+    };
+    const stale = (slot: Slot, s: Source) => slot.image !== s.image || (s.stamp !== undefined && slot.stamp !== s.stamp);
+    /** Puts A into slot 0 and B into slot 1 with as few uploads as possible; returns the slot to sample B from. */
+    const assign = (a: Source, b: Source): Slot => {
+      const same = a.image === b.image;
+      if (slots[0].image !== a.image && slots[1].image === a.image) swap(); // the transition ended: A takes over what B held
+      else if (!same && slots[1].image !== b.image && slots[0].image === b.image) swap(); // rewinding into a transition
+      if (stale(slots[0], a)) upload(slots[0], a);
       // When both sides want the same picture (no transition, or two beats sharing a fallback
       // still) slot 0 serves both — never shuffle it into slot 1.
-      if (same) return slots[0].tex;
-      if (slots[1].image !== imgB) upload(1, imgB);
-      return slots[1].tex;
+      if (same) return slots[0];
+      if (stale(slots[1], b)) upload(slots[1], b);
+      return slots[1];
     };
 
     let width = 0;
@@ -112,6 +156,13 @@ export function PaintedStory({ onReady, onFail }: { onReady: () => void; onFail:
     });
     io.observe(canvas);
 
+    // The gavel: the flash starts when the strike clip meets the block.
+    let flashAt = -Infinity;
+    const offImpact = filmEvents.on("impact", () => {
+      flashAt = performance.now();
+      dirty = true;
+    });
+
     let p = progressStore.get().value;
     let lastP = p;
     let vel = 0;
@@ -120,7 +171,9 @@ export function PaintedStory({ onReady, onFail }: { onReady: () => void; onFail:
     let readySent = false;
     let disposed = false;
     let lastRender = 0;
-    let lastFrameKey = "";
+    let lastTarget = p;
+    let jumped = 0;
+    let movedAt = 0;
 
     const render = (now: number) => {
       raf = requestAnimationFrame(render);
@@ -134,11 +187,22 @@ export function PaintedStory({ onReady, onFail }: { onReady: () => void; onFail:
       vel = vel * 0.85 + Math.min(1, inst * 900) * 0.15;
       lastP = p;
 
-      const frame = frameAt(p, clipFrameCount);
-      set.focus(frame.b && frame.mix > 0.5 ? frame.b.beat : frame.a.beat);
-      const frameKey = `${frame.a.beat}:${frame.a.frame}:${frame.b?.beat ?? -1}:${frame.b?.frame ?? -1}`;
-      const moving = Math.abs(target - p) > 0.00005 || frame.b !== null || vel > 0.002 || frameKey !== lastFrameKey;
-      lastFrameKey = frameKey;
+      const frame = frameAt(p);
+      set.update(frame.a.beat, frame.b ? frame.b.beat : null, frame.mix);
+      // QA (`?snap`): a jump in progress that has come to rest replays (or holds) the clips on screen.
+      if (snap) {
+        if (Math.abs(target - lastTarget) > 1e-6) {
+          jumped += Math.abs(target - lastTarget);
+          movedAt = now;
+        }
+        lastTarget = target;
+        if (jumped > 0.002 && now - movedAt > SETTLE_MS) {
+          jumped = 0;
+          set.settle();
+        }
+      }
+      const flash = Math.max(0, 1 - (now - flashAt) / FLASH_MS);
+      const moving = Math.abs(target - p) > 0.00005 || frame.b !== null || vel > 0.002 || flash > 0 || set.playing();
       // At rest, refresh the grain at ~20fps; skip entirely when not visible.
       if (!visible) return;
       if (!moving && !dirty && now - lastRender < 50) return;
@@ -147,17 +211,19 @@ export function PaintedStory({ onReady, onFail }: { onReady: () => void; onFail:
 
       const reelA = set.reels[frame.a.beat];
       const reelB = frame.b ? set.reels[frame.b.beat] : reelA;
-      const a = reelA.sourceFor(frame.a.frame);
-      const b = frame.b ? reelB.sourceFor(frame.b.frame) : a;
-      const texB = assign(a.image, b.image);
+      const a = reelA.source();
+      const b = frame.b ? reelB.source() : a;
+      const slotB = assign(a, b);
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, slots[0].tex);
       gl.activeTexture(gl.TEXTURE1);
-      gl.bindTexture(gl.TEXTURE_2D, texB);
+      gl.bindTexture(gl.TEXTURE_2D, slotB.tex);
       gl.uniform2f(u.uSizeA, a.width, a.height);
       gl.uniform2f(u.uSizeB, b.width, b.height);
       gl.uniform2f(u.uFocalA, a.focal[0], a.focal[1]);
       gl.uniform2f(u.uFocalB, b.focal[0], b.focal[1]);
+      gl.uniform1f(u.uBlurA, slots[0].mip ? 0 : 1);
+      gl.uniform1f(u.uBlurB, slotB.mip ? 0 : 1);
       const driftB = frame.b ? frame.b.drift : frame.a.drift;
       gl.uniform3f(u.uDriftA, frame.a.drift[0], frame.a.drift[1], frame.a.drift[2]);
       gl.uniform3f(u.uDriftB, driftB[0], driftB[1], driftB[2]);
@@ -166,7 +232,6 @@ export function PaintedStory({ onReady, onFail }: { onReady: () => void; onFail:
       gl.uniform1f(u.uHasB, frame.b ? 1 : 0);
       gl.uniform1f(u.uTime, now / 1000);
       gl.uniform1f(u.uVel, vel);
-      const flash = Math.max(0, 1 - Math.abs(p - GAVEL_STRIKE_AT) / 0.012);
       gl.uniform1f(u.uFlash, flash * flash);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
 
@@ -176,16 +241,11 @@ export function PaintedStory({ onReady, onFail }: { onReady: () => void; onFail:
         b: frame.b ? frame.b.beat : -1,
         mix: frame.mix,
         beat: frame.a.beat,
-        frame: reelA.nearestLoaded(frame.a.frame) >= 0 ? reelA.nearestLoaded(frame.a.frame) : frame.a.frame,
+        video: videoDebug(frame, set.reels),
       };
-
-      if (!readySent && set.reels[0].version > 0) {
-        readySent = true;
-        onReady();
-      }
     };
     raf = requestAnimationFrame(render);
-    // Never keep the loader waiting on a slow network: the placeholder counts as a first frame after 4s.
+    // The loader lifts once the first picture is here and its clip can play (never later than the media timeout).
     void set.first.then(() => {
       if (!disposed && !readySent) {
         readySent = true;
@@ -198,7 +258,9 @@ export function PaintedStory({ onReady, onFail }: { onReady: () => void; onFail:
       cancelAnimationFrame(raf);
       ro.disconnect();
       io.disconnect();
+      offImpact();
       set.cancel();
+      setRef.current = null;
       slots.forEach((s) => gl.deleteTexture(s.tex));
       gl.deleteProgram(program);
       // The context is deliberately not "lost" here: React's development double-mount would

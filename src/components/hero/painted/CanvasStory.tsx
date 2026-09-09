@@ -1,20 +1,35 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { clipFrameCount } from "../art";
-import { dprCap, wantsSmallArt } from "../capabilities";
+import { dprCap, snapTime, wantsSmallArt, wantsSmallVideo, wantsVideo } from "../capabilities";
+import { filmEvents } from "../film-events";
 import { progressStore } from "../progress-store";
-import { GAVEL_STRIKE_AT, frameAt } from "../story";
-import { loadMedia, type FrameDebug, type Source } from "./media";
+import { frameAt } from "../story";
+import { loadMedia, videoDebug, type FrameDebug, type MediaSet, type Source } from "./media";
+
+/** The gavel's flash: 1 on the `impact` event, gone this many milliseconds later. */
+const FLASH_MS = 600;
+/** QA (`?snap`): a jump in progress counts as settled after this long at rest. */
+const SETTLE_MS = 150;
 
 /**
  * The 2D fallback (no WebGL): the same film and the same timeline on a canvas. Stills drift,
- * clips play frame by frame, the dissolve and the ripple are cross-fades, the curtain is a dark
- * cloth with a wavy edge. Portrait viewports contain the whole picture over a blurred, darkened
- * copy of itself. Deliberately simple — it exists so nobody sees a blank stage.
+ * clips play as video (drawn straight from the element every frame while they run), the dissolve
+ * and the ripple are cross-fades, the curtain is a dark cloth with a wavy edge, the gavel's flash
+ * follows the film's `impact` event. Portrait viewports contain the whole picture over a blurred,
+ * darkened copy of itself. `?snap` / `?t=` work as in the WebGL renderer (QA captures).
+ * Deliberately simple — it exists so nobody sees a blank stage.
  */
-export function CanvasStory({ onReady }: { onReady: () => void }) {
+export function CanvasStory({ revealed, onReady }: { revealed: boolean; onReady: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const setRef = useRef<MediaSet | null>(null);
+  const revealedRef = useRef(false);
+
+  // The loader is lifting: the clips may start (until then they only preload).
+  useEffect(() => {
+    revealedRef.current = revealed;
+    if (revealed) setRef.current?.reveal();
+  }, [revealed]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -22,15 +37,21 @@ export function CanvasStory({ onReady }: { onReady: () => void }) {
     const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
     const snap = new URLSearchParams(window.location.search).has("snap");
-    const dpr = dprCap("canvas");
+    const dpr = dprCap();
     const canBlur = "filter" in ctx;
     let dirty = true;
     const set = loadMedia({
       small: wantsSmallArt(),
+      smallVideo: wantsSmallVideo(),
+      video: wantsVideo(),
+      holdAt: snapTime(),
+      host: canvas.parentElement,
       onUpdate: () => {
         dirty = true;
       },
     });
+    setRef.current = set;
+    if (revealedRef.current) set.reveal();
 
     let width = 0;
     let height = 0;
@@ -54,9 +75,17 @@ export function CanvasStory({ onReady }: { onReady: () => void }) {
     });
     io.observe(canvas);
 
+    let flashAt = -Infinity;
+    const offImpact = filmEvents.on("impact", () => {
+      flashAt = performance.now();
+      dirty = true;
+    });
+
+    /** The drawable and its size in pixels (a video's decoded size, an image's natural size). */
     const pixelSize = (s: Source) => {
-      const src = s.image as CanvasImageSource & { width: number; height: number; naturalWidth?: number; naturalHeight?: number };
-      return { src, iw: src.naturalWidth || src.width, ih: src.naturalHeight || src.height };
+      const src = s.image as CanvasImageSource;
+      const el = s.image as unknown as { videoWidth?: number; videoHeight?: number; naturalWidth?: number; naturalHeight?: number; width?: number; height?: number };
+      return { src, iw: el.videoWidth || el.naturalWidth || el.width || 1, ih: el.videoHeight || el.naturalHeight || el.height || 1 };
     };
 
     /** Cover-fit around the focal point, zoomed and panned by the drift. */
@@ -110,8 +139,11 @@ export function CanvasStory({ onReady }: { onReady: () => void }) {
     let lastP = -1;
     let lastT = performance.now();
     let raf = 0;
-    let ready = false;
-    let lastFrameKey = "";
+    let readySent = false;
+    let disposed = false;
+    let lastTarget = p;
+    let jumped = 0;
+    let movedAt = 0;
     const render = (now: number) => {
       raf = requestAnimationFrame(render);
       const dt = Math.min(64, now - lastT);
@@ -119,23 +151,35 @@ export function CanvasStory({ onReady }: { onReady: () => void }) {
       const target = progressStore.get().value;
       if (snap) p = target;
       else p += (target - p) * Math.min(1, dt / 90);
-      const frame = frameAt(p, clipFrameCount);
-      set.focus(frame.b && frame.mix > 0.5 ? frame.b.beat : frame.a.beat);
-      const frameKey = `${frame.a.beat}:${frame.a.frame}:${frame.b?.beat ?? -1}:${frame.b?.frame ?? -1}`;
-      const moving = p !== lastP || Math.abs(target - p) > 0.00005 || frame.b !== null || frameKey !== lastFrameKey;
+      const frame = frameAt(p);
+      set.update(frame.a.beat, frame.b ? frame.b.beat : null, frame.mix);
+      // QA (`?snap`): a jump in progress that has come to rest replays (or holds) the clips on screen.
+      if (snap) {
+        if (Math.abs(target - lastTarget) > 1e-6) {
+          jumped += Math.abs(target - lastTarget);
+          movedAt = now;
+        }
+        lastTarget = target;
+        if (jumped > 0.002 && now - movedAt > SETTLE_MS) {
+          jumped = 0;
+          set.settle();
+        }
+      }
+      const flash = Math.max(0, 1 - (now - flashAt) / FLASH_MS);
+      const moving = p !== lastP || Math.abs(target - p) > 0.00005 || frame.b !== null || flash > 0 || set.playing();
       lastP = p;
-      lastFrameKey = frameKey;
       if (!visible || (!moving && !dirty)) return;
       dirty = false;
 
       const reelA = set.reels[frame.a.beat];
-      const a = reelA.sourceFor(frame.a.frame);
+      const reelB = frame.b ? set.reels[frame.b.beat] : reelA;
+      const a = reelA.source();
       ctx.fillStyle = "#1b5ad6";
       ctx.fillRect(0, 0, width, height);
       if (!frame.b || frame.mix <= 0) {
         draw(a, frame.a.drift, 1);
       } else if (frame.kind === "curtain") {
-        const b = set.reels[frame.b.beat].sourceFor(frame.b.frame);
+        const b = reelB.source();
         const t = frame.mix;
         if (t < 0.5) draw(a, frame.a.drift, 1);
         else draw(b, frame.b.drift, 1);
@@ -165,30 +209,40 @@ export function CanvasStory({ onReady }: { onReady: () => void }) {
         ctx.stroke();
       } else {
         // dissolve (with a little vertical smear) and ripple: a cross-fade
-        const b = set.reels[frame.b.beat].sourceFor(frame.b.frame);
+        const b = reelB.source();
         const bell = Math.sin(frame.mix * Math.PI);
         const smear = frame.kind === "dissolve" ? bell * height * 0.03 : 0;
         draw(a, frame.a.drift, 1, -smear * frame.mix);
         draw(b, frame.b.drift, frame.mix, smear * (1 - frame.mix));
       }
-      const flash = Math.max(0, 1 - Math.abs(p - GAVEL_STRIKE_AT) / 0.012);
       if (flash > 0) {
         ctx.fillStyle = `rgba(255,250,235,${(flash * flash * 0.85).toFixed(3)})`;
         ctx.fillRect(0, 0, width, height);
       }
-      const shown = reelA.nearestLoaded(frame.a.frame);
-      (window as unknown as { __yilFrame?: FrameDebug }).__yilFrame = { p, a: frame.a.beat, b: frame.b ? frame.b.beat : -1, mix: frame.mix, beat: frame.a.beat, frame: shown >= 0 ? shown : frame.a.frame };
-      if (!ready) {
-        ready = true;
-        onReady();
-      }
+      (window as unknown as { __yilFrame?: FrameDebug }).__yilFrame = {
+        p,
+        a: frame.a.beat,
+        b: frame.b ? frame.b.beat : -1,
+        mix: frame.mix,
+        beat: frame.a.beat,
+        video: videoDebug(frame, set.reels),
+      };
     };
     raf = requestAnimationFrame(render);
+    void set.first.then(() => {
+      if (!disposed && !readySent) {
+        readySent = true;
+        onReady();
+      }
+    });
     return () => {
+      disposed = true;
       cancelAnimationFrame(raf);
       ro.disconnect();
       io.disconnect();
+      offImpact();
       set.cancel();
+      setRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

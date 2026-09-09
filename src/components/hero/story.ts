@@ -8,9 +8,10 @@
  * Two layers of structure:
  *   SCENES — the chapters of the story: their ranges, labels and captions (copy lives here).
  *   FILM   — the beats of the picture: each beat is either a painted still with a slow camera
- *            drift or a CLIP, a frame sequence sliced from a generated video and scrubbed by the
- *            scroll. A clip whose frames are not in the repository yet plays as its fallback still,
- *            so the story never depends on the pipeline having run.
+ *            drift or a CLIP, a short generated video that plays by itself while its beat is on
+ *            screen; the scroll only carries the visitor from beat to beat. A clip that has not
+ *            been encoded yet plays as its fallback still, so the story never depends on the
+ *            pipeline having run.
  * Ranges are deliberately generous: each beat has room for the caption to be read and the picture
  * to settle.
  */
@@ -153,7 +154,10 @@ export const SCENES: Scene[] = [
   },
 ];
 
-/** The gavel strikes at exactly this progress value. Renderers key the flash and the sound off it. */
+/**
+ * The gavel strikes at about this progress value: captions and annotations key their timing off
+ * it. (The flash and the sound follow the clip itself — `impactAt` in art-manifest.json.)
+ */
 export const GAVEL_STRIKE_AT = 0.385;
 
 /** Height of the pinned stage as a multiple of the viewport (desktop / mobile). */
@@ -163,14 +167,13 @@ export const STAGE_HEIGHT_VH = { desktop: 1000, mobile: 760 };
    THE FILM
    One beat per stretch of the scroll. A still beat holds a painting under a slow camera move
    (`drift`: scale and a pan in picture units, eased from the beat's start to its end). A clip beat
-   scrubs a frame sequence extracted from a generated video (public/art/film/<clip>/): progress
-   within the beat maps to a frame fraction through `keyframes` (piecewise linear, default
-   [[0,0],[1,1]]) so a particular frame can be pinned to a particular scroll position — the gavel's
-   impact frame lands on GAVEL_STRIKE_AT. `hold: [a, b]` plays the clip over the first `a` of the
-   beat and freezes on its last frame from there on.
-   Every beat names a `fallback` still (a chain is allowed): the picture shown while the clip has no
-   frames yet or the still has not been painted yet. Sizes, focal points and frame counts come from
-   art-manifest.json (written by scripts/fetch-artwork.mjs).
+   plays a short video (public/art/film/<clip>/) from its first frame whenever the beat comes on
+   screen — the clip runs on its own clock, not the scroll's — and holds its last frame once it
+   ends (loop clips never end). Clip beats get the same slow drift as stills (CLIP_DRIFT unless the
+   beat names its own), which keeps the picture alive after the clip has finished.
+   Every beat names a `fallback` still (a chain is allowed): the picture shown while the clip has
+   not been encoded yet or the still has not been painted yet. Sizes, focal points, durations and
+   the gavel's impact time come from art-manifest.json (written by scripts/fetch-artwork.mjs).
    ------------------------------------------------------------------------------------------------ */
 export type Drift = { from: [scale: number, x: number, y: number]; to: [scale: number, x: number, y: number] };
 
@@ -187,13 +190,9 @@ export type Media =
       kind: "clip";
       /** Clip id in content/artwork/manifest.json → public/art/film/<id>/ */
       clip: string;
-      /** Still(s) shown until the clip's frames exist, in order of preference. */
+      /** Still(s) shown until the clip has been encoded (or while its video cannot play), in order of preference. */
       fallback: string | readonly string[];
-      /** progress within the beat → frame fraction (0 first frame, 1 last), piecewise linear. */
-      keyframes?: ReadonlyArray<readonly [progressWithinBeat: number, frameFraction: number]>;
-      /** The clip finishes at `a` (progress within the beat) and holds its last frame until `b`. */
-      hold?: readonly [number, number];
-      /** Optional camera move on top of the clip (identity when absent: the film moves by itself). */
+      /** Optional camera move on top of the clip (CLIP_DRIFT when absent). */
       drift?: Drift;
     };
 
@@ -216,7 +215,7 @@ export const FILM: Beat[] = [
     start: 0,
     end: 0.1,
     tone: "lapis",
-    media: { kind: "clip", clip: "assembly", fallback: "advocate", hold: [0.85, 1] },
+    media: { kind: "clip", clip: "assembly", fallback: "advocate" },
     alt: "A painted advocate in a black court gown assembles out of drifting dust against a deep blue wall, seen from behind, holding the gown open like a curtain.",
   },
   {
@@ -234,7 +233,7 @@ export const FILM: Beat[] = [
     start: 0.34,
     end: 0.42,
     tone: "lapis",
-    media: { kind: "clip", clip: "strike", fallback: "gavel", keyframes: [[0, 0], [(GAVEL_STRIKE_AT - 0.34) / 0.08, 0.74], [1, 1]] }, // 0.74 × 49 → frame 37 (f037.webp), the moment of contact; f034 is still the raised gavel, f038 the dust
+    media: { kind: "clip", clip: "strike", fallback: "gavel" },
     alt: "A wooden gavel with a brass band is raised above its sound block on a marble table and comes down.",
   },
   {
@@ -325,7 +324,7 @@ export function beatFor(scene: SceneId): Beat {
 /* ------------------------------------------------------------------------------------------------
    TRANSITIONS
    Each boundary between consecutive beats blends over a window centred on `at`. During the window
-   both beats keep playing (A on its last frames, B on its first), so the film never stalls.
+   both clips play (A running on, B from its first frame), so the film never stalls.
      dissolve — the picture breaks into pigment grains and streaks and reassembles as the next
      curtain  — a dark cloth is drawn across the picture and pulled away with an outward ripple,
                 revealing the next (the raised gavel)
@@ -349,10 +348,8 @@ export const TRANSITIONS: Transition[] = [
 export type FrameRef = {
   /** Index into FILM. */
   beat: number;
-  /** Frame index within the clip (0 for stills, or when the frame count is unknown). */
-  frame: number;
-  /** 0–1 position within the clip, independent of how many frames were extracted. */
-  fraction: number;
+  /** 0–1 progress within the beat (clamped: outside the beat it sits at the start or the end). */
+  local: number;
   /** Camera drift (scale, x, y) at this moment. */
   drift: [number, number, number];
 };
@@ -367,20 +364,17 @@ export type Frame = {
   kind: TransitionKind;
 };
 
-/** How many frames a clip has on disk (0 when none have been extracted) — supplied by art.ts. */
-export type FrameCount = (clip: string) => number;
-
-/** Resolves scroll progress into the frame(s) to show and how far the blend has gone. */
-export function frameAt(p: number, frames?: FrameCount): Frame {
+/** Resolves scroll progress into the beat(s) on screen and how far the blend between them has gone. */
+export function frameAt(p: number): Frame {
   for (const t of TRANSITIONS) {
     const start = t.at - t.width / 2;
     const end = t.at + t.width / 2;
     if (p >= start && p < end) {
       const mix = smoothstep((p - start) / (end - start));
-      return { a: frameRef(beatIndex(t.from), p, frames), b: frameRef(beatIndex(t.to), p, frames), mix, kind: t.kind };
+      return { a: frameRef(beatIndex(t.from), p), b: frameRef(beatIndex(t.to), p), mix, kind: t.kind };
     }
   }
-  return { a: frameRef(beatIndexAt(p), p, frames), b: null, mix: 0, kind: "dissolve" };
+  return { a: frameRef(beatIndexAt(p), p), b: null, mix: 0, kind: "dissolve" };
 }
 
 function beatIndex(id: string): number {
@@ -388,36 +382,20 @@ function beatIndex(id: string): number {
   return i < 0 ? 0 : i;
 }
 
-/** The frame of one beat at progress p (progress outside the beat clamps to its first/last frame). */
-export function frameRef(beat: number, p: number, frames?: FrameCount): FrameRef {
+/** One beat at progress p: its local progress and camera drift (progress outside the beat clamps to its start/end). */
+export function frameRef(beat: number, p: number): FrameRef {
   const b = FILM[beat];
-  const q = clamp01((p - b.start) / (b.end - b.start));
-  const fraction = frameFraction(b.media, q);
-  const n = b.media.kind === "clip" && frames ? frames(b.media.clip) : 0;
-  const frame = n > 1 ? Math.round(fraction * (n - 1)) : 0;
-  return { beat, frame, fraction, drift: driftAt(beat, q) };
+  const local = clamp01((p - b.start) / (b.end - b.start));
+  return { beat, local, drift: driftAt(beat, local) };
 }
 
-/** Frame fraction (0–1) of a clip at progress-within-beat q, through `hold` and `keyframes`. */
-export function frameFraction(media: Media, q: number): number {
-  if (media.kind !== "clip") return 0;
-  if (media.hold) {
-    if (q >= media.hold[0]) return 1;
-    q = media.hold[0] > 0 ? q / media.hold[0] : 1;
-  }
-  const keys = media.keyframes ?? [[0, 0], [1, 1]];
-  if (q <= keys[0][0]) return keys[0][1];
-  for (let i = 1; i < keys.length; i++) {
-    const [x0, y0] = keys[i - 1];
-    const [x1, y1] = keys[i];
-    if (q <= x1) return x1 > x0 ? lerp(y0, y1, (q - x0) / (x1 - x0)) : y1;
-  }
-  return keys[keys.length - 1][1];
-}
+/** The slow camera move every clip beat gets unless it names its own: a gentle push-in over the beat. */
+export const CLIP_DRIFT: Drift = { from: [1, 0, 0], to: [1.05, 0, 0] };
 
 /** Camera drift of a beat at progress-within-beat q (0–1). */
 export function driftAt(beat: number, q: number): [number, number, number] {
-  const { drift } = FILM[beat].media;
+  const { media } = FILM[beat];
+  const drift = media.drift ?? (media.kind === "clip" ? CLIP_DRIFT : undefined);
   if (!drift) return [1, 0, 0];
   const e = smoothstep(q);
   return [lerp(drift.from[0], drift.to[0], e), lerp(drift.from[1], drift.to[1], e), lerp(drift.from[2], drift.to[2], e)];

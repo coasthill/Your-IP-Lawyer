@@ -1,12 +1,13 @@
 "use client";
 
 /**
- * Decides which renderer the visitor gets.
- *   webgl  → the film: a full-screen shader that scrubs clips frame by frame, drifts the stills and
+ * Decides which renderer the visitor gets, and what it may load.
+ *   webgl  → the film: a full-screen shader that plays the clips as video, drifts the stills and
  *            dissolves, ripples or curtains one beat into the next. Cheap enough for phones, so it is
  *            the default wherever WebGL works.
  *   canvas → 2D canvas cross-fades (no WebGL, software GL, or save-data)
  *   static → no animation (prefers-reduced-motion, or explicitly requested)
+ * Video is switched off (posters and stills only) on save-data connections and with `?video=0`.
  */
 export type RenderTier = "webgl" | "canvas" | "static";
 
@@ -19,13 +20,17 @@ export function detectTier(): RenderTier {
   const forced = params.get("render");
   if (forced === "webgl" || forced === "canvas" || forced === "static") return forced;
 
-  const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
-  if (saveData) return "canvas";
+  if (saveData()) return "canvas";
 
   const gl = probeWebGL();
   if (!gl.ok) return "canvas";
   if (gl.software) return "canvas";
   return "webgl";
+}
+
+function saveData(): boolean {
+  if (typeof navigator === "undefined") return false;
+  return Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData);
 }
 
 function probeWebGL(): { ok: boolean; software: boolean; renderer: string } {
@@ -44,15 +49,39 @@ function probeWebGL(): { ok: boolean; software: boolean; renderer: string } {
   }
 }
 
-/** Device pixel ratio cap to keep fill-rate sane (the dissolve shader samples noise per pixel). */
-export function dprCap(tier: RenderTier): number {
+/** Device pixel ratio cap: 2 on every tier — the clips are sharp enough to deserve it. */
+export function dprCap(): number {
   if (typeof window === "undefined") return 1;
-  const dpr = window.devicePixelRatio || 1;
-  return tier === "webgl" ? Math.min(dpr, 1.5) : Math.min(dpr, 2);
+  return Math.min(window.devicePixelRatio || 1, 2);
 }
 
 /** Phones and small tablets get the smaller image files. */
 export function wantsSmallArt(): boolean {
   if (typeof window === "undefined") return false;
   return Math.max(window.innerWidth, window.innerHeight) * Math.min(window.devicePixelRatio || 1, 2) <= 1400;
+}
+
+/**
+ * The ≤1280-wide clip variants are for screens that cannot show more: the picture is never drawn
+ * narrower than the viewport, so its width in device pixels decides.
+ */
+export function wantsSmallVideo(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.innerWidth * Math.min(window.devicePixelRatio || 1, 2) <= 1400;
+}
+
+/** Whether the clips may play as video at all (off on save-data connections and with `?video=0`). */
+export function wantsVideo(): boolean {
+  if (typeof window === "undefined") return false;
+  if (new URLSearchParams(window.location.search).get("video") === "0") return false;
+  return !saveData();
+}
+
+/** QA: `?t=<seconds>` freezes the clips on screen at that second once the page has settled (see media.ts). */
+export function snapTime(): number | null {
+  if (typeof window === "undefined") return null;
+  const raw = new URLSearchParams(window.location.search).get("t");
+  if (raw === null) return null;
+  const t = Number(raw);
+  return Number.isFinite(t) && t >= 0 ? t : null;
 }
