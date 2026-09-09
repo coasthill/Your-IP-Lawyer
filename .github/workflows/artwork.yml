@@ -1,9 +1,10 @@
 # Fetches the homepage artwork from the URLs listed in content/artwork/manifest.json (and, optionally,
-# review candidates from content/artwork/candidates.json), converts them to web sizes with sharp and
-# commits the results to the branch the workflow was run on.
+# review candidates from content/artwork/candidates.json), converts the stills to web sizes with sharp,
+# slices the video clips into frame sequences with ffmpeg (public/art/film/<id>/) and commits the
+# results to the branch the workflow was run on.
 #
 # Run it from the repository's Actions tab ("Fetch artwork" → "Run workflow") after generating new
-# stills — README section 11 explains the whole loop for the site owner.
+# stills or clips — README section 11 explains the whole loop for the site owner.
 name: Fetch artwork
 
 on:
@@ -37,6 +38,14 @@ jobs:
           node-version: 22
       - name: Install sharp (only sharp — the site itself is not built here)
         run: npm i --no-save --no-audit --no-fund sharp@0.34.3
+      - name: Install ffmpeg if the runner image lacks it (slices the clips into frames)
+        run: |
+          if ! which ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+          which ffmpeg
+          ffmpeg -version | head -n 1
       - name: Fetch and convert
         env:
           WITH_CANDIDATES: ${{ github.event_name == 'push' || inputs.candidates }}

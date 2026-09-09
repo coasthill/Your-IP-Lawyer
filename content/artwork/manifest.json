@@ -96,6 +96,14 @@
         0.5
       ],
       "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_150541_16a29a64-5a18-4bda-9c8f-9d6c444618e9.png"
+    },
+    {
+      "id": "idea",
+      "focal": [
+        0.3,
+        0.5
+      ],
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_151055_725272de-85d7-4957-a940-a3e470824bb2.png"
     }
   ],
   "clips": [
@@ -116,6 +124,42 @@
       "fps": 10,
       "reverse": true,
       "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_150346_aa036035-fb74-43a9-b1da-403d1eda9af6.mp4"
+    },
+    {
+      "id": "sapling",
+      "fps": 10,
+      "reverse": false,
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_151052_4b77e4ae-524e-42f3-b9f3-9582c307947b.mp4"
+    },
+    {
+      "id": "water",
+      "fps": 10,
+      "reverse": false,
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_151053_aa75aa98-e9cb-4be7-9474-7b88f2772537.mp4"
+    },
+    {
+      "id": "certificate",
+      "fps": 10,
+      "reverse": false,
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_151113_968da0b4-16be-4f75-bf99-7d6f8c0a1f91.mp4"
+    },
+    {
+      "id": "structure",
+      "fps": 10,
+      "reverse": false,
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_151329_ef74a3b2-48bd-49d5-8f3c-8e89963c413b.mp4"
+    },
+    {
+      "id": "orchard",
+      "fps": 10,
+      "reverse": false,
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_151329_8a992451-508d-4a92-beff-4e0e6c30d7f4.mp4"
+    },
+    {
+      "id": "disclosure",
+      "fps": 10,
+      "reverse": false,
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_151329_dac9a5f2-d4fb-4b6c-801b-16669b49b2f7.mp4"
     }
   ]
 }

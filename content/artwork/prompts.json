@@ -3,13 +3,122 @@
   "style": "Neoclassical academic oil painting in the 19th-century salon manner, fine painterly brushwork, luminous, restrained varnish sheen, faint canvas weave, muted realistic colour, museum quality. No text, no letters, no numbers, no watermark, no signature, no frame.",
   "palette": "A flat, deep ultramarine blue wall (Yves Klein blue) for the lawyer's scenes; a flat gallery-white wall for the machine scenes; ivory marble; black silk; crisp white linen; gold leaf highlights; one crimson accent (the wax seal).",
   "scenes": [
-    { "id": "advocate", "scene": "lawyer", "prompt": "Full-length figure of a young Indian advocate seen from behind at a three-quarter angle, face turned away and unseen, wearing a long flowing black court gown over a black coat with crisp white barrister's bands at the collar, standing on a low ivory marble step in front of a flat, deep ultramarine blue wall (Yves Klein blue). With one hand he holds the edge of the gown out to the side like a theatre curtain, the folds catching warm gold light. Soft daylight from the upper left, pale marble floor, wide composition with generous empty blue wall on the left half for text." },
-    { "id": "gown", "scene": "gown", "prompt": "Extreme close view of a black silk barrister's court gown billowing in mid-air across a flat, deep ultramarine blue wall (Yves Klein blue): deep folds and swirling fabric in dynamic diagonal motion caught mid-movement, the edges of the folds catching warm gold daylight from the upper left. No figure, no face, no hands, no body — only fabric — with generous empty blue wall on the right third." },
-    { "id": "gavel", "scene": "gavel", "prompt": "Still life, low camera angle: a polished dark-walnut gavel with a brass band suspended mid-strike a hand's width above a round wooden sound block, on the edge of an ivory marble table, against a flat deep ultramarine blue wall (Yves Klein blue). A single cream document with a small crimson wax seal lies beside the block. Dramatic soft daylight from the upper left; generous empty blue wall in the upper half for text." },
-    { "id": "patent", "scene": "patent", "prompt": "Still life of an antique brass mechanism — interlocking gears of several sizes, an escapement wheel and a coiled spring — standing upright on an ivory marble slab in bright white studio daylight against a flat gallery-white wall. A sheet of cream technical drawing paper lies beneath the parts. Gold and brass tones, crisp highlights; generous empty white wall on the right half for text." },
-    { "id": "design", "scene": "design", "prompt": "Still life: a turned ivory-white porcelain vessel with a raised geometric pattern sits on a small wooden potter's lathe, a brass caliper resting against its side, on an ivory marble plinth against a flat gallery-white wall. Bright soft daylight from the upper left; generous empty white wall on the left half for text." },
-    { "id": "trademark", "scene": "trademark", "prompt": "Close view: a hand emerging from a black court-gown sleeve with a crisp white linen cuff presses a heavy brass seal stamp into molten crimson wax on a cream parchment document, on an ivory marble table against a flat gallery-white wall. Warm daylight from the upper left, gold reflections on the brass; generous empty white wall on the right half for text." },
-    { "id": "gi", "scene": "gi", "prompt": "Still life of Indian geographical-indication goods on an ivory marble table: a small bowl of loose Darjeeling tea leaves, folded Banarasi silk brocade in crimson and gold, three ripe Alphonso mangoes, a carved sandalwood box and a soft pashmina shawl, against a flat gallery-white wall with a drape of deep ultramarine blue cloth hanging at the far left edge. Warm daylight from the upper left. The arrangement sits in the lower left half, leaving generous empty white wall on the right half." },
-    { "id": "legal-world", "scene": "legal-world", "reference": "advocate", "prompt": "The same young Indian advocate as in the reference image — same black court gown, same build and dark hair — seen from behind, face unseen, walking away from the viewer toward a tall bright window at the end of a marble hall, the gown flowing behind him. A flat deep ultramarine blue wall on the left side, loose cream papers lifting into the air around him, gold daylight streaming in; wide composition with the figure centre-right." }
+    {
+      "id": "advocate",
+      "scene": "lawyer",
+      "prompt": "Full-length figure of a young Indian advocate seen from behind at a three-quarter angle, face turned away and unseen, wearing a long flowing black court gown over a black coat with crisp white barrister's bands at the collar, standing on a low ivory marble step in front of a flat, deep ultramarine blue wall (Yves Klein blue). With one hand he holds the edge of the gown out to the side like a theatre curtain, the folds catching warm gold light. Soft daylight from the upper left, pale marble floor, wide composition with generous empty blue wall on the left half for text."
+    },
+    {
+      "id": "gown",
+      "scene": "gown",
+      "prompt": "Extreme close view of a black silk barrister's court gown billowing in mid-air across a flat, deep ultramarine blue wall (Yves Klein blue): deep folds and swirling fabric in dynamic diagonal motion caught mid-movement, the edges of the folds catching warm gold daylight from the upper left. No figure, no face, no hands, no body — only fabric — with generous empty blue wall on the right third."
+    },
+    {
+      "id": "gavel",
+      "scene": "gavel",
+      "prompt": "Still life, low camera angle: a polished dark-walnut gavel with a brass band suspended mid-strike a hand's width above a round wooden sound block, on the edge of an ivory marble table, against a flat deep ultramarine blue wall (Yves Klein blue). A single cream document with a small crimson wax seal lies beside the block. Dramatic soft daylight from the upper left; generous empty blue wall in the upper half for text."
+    },
+    {
+      "id": "patent",
+      "scene": "patent",
+      "prompt": "Still life of an antique brass mechanism — interlocking gears of several sizes, an escapement wheel and a coiled spring — standing upright on an ivory marble slab in bright white studio daylight against a flat gallery-white wall. A sheet of cream technical drawing paper lies beneath the parts. Gold and brass tones, crisp highlights; generous empty white wall on the right half for text."
+    },
+    {
+      "id": "design",
+      "scene": "design",
+      "prompt": "Still life: a turned ivory-white porcelain vessel with a raised geometric pattern sits on a small wooden potter's lathe, a brass caliper resting against its side, on an ivory marble plinth against a flat gallery-white wall. Bright soft daylight from the upper left; generous empty white wall on the left half for text."
+    },
+    {
+      "id": "trademark",
+      "scene": "trademark",
+      "prompt": "Close view: a hand emerging from a black court-gown sleeve with a crisp white linen cuff presses a heavy brass seal stamp into molten crimson wax on a cream parchment document, on an ivory marble table against a flat gallery-white wall. Warm daylight from the upper left, gold reflections on the brass; generous empty white wall on the right half for text."
+    },
+    {
+      "id": "gi",
+      "scene": "gi",
+      "prompt": "Still life of Indian geographical-indication goods on an ivory marble table: a small bowl of loose Darjeeling tea leaves, folded Banarasi silk brocade in crimson and gold, three ripe Alphonso mangoes, a carved sandalwood box and a soft pashmina shawl, against a flat gallery-white wall with a drape of deep ultramarine blue cloth hanging at the far left edge. Warm daylight from the upper left. The arrangement sits in the lower left half, leaving generous empty white wall on the right half."
+    },
+    {
+      "id": "legal-world",
+      "scene": "legal-world",
+      "reference": "advocate",
+      "prompt": "The same young Indian advocate as in the reference image — same black court gown, same build and dark hair — seen from behind, face unseen, walking away from the viewer toward a tall bright window at the end of a marble hall, the gown flowing behind him. A flat deep ultramarine blue wall on the left side, loose cream papers lifting into the air around him, gold daylight streaming in; wide composition with the figure centre-right."
+    },
+    {
+      "id": "orchard",
+      "scene": "patent (beat: the orchard of rights)",
+      "prompt": "A grand old tree with dark green leaves standing on an ivory marble floor in front of a flat, deep ultramarine blue wall (Yves Klein blue). Instead of fruit, small golden emblems hang from its branches on fine threads, glowing softly: circular brass medallions embossed with a copyright symbol and a registered trade mark symbol, a small brass gear, a faceted gold ornament, and a single gold leaf medallion. Soft daylight from the upper left; the tree occupies the left half, leaving generous empty blue wall on the right half."
+    },
+    {
+      "id": "idea",
+      "scene": "patent (beat: the disclosure)",
+      "prompt": "Close view of two hands emerging from black court-gown sleeves with crisp white linen cuffs, cupped together and holding a small glowing sphere of warm golden light just above an ivory marble table, on which a cream patent drawing with fine ink lines and small diagrams lies; a flat gallery-white wall behind; soft daylight from the upper left; the hands sit in the left half, leaving generous empty white wall on the right half."
+    },
+    {
+      "id": "structure",
+      "scene": "design (beat: the structure rises)",
+      "prompt": "Classical sculptors in pale work aprons on wooden scaffolding carving a tall ivory marble column crowned with the scales of justice, chisels and mallets in hand, fine marble dust in the air, in bright white daylight against a flat gallery-white wall. The column stands centre-right, leaving generous empty white wall on the left half."
+    },
+    {
+      "id": "statue",
+      "scene": "gi (beat: statue and sapling)",
+      "reference": "advocate",
+      "prompt": "The same young Indian advocate as in the reference image — same black court gown, same build and dark hair — standing perfectly still on a low ivory marble pedestal like a statue, seen from behind at a three-quarter angle, face unseen; beside the pedestal a young sapling with fresh green leaves grows from a terracotta pot. A flat gallery-white wall behind, with a drape of deep ultramarine blue cloth at the far left; warm daylight from the upper left; the group sits in the left half, leaving generous empty white wall on the right."
+    },
+    {
+      "id": "water-still",
+      "scene": "legal-world (beat: shared water)",
+      "reference": "advocate",
+      "prompt": "In a bright marble hall with a tall window, the same young Indian advocate as in the reference image — same black court gown, seen from behind, face unseen — stands beside a young tree planted in the marble floor, together with a second figure, a young woman in plain modern clothes with a notebook under her arm, who pours water from a small brass jug onto the tree's roots. A flat deep ultramarine blue wall on the left side, gold daylight streaming in from the right, wide composition with the figures centre-right."
+    }
+  ],
+  "clips_note": "Film clips: Kling 3.0 on Higgsfield (kling3_0), mode std, sound off, 5 seconds, 16:9, about 6.25 credits each (pro mode needs a Plus plan). Each clip is image-to-video from one of the stills (start_image = that still). Every prompt begins with 'Oil painting come to life, the painterly texture preserved throughout.' and ends with 'Static camera, no zoom, no text.' The assembly clip was generated as the advocate dissolving into dust and is played backwards (reverse: true in manifest.json). If Higgsfield answers with a preset recommendation instead of a job, resubmit with declined_preset_id.",
+  "clips": [
+    {
+      "id": "assembly",
+      "from": "advocate",
+      "reverse": true,
+      "prompt": "The advocate in the black court gown stands still for a moment, then his figure and the gown dissolve gradually into fine golden dust and pale mist that drifts upward and scatters, from the edges of the gown inward, until only the empty deep blue wall, the marble steps and the column remain."
+    },
+    {
+      "id": "gown-fills",
+      "from": "gown",
+      "prompt": "The black silk gown fabric keeps billowing in slow motion across the deep blue wall; warm gold light glides along the folds. From within the cloth, faint golden embroidered emblems glow and drift like light catching thread — small circular seals, a tiny brass gear, a leaf medallion — then fade back into the silk. Gentle continuous motion, no readable text."
+    },
+    {
+      "id": "strike",
+      "from": "gavel",
+      "prompt": "The wooden gavel hangs motionless in mid-air above its sound block for a long, deliberate moment, trembling very slightly as if held too long; then it swings down and strikes the block hard. At the impact a ring of light and fine dust bursts outward across the marble table and the deep blue wall like a shockwave, the crimson wax seal on the document glints, and the gavel settles."
+    },
+    {
+      "id": "orchard",
+      "from": "orchard",
+      "prompt": "A gentle breeze stirs the leaves of the tree; the golden emblems hanging from its branches sway slowly on their threads and glow brighter one after another; soft light drifts across the deep blue wall and the marble floor."
+    },
+    {
+      "id": "disclosure",
+      "from": "idea",
+      "prompt": "The glowing golden sphere resting in the cupped hands slowly splits into two halves that drift apart; between them a glowing sheet of fine ink lines and small technical diagrams unfolds and hovers in the light, casting a soft gold glow on the hands and the marble; the hands hold steady."
+    },
+    {
+      "id": "structure",
+      "from": "structure",
+      "prompt": "The sculptors keep working: mallets tap on chisels, fine marble dust drifts down through the light, one sculptor leans back to judge his work, and the scales of justice at the top of the column sway very slightly and settle level."
+    },
+    {
+      "id": "certificate",
+      "from": "trademark",
+      "prompt": "The hand lifts the heavy brass seal off the crimson wax, hesitates in the air for a beat, then presses it down a second time by mistake, leaving a doubled, slightly offset impression; the wax glistens as it cools; the hand withdraws to the left, and the ornate wax seal remains on the cream document."
+    },
+    {
+      "id": "sapling",
+      "from": "statue",
+      "prompt": "The advocate stands perfectly still like a statue on his pedestal while the young sapling beside him grows visibly: its stem rises and thickens, new branches spread, fresh green leaves unfurl one after another and catch the warm daylight, until it is a small young tree."
+    },
+    {
+      "id": "water",
+      "from": "water-still",
+      "prompt": "The young woman tilts the brass jug and pours a thin, glittering stream of water onto the roots of the young tree; the leaves stir gently; loose sheets of paper drift slowly through the sunbeam; the advocate turns his head slightly toward the tree."
+    }
   ]
 }
