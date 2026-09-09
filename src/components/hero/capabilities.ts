@@ -2,8 +2,9 @@
 
 /**
  * Decides which renderer the visitor gets.
- *   webgl  → the painted stage: a full-screen shader that dissolves one still into the next.
- *            Cheap enough for phones, so it is the default wherever WebGL works.
+ *   webgl  → the film: a full-screen shader that scrubs clips frame by frame, drifts the stills and
+ *            dissolves, ripples or curtains one beat into the next. Cheap enough for phones, so it is
+ *            the default wherever WebGL works.
  *   canvas → 2D canvas cross-fades (no WebGL, software GL, or save-data)
  *   static → no animation (prefers-reduced-motion, or explicitly requested)
  */

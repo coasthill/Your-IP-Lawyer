@@ -243,8 +243,8 @@ export const FILM: Beat[] = [
     start: 0.42,
     end: 0.49,
     tone: "lapis",
-    media: { kind: "still", asset: "orchard", fallback: "patent", drift: { from: [1.0, 0, 0], to: [1.07, 0.02, -0.01] } },
-    alt: "An orchard at dusk in which the fruit on the branches are the symbols of intellectual property.",
+    media: { kind: "clip", clip: "orchard", fallback: ["orchard", "patent"] },
+    alt: "A great tree on a marble floor against a deep blue wall; its fruit are small golden emblems — copyright and trade mark medallions, a gear, an ornament, a leaf — glowing as a breeze stirs the leaves.",
   },
   {
     id: "disclosure",
@@ -253,7 +253,7 @@ export const FILM: Beat[] = [
     end: 0.56,
     tone: "paper",
     media: { kind: "clip", clip: "disclosure", fallback: "patent" },
-    alt: "Antique brass gears and an escapement on marble in bright daylight, the mechanism turning as a patent drawing unfolds beside it.",
+    alt: "Two hands in black sleeves with white cuffs hold a glowing golden sphere above a patent drawing; the sphere splits open and a glowing sheet of diagrams unfolds between the halves.",
   },
   {
     id: "structure",
@@ -261,8 +261,8 @@ export const FILM: Beat[] = [
     start: 0.56,
     end: 0.67,
     tone: "paper",
-    media: { kind: "still", asset: "structure", fallback: "design", drift: { from: [1.06, -0.02, 0], to: [1.0, 0.01, 0] } },
-    alt: "A turned porcelain vessel with a raised pattern on a small lathe, a brass caliper resting against it.",
+    media: { kind: "clip", clip: "structure", fallback: ["structure", "design"] },
+    alt: "Sculptors on wooden scaffolding carve a tall marble column crowned with the scales of justice, marble dust drifting in white daylight.",
   },
   {
     id: "certificate",
@@ -280,7 +280,7 @@ export const FILM: Beat[] = [
     end: 0.89,
     tone: "paper",
     media: { kind: "clip", clip: "sapling", fallback: "gi" },
-    alt: "A still life of Indian geographical-indication goods — tea, brocade, mangoes, sandalwood, a shawl — on marble, a sapling growing among them.",
+    alt: "The advocate stands like a statue on a marble pedestal beside a blue drape while a sapling in a terracotta pot grows into a young tree.",
   },
   {
     id: "constellation",
@@ -298,7 +298,7 @@ export const FILM: Beat[] = [
     end: 1,
     tone: "lapis",
     media: { kind: "clip", clip: "water", fallback: ["water-still", "legal-world"] },
-    alt: "Still water in a marble hall, a single ring spreading outward under the light of a tall window.",
+    alt: "In a bright marble hall a young woman waters a young tree from a brass jug while the advocate stands beside it; loose papers drift through the sunlight.",
   },
 ];
 

@@ -1,5 +1,5 @@
 {
-  "note": "The prompts behind the homepage paintings, so they can be regenerated or varied later. Model: GPT Image 2 on Higgsfield (gpt_image_2), 3:2, 2K, medium quality — about 2 credits per still. Scene 8 was generated with scene 1 passed as an image reference so the same advocate appears in both. Keep the shared style sentence and the 'no text' sentence in every prompt.",
+  "note": "The prompts behind the homepage paintings, so they can be regenerated or varied later. Model: GPT Image 2 on Higgsfield (gpt_image_2), 3:2, 2K, medium quality — about 2 credits per still. The legal-world, statue and water-still scenes were generated with the advocate still passed as an image reference so the same advocate appears in all of them. Keep the shared style sentence and the 'no text' sentence in every prompt.",
   "style": "Neoclassical academic oil painting in the 19th-century salon manner, fine painterly brushwork, luminous, restrained varnish sheen, faint canvas weave, muted realistic colour, museum quality. No text, no letters, no numbers, no watermark, no signature, no frame.",
   "palette": "A flat, deep ultramarine blue wall (Yves Klein blue) for the lawyer's scenes; a flat gallery-white wall for the machine scenes; ivory marble; black silk; crisp white linen; gold leaf highlights; one crimson accent (the wax seal).",
   "scenes": [
