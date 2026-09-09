@@ -1,5 +1,5 @@
 {
-  "note": "Scene stills for the homepage. Each 'source' is a URL the Fetch artwork workflow downloads and converts; 'focal' is the x,y point (0–1, from the top-left) that must stay in frame when the picture is cropped on narrow screens. The prompts used to make them are in prompts.json.",
+  "note": "Scene stills and film clips for the homepage. Each 'source' is a URL the Fetch artwork workflow downloads; stills are converted to WebP, clips are sliced into WebP frame sequences at 'fps' (reverse: true plays a clip backwards). 'focal' is the x,y point (0–1, from the top-left) that must stay in frame when a still is cropped. Prompts live in prompts.json.",
   "scenes": [
     {
       "id": "advocate",
@@ -64,6 +64,58 @@
         0.55
       ],
       "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_074721_d474ab3a-9ead-4a81-8c6b-fbfbce1148a6.png"
+    },
+    {
+      "id": "orchard",
+      "focal": [
+        0.32,
+        0.5
+      ],
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_150310_bd7ffb64-7982-4b6b-8e48-567d487c02df.png"
+    },
+    {
+      "id": "structure",
+      "focal": [
+        0.62,
+        0.5
+      ],
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_150540_7fb39408-852a-47a3-939e-fed7b715a92a.png"
+    },
+    {
+      "id": "statue",
+      "focal": [
+        0.32,
+        0.5
+      ],
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_150540_3d5afc7a-9c77-4726-8bc3-b570c413ad22.png"
+    },
+    {
+      "id": "water-still",
+      "focal": [
+        0.6,
+        0.5
+      ],
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_150541_16a29a64-5a18-4bda-9c8f-9d6c444618e9.png"
+    }
+  ],
+  "clips": [
+    {
+      "id": "strike",
+      "fps": 10,
+      "reverse": false,
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_150346_658bcc2d-1cb2-41cc-a932-62d487e0369c.mp4"
+    },
+    {
+      "id": "gown-fills",
+      "fps": 10,
+      "reverse": false,
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_150307_f6f586bc-d060-45b5-bb7f-494126ff3e85.mp4"
+    },
+    {
+      "id": "assembly",
+      "fps": 10,
+      "reverse": true,
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_150346_aa036035-fb74-43a9-b1da-403d1eda9af6.mp4"
     }
   ]
 }
