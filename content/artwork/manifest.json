@@ -1,5 +1,5 @@
 {
-  "note": "Scene stills and film clips for the homepage. Each 'source' is a URL the Fetch artwork workflow downloads; stills are converted to WebP, clips are sliced into WebP frame sequences at 'fps' (reverse: true plays a clip backwards). 'focal' is the x,y point (0–1, from the top-left) that must stay in frame when a still is cropped. Prompts live in prompts.json.",
+  "note": "Scene stills and film clips for the homepage. Each 'source' is a URL the Fetch artwork workflow downloads; stills are converted to WebP, clips are encoded with ffmpeg into webm and mp4 files (a large and a small variant) plus a poster and a contact sheet, and the film plays them as video. Clip options: reverse (play backwards), trim ([start, end] seconds), loop (encode a seamless forward-then-backward loop) and impactAt (seconds on the forward, untrimmed clip when the gavel meets the block; the sound and flash fire there). The clip sources are the 2K upscales of the Kling generations (see prompts.json). 'focal' is the x,y point (0-1, from the top-left) that must stay in frame when a still is cropped. Prompts live in prompts.json.",
   "scenes": [
     {
       "id": "advocate",
@@ -109,57 +109,52 @@
   "clips": [
     {
       "id": "strike",
-      "fps": 10,
       "reverse": false,
-      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_150346_658bcc2d-1cb2-41cc-a932-62d487e0369c.mp4"
+      "impactAt": 3.6,
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_180444_4d319794-89dd-4f8b-97f7-ee55b9135a93.mp4"
     },
     {
       "id": "gown-fills",
-      "fps": 10,
       "reverse": false,
-      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_150307_f6f586bc-d060-45b5-bb7f-494126ff3e85.mp4"
+      "loop": true,
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_181027_dbac0e86-575c-4736-8cf5-f30fc56f0d29.mp4"
     },
     {
       "id": "assembly",
-      "fps": 10,
       "reverse": true,
-      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_150346_aa036035-fb74-43a9-b1da-403d1eda9af6.mp4"
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_181025_22e4f93e-d7ae-4df7-82ae-c42c74c3c95c.mp4"
     },
     {
       "id": "sapling",
-      "fps": 10,
       "reverse": false,
-      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_151052_4b77e4ae-524e-42f3-b9f3-9582c307947b.mp4"
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_181508_260ba752-1302-489c-94ea-1e27e079e442.mp4"
     },
     {
       "id": "water",
-      "fps": 10,
       "reverse": false,
-      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_151053_aa75aa98-e9cb-4be7-9474-7b88f2772537.mp4"
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_181511_7971573f-8dad-4c0f-a542-c21ccd95c170.mp4"
     },
     {
       "id": "certificate",
-      "fps": 10,
       "reverse": false,
-      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_151113_968da0b4-16be-4f75-bf99-7d6f8c0a1f91.mp4"
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_181304_b67a7527-013c-47c1-a4db-823e81060c6d.mp4"
     },
     {
       "id": "structure",
-      "fps": 10,
       "reverse": false,
-      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_151329_ef74a3b2-48bd-49d5-8f3c-8e89963c413b.mp4"
+      "loop": true,
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_181645_278f3c76-fd0e-4a2d-9611-50bfedf339f0.mp4"
     },
     {
       "id": "orchard",
-      "fps": 10,
       "reverse": false,
-      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_151329_8a992451-508d-4a92-beff-4e0e6c30d7f4.mp4"
+      "loop": true,
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_181655_8d3581f8-149e-4568-938d-4281d888d005.mp4"
     },
     {
       "id": "disclosure",
-      "fps": 10,
       "reverse": false,
-      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_151329_dac9a5f2-d4fb-4b6c-801b-16669b49b2f7.mp4"
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_2xwMSesjmHx9KvBsat44Yc7osc7/hf_20260909_181303_4b263177-100d-4113-8c49-0cbc921a5b63.mp4"
     }
   ]
 }

@@ -1,7 +1,13 @@
 # Fetches the homepage artwork from the URLs listed in content/artwork/manifest.json (and, optionally,
 # review candidates from content/artwork/candidates.json), converts the stills to web sizes with sharp,
-# slices the video clips into frame sequences with ffmpeg (public/art/film/<id>/) and commits the
-# results to the branch the workflow was run on.
+# encodes each film clip with ffmpeg into public/art/film/<id>/ — clip.webm (VP9) and clip.mp4 (H.264),
+# up to 2560px wide, clip-sm.webm and clip-sm.mp4 up to 1280px wide for phones, poster.webp and
+# poster-sm.webp (the first frame) and sheet.jpg (a five-frame contact sheet) — writes
+# src/components/hero/art-manifest.json and commits the results to the branch the workflow was run on.
+#
+# A clip whose source, reverse, trim and loop are unchanged and whose files are all present is skipped;
+# tick "reencode" when starting the workflow by hand to encode every clip again (after changing the
+# encoder settings in scripts/fetch-artwork.mjs, or to replace stand-in media).
 #
 # Run it from the repository's Actions tab ("Fetch artwork" → "Run workflow") after generating new
 # stills or clips — README section 11 explains the whole loop for the site owner.
@@ -22,6 +28,10 @@ on:
         description: "Also convert content/artwork/candidates.json into public/art/candidates (review copies)"
         type: boolean
         default: true
+      reencode:
+        description: "Encode every clip again, even those whose source and settings are unchanged"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -38,7 +48,7 @@ jobs:
           node-version: 22
       - name: Install sharp (only sharp — the site itself is not built here)
         run: npm i --no-save --no-audit --no-fund sharp@0.34.3
-      - name: Install ffmpeg if the runner image lacks it (slices the clips into frames)
+      - name: Install ffmpeg if the runner image lacks it (encodes the clips)
         run: |
           if ! which ffmpeg >/dev/null 2>&1; then
             sudo apt-get update
@@ -46,9 +56,10 @@ jobs:
           fi
           which ffmpeg
           ffmpeg -version | head -n 1
-      - name: Fetch and convert
+      - name: Fetch, convert and encode
         env:
           WITH_CANDIDATES: ${{ github.event_name == 'push' || inputs.candidates }}
+          REENCODE: ${{ github.event_name == 'workflow_dispatch' && inputs.reencode }}
         run: node scripts/fetch-artwork.mjs
       - name: Commit the converted files
         run: |
@@ -56,5 +67,5 @@ jobs:
           git config user.email "artwork-fetch@users.noreply.github.com"
           git add -A public/art src/components/hero/art-manifest.json
           if git diff --cached --quiet; then echo "Nothing changed"; exit 0; fi
-          git commit -m "Artwork: fetch and convert scene stills"
+          git commit -m "Artwork: fetch and encode film clips"
           git push
