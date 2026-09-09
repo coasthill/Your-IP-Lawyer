@@ -1,0 +1,44 @@
+# Fetches the homepage artwork from the URLs listed in content/artwork/manifest.json (and, optionally,
+# review candidates from content/artwork/candidates.json), converts them to web sizes with sharp and
+# commits the results to the branch the workflow was run on.
+#
+# Run it from the repository's Actions tab ("Fetch artwork" → "Run workflow") after generating new
+# stills — README section 11 explains the whole loop for the site owner.
+name: Fetch artwork
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidates:
+        description: "Also convert content/artwork/candidates.json into public/art/candidates (review copies)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install sharp
+        run: mkdir -p /tmp/art && cd /tmp/art && npm init -y >/dev/null && npm i --no-audit --no-fund sharp@0.34.3
+      - name: Fetch and convert
+        env:
+          NODE_PATH: /tmp/art/node_modules
+          WITH_CANDIDATES: ${{ inputs.candidates }}
+        run: node scripts/fetch-artwork.mjs
+      - name: Commit the converted files
+        run: |
+          git config user.name "artwork-fetch[bot]"
+          git config user.email "artwork-fetch@users.noreply.github.com"
+          git add -A public/art src/components/hero/art-manifest.json
+          if git diff --cached --quiet; then echo "Nothing changed"; exit 0; fi
+          git commit -m "Artwork: fetch and convert scene stills"
+          git push

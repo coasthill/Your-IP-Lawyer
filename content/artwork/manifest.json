@@ -1,0 +1,4 @@
+{
+  "note": "Scene stills for the homepage. Each 'source' is a URL the Fetch artwork workflow downloads and converts; 'focal' is the x,y point (0–1, from the top-left) that must stay in frame when the picture is cropped on narrow screens. The prompts used to make them are in prompts.json.",
+  "scenes": []
+}
