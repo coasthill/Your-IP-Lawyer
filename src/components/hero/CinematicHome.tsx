@@ -6,10 +6,11 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { detectTier, type RenderTier } from "./capabilities";
 import { progressStore } from "./progress-store";
-import { ART, GAVEL_STRIKE_AT, STAGE_HEIGHT_VH, frameAt } from "./story";
+import { FILM, GAVEL_STRIKE_AT, STAGE_HEIGHT_VH, frameAt } from "./story";
 import { TextOverlay } from "./TextOverlay";
 import { Annotations } from "./Annotations";
 import { MapOverlay } from "./MapOverlay";
+import { ConstellationOverlay } from "./ConstellationOverlay";
 import { Loader } from "./Loader";
 import { SoundToggle } from "./SoundToggle";
 import { sound } from "./sound";
@@ -31,8 +32,8 @@ const CanvasStory = dynamic(() => import("./painted/CanvasStory").then((m) => m.
  * scroll position to progress 0–1, which the renderer and every DOM layer read from the store.
  * Nothing here scroll-jacks: the user scrolls normally, the painting follows.
  *
- * The stage switches between the lapis and paper surfaces as the paintings change, so captions,
- * annotations and controls always sit on the right colours.
+ * The stage switches between the lapis and paper surfaces as the beats of the film change, so
+ * captions, annotations and controls always sit on the right colours.
  */
 export function CinematicHome() {
   const detected = useSyncExternalStore(noopSubscribe, getClientTier, getServerTier);
@@ -66,14 +67,14 @@ export function CinematicHome() {
     return () => trigger.kill();
   }, [tier]);
 
-  // Surface tone follows the painting on screen (direct DOM update, no React state per frame).
+  // Surface tone follows the beat on screen (direct DOM update, no React state per frame).
   useEffect(() => {
     const el = stickyRef.current;
     if (!el || !tier || tier === "static") return;
     let current = "";
     const apply = (p: number) => {
       const f = frameAt(p);
-      const tone = (f.b >= 0 && f.mix > 0.5 ? ART[f.b] : ART[f.a]).tone;
+      const tone = FILM[f.b && f.mix > 0.5 ? f.b.beat : f.a.beat].tone;
       if (tone === current) return;
       current = tone;
       el.dataset.tone = tone;
@@ -126,6 +127,7 @@ export function CinematicHome() {
               />
               <Annotations />
               <MapOverlay />
+              <ConstellationOverlay />
               <TextOverlay />
               <FrameMarks />
               <div className="pointer-events-auto absolute bottom-6 left-[var(--page-x)] right-[var(--page-x)] z-30 flex items-end justify-between">
@@ -140,7 +142,7 @@ export function CinematicHome() {
   );
 }
 
-/** Registration marks in the four corners and a scene counter: the drawing-sheet furniture. */
+/** Registration marks in the four corners and a beat counter: the drawing-sheet furniture. */
 function FrameMarks() {
   const ref = useRef<HTMLSpanElement>(null);
   useEffect(() => {
@@ -149,8 +151,8 @@ function FrameMarks() {
     let last = "";
     const apply = (p: number) => {
       const f = frameAt(p);
-      const i = f.b >= 0 && f.mix > 0.5 ? f.b : f.a;
-      const label = `${String(i + 1).padStart(2, "0")} / ${String(ART.length).padStart(2, "0")}`;
+      const i = f.b && f.mix > 0.5 ? f.b.beat : f.a.beat;
+      const label = `${String(i + 1).padStart(2, "0")} / ${String(FILM.length).padStart(2, "0")}`;
       if (label !== last) {
         last = label;
         el.textContent = label;
@@ -164,7 +166,7 @@ function FrameMarks() {
       <span className="reg-mark absolute left-[var(--page-x)] top-[calc(var(--header-height)+0.75rem)]" />
       <span className="reg-mark absolute right-[var(--page-x)] top-[calc(var(--header-height)+0.75rem)]" />
       <span ref={ref} className="absolute right-[var(--page-x)] top-[calc(var(--header-height)+2rem)] font-mono text-[0.6rem] tracking-[0.24em] opacity-70 [font-variant-numeric:tabular-nums]">
-        01 / 08
+        01 / {String(FILM.length).padStart(2, "0")}
       </span>
     </div>
   );

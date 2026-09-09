@@ -1,13 +1,20 @@
 /**
  * The painted stage in one full-screen fragment shader.
  *
- * Two paintings (A, the one on screen; B, the one being revealed) are cover-fitted to the viewport
- * around their focal points, drifted slowly like a camera on a dolly, and blended by `uMix`:
+ * Two pictures (A, the one on screen; B, the one being revealed) — each a painted still or a frame
+ * of a clip — are fitted to the viewport, drifted slowly like a camera on a dolly, and blended by
+ * `uMix`:
  *   kind 0 — DISSOLVE: the picture breaks up along a noise field into pigment grains and vertical
- *            streaks (the pixel-sort look), a few gold motes catch the light, and the next painting
+ *            streaks (the pixel-sort look), a few gold motes catch the light, and the next picture
  *            settles in behind.
  *   kind 1 — CURTAIN: a dark cloth is drawn across the frame and pulled away; the gavel's flash
- *            happens while the cloth covers the picture.
+ *            happens after the cloth has cleared. As it is pulled away the cloth sends an outward
+ *            ripple through the picture behind it.
+ *   kind 2 — RIPPLE: a wave spreads from the centre of the frame, displacing the picture along its
+ *            radius, with a thinner ribbon trailing it; B follows the wavefront outward.
+ * Fit (`uFit`): 0 covers the viewport around the focal point (landscape screens); 1 contains the
+ * whole picture (portrait screens — the film is never cropped on phones) and fills the surround
+ * with the same picture sampled far down the mip chain, darkened: blurred ambient light.
  * Everything is procedural: no extra textures, no post-processing pass.
  */
 
@@ -26,7 +33,7 @@ varying vec2 vUv;
 
 uniform sampler2D uTexA;
 uniform sampler2D uTexB;
-uniform vec2 uSizeA;      // painting size in pixels
+uniform vec2 uSizeA;      // picture size in pixels
 uniform vec2 uSizeB;
 uniform vec2 uFocalA;     // focal point, 0–1, y up
 uniform vec2 uFocalB;
@@ -34,13 +41,15 @@ uniform vec3 uDriftA;     // scale, pan x, pan y
 uniform vec3 uDriftB;
 uniform vec2 uRes;        // viewport in pixels
 uniform float uMix;       // 0 → A, 1 → B
-uniform float uKind;      // 0 dissolve, 1 curtain
+uniform float uKind;      // 0 dissolve, 1 curtain, 2 ripple
+uniform float uFit;       // 0 cover, 1 contain
 uniform float uTime;
 uniform float uVel;       // |scroll velocity| 0–1
 uniform float uFlash;     // gavel flash 0–1
 uniform float uSeed;
 uniform float uHasB;
 
+const float PI = 3.14159265;
 const vec3 GOLD = vec3(0.85, 0.71, 0.33);
 const vec3 CLOTH = vec3(0.035, 0.035, 0.045);
 
@@ -70,36 +79,70 @@ float fbm(vec2 p) {
   return v;
 }
 
-/* Cover-fit uv (screen, 0-1) into a painting of 'size' px, keeping 'focal' in frame, then apply the drift. */
+/* Cover-fit uv (screen, 0-1) into a picture of 'size' px, keeping 'focal' in frame, then apply the drift. */
 vec2 coverUv(vec2 uv, vec2 size, vec2 focal, vec3 drift) {
   vec2 s = uRes / size;
   float k = max(s.x, s.y);
-  vec2 vis = uRes / (size * k);              // fraction of the painting that fits
+  vec2 vis = uRes / (size * k);              // fraction of the picture that fits
   vec2 offset = clamp(focal - vis * 0.5, vec2(0.0), vec2(1.0) - vis);
   vec2 p = offset + uv * vis;
   p = focal + (p - focal) / drift.x + drift.yz * vis;
   return clamp(p, vec2(0.002), vec2(0.998));
 }
 
-vec3 sampleSplit(sampler2D tex, vec2 uv, float split) {
-  if (split < 0.0005) return texture2D(tex, uv).rgb;
-  float r = texture2D(tex, uv + vec2(split, 0.0)).r;
-  float g = texture2D(tex, uv).g;
-  float b = texture2D(tex, uv - vec2(split, 0.0)).b;
-  return vec3(r, g, b);
+/* Contain-fit: the whole picture, centred; 'inside' is 0 for screen pixels outside the picture. */
+vec2 containUv(vec2 uv, vec2 size, vec2 focal, vec3 drift, out float inside) {
+  vec2 s = uRes / size;
+  float k = min(s.x, s.y);
+  vec2 vis = uRes / (size * k);              // > 1 on the axis with room to spare
+  vec2 p = 0.5 + (uv - 0.5) * vis;
+  p = focal + (p - focal) / drift.x + drift.yz;
+  vec2 px = abs(p - 0.5) * size;             // distance from the centre in picture pixels
+  vec2 edge = smoothstep(size * 0.5, size * 0.5 - 1.5, px);
+  inside = edge.x * edge.y;
+  return clamp(p, vec2(0.002), vec2(0.998));
+}
+
+/* One picture at a screen uv under the current fit: cover, or contain over blurred ambient light. */
+vec3 pick(sampler2D tex, vec2 uv, vec2 size, vec2 focal, vec3 drift) {
+  if (uFit < 0.5) return texture2D(tex, coverUv(uv, size, focal, drift)).rgb;
+  float inside;
+  vec2 p = containUv(uv, size, focal, drift, inside);
+  vec3 c = texture2D(tex, p).rgb;
+  // the surround: the same picture, cover-fitted, far down the mip chain and darkened to 35 %
+  vec2 q = coverUv(uv, size, focal, vec3(1.15, 0.0, 0.0));
+  vec3 amb = texture2D(tex, q, 6.0).rgb * 0.5 + texture2D(tex, q + vec2(0.03, 0.02), 6.0).rgb * 0.25 + texture2D(tex, q - vec2(0.03, 0.02), 6.0).rgb * 0.25;
+  return mix(amb * 0.35, c, inside);
+}
+vec3 pickA(vec2 uv) { return pick(uTexA, uv, uSizeA, uFocalA, uDriftA); }
+vec3 pickB(vec2 uv) { return pick(uTexB, uv, uSizeB, uFocalB, uDriftB); }
+
+vec3 splitA(vec2 uv, float split) {
+  if (split < 0.0005) return pickA(uv);
+  return vec3(pickA(uv + vec2(split, 0.0)).r, pickA(uv).g, pickA(uv - vec2(split, 0.0)).b);
+}
+vec3 splitB(vec2 uv, float split) {
+  if (split < 0.0005) return pickB(uv);
+  return vec3(pickB(uv + vec2(split, 0.0)).r, pickB(uv).g, pickB(uv - vec2(split, 0.0)).b);
+}
+
+/* Radial coordinates from the centre of the frame, corrected for the viewport aspect. */
+vec2 radial(vec2 uv) {
+  vec2 c = uv - 0.5;
+  c.x *= uRes.x / uRes.y;
+  return c;
 }
 
 void main() {
   vec2 uv = vUv;
-  vec2 uvA = coverUv(uv, uSizeA, uFocalA, uDriftA);
   vec3 col;
 
   if (uHasB < 0.5 || uMix <= 0.0005) {
-    col = texture2D(uTexA, uvA).rgb;
+    col = pickA(uv);
   } else if (uKind < 0.5) {
     /* ---------- dissolve ---------- */
     float t = uMix;
-    float bell = sin(t * 3.14159);                   // peaks mid-transition
+    float bell = sin(t * PI);                        // peaks mid-transition
     float n = fbm(uv * vec2(3.2, 2.2) + uSeed * 7.0);
     float w = 0.28;
     float r = clamp((t * (1.0 + w) - n) / w, 0.0, 1.0);   // reveal of B, grain by grain
@@ -110,26 +153,24 @@ void main() {
     float col2 = hash(vec2(floor(uv.x * uRes.x / 9.0), 4.1));
     float streak = (0.35 + 0.65 * col1) * (0.5 + 0.5 * col2);
     float amount = bell * (0.05 + 0.12 * uVel) * streak;
-    vec2 uvB = coverUv(uv + vec2(0.0, amount * (1.0 - t)), uSizeB, uFocalB, uDriftB);
-    vec2 uvA2 = coverUv(uv - vec2(0.0, amount * t), uSizeA, uFocalA, uDriftA);
+    vec2 uvB = uv + vec2(0.0, amount * (1.0 - t));
+    vec2 uvA2 = uv - vec2(0.0, amount * t);
 
     // coarse blocks right at the edge
     vec2 g = uRes / (10.0 + 26.0 * (1.0 - near));
     vec2 q = floor(uv * g) / g;
     float blocky = smoothstep(0.55, 0.95, near) * bell;
-    vec2 uvAq = coverUv(q - vec2(0.0, amount * t), uSizeA, uFocalA, uDriftA);
-    vec2 uvBq = coverUv(q + vec2(0.0, amount * (1.0 - t)), uSizeB, uFocalB, uDriftB);
     float split = 0.0035 * near * bell;
-    vec3 a = mix(sampleSplit(uTexA, uvA2, split), texture2D(uTexA, uvAq).rgb, blocky);
-    vec3 b = mix(sampleSplit(uTexB, uvB, split), texture2D(uTexB, uvBq).rgb, blocky);
+    vec3 a = mix(splitA(uvA2, split), pickA(q - vec2(0.0, amount * t)), blocky);
+    vec3 b = mix(splitB(uvB, split), pickB(q + vec2(0.0, amount * (1.0 - t))), blocky);
     col = mix(a, b, r);
 
     // pigment grains and gold motes along the edge
-    float grain = hash(uv * uRes * 0.5 + uSeed) ;
+    float grain = hash(uv * uRes * 0.5 + uSeed);
     col += (grain - 0.5) * 0.18 * near * bell;
     float mote = step(0.994, hash(floor(uv * uRes / 2.0) + uSeed * 3.0)) * near * bell;
     col += GOLD * mote * 0.9;
-  } else {
+  } else if (uKind < 1.5) {
     /* ---------- curtain ---------- */
     float t = uMix;
     float wave = 0.045 * sin(uv.y * 7.0 + uTime * 0.6) + 0.018 * sin(uv.y * 23.0 - uTime * 0.9);
@@ -137,8 +178,17 @@ void main() {
     float edge = e + wave;
     float cloth = (t < 0.5) ? step(edge, uv.x) : step(uv.x, edge);
     float dist = abs(uv.x - edge);
-    vec2 uvB = coverUv(uv, uSizeB, uFocalB, uDriftB);
-    vec3 pic = (t < 0.5) ? texture2D(uTexA, uvA).rgb : texture2D(uTexB, uvB).rgb;
+
+    // as the cloth is pulled away it sends a ring outward through the picture it uncovers
+    float t2 = clamp((t - 0.5) * 2.0, 0.0, 1.0);
+    vec2 c = radial(uv);
+    float d = length(c);
+    float front = t2 * 1.2 - 0.05;
+    float band = exp(-pow((d - front) * 5.0, 2.0));
+    float ring = sin(d * 34.0 - t2 * 14.0) * 0.016 * sin(t2 * PI) * band;
+    vec2 disp = (t < 0.5) ? vec2(0.0) : normalize(c + 1e-5) * ring;
+    vec3 pic = (t < 0.5) ? pickA(uv) : pickB(uv + disp);
+    pic += GOLD * band * sin(t2 * PI) * 0.08 * step(0.5, t);
 
     // the cloth: dark folds, a gold rim light along its leading edge
     float folds = 0.5 + 0.5 * sin(uv.x * 46.0 + uv.y * 5.0 + wave * 30.0);
@@ -151,6 +201,27 @@ void main() {
     float shadow = (t < 0.5) ? smoothstep(0.12, 0.0, uv.x - edge) : smoothstep(0.12, 0.0, edge - uv.x);
     pic *= 1.0 - 0.35 * shadow * (1.0 - cloth);
     col = mix(pic, clothCol, cloth);
+  } else {
+    /* ---------- ripple ---------- */
+    float t = uMix;
+    float bell = sin(t * PI);
+    vec2 c = radial(uv);
+    float d = length(c);
+    vec2 dir = normalize(c + 1e-5);
+    float front = t * 1.25 - 0.08;                    // the wavefront radius, growing outward
+    float band = exp(-pow((d - front) * 4.5, 2.0));   // the main wave around the front
+    float ribbon = exp(-pow((d - front + 0.16) * 14.0, 2.0));   // a thinner ribbon trailing it
+    float amp = 0.028 * bell;
+    float wave = sin(d * 42.0 - uTime * 6.0) * amp * band + sin(d * 90.0 - uTime * 9.0) * amp * 0.4 * ribbon;
+    vec2 disp = dir * wave;
+    // B follows the wavefront outward; the join is softened by the wave itself
+    float r = smoothstep(front + 0.06, front - 0.06, d + wave * 2.0);
+    vec3 a = pickA(uv + disp);
+    vec3 b = pickB(uv + disp * 0.6);
+    col = mix(a, b, r);
+    // light catches the crest
+    float crest = max(0.0, sin(d * 42.0 - uTime * 6.0)) * band * bell;
+    col += GOLD * crest * 0.14 + vec3(0.06) * ribbon * bell;
   }
 
   // gavel flash

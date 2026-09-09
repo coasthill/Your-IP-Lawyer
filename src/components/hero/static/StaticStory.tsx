@@ -6,11 +6,12 @@ import { cn } from "@/lib/utils";
 /**
  * The still homepage — served when the visitor prefers reduced motion (or asks for it with
  * ?render=static). Nothing moves and nothing needs JavaScript: the paintings hang one after the
- * other with the eight captions of the story laid out as a readable editorial sequence.
+ * other with the captions of the story laid out as a readable editorial sequence. Each scene hangs
+ * the still of its first beat (or that beat's fallback still) — never a frame of a clip.
  */
 export function StaticStory() {
   const assets = artAssets();
-  const byScene = (id: string) => assets.find((a) => a.entry.scene === id)!;
+  const byScene = (id: string) => assets.find((a) => a.entry.scene === id) ?? assets[0];
   const [lawyer, gown, gavel, patent, design, trademark, gi, legal] = SCENES;
 
   return (
