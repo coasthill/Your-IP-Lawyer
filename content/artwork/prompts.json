@@ -120,5 +120,48 @@
       "from": "water-still",
       "prompt": "The young woman tilts the brass jug and pours a thin, glittering stream of water onto the roots of the young tree; the leaves stir gently; loose sheets of paper drift slowly through the sunbeam; the advocate turns his head slightly toward the tree."
     }
+  ],
+  "bridges_note": "Bridge clips: Kling 3.0 on Higgsfield (kling3_0), mode std, sound off, 4 seconds, 16:9, 5 credits each, generated with a start_image and an end_image (the stills of the two beats they join; loop clips end on their own still and the reversed assembly clip ends on the advocate still), then upscaled like the other clips (2K, 24 fps, about 0.2 credits). Each bridge starts on the last frame of one beat and ends on the first frame of the next, so the film cuts to it and out of it without a visible seam: one continuous action carries the visitor from beat to beat. Every prompt begins with 'Oil painting come to life, the painterly texture preserved throughout.' and ends with 'no cut, no text.'",
+  "bridges": [
+    {
+      "id": "bridge-gown",
+      "from": "assembly",
+      "to": "gown-fills",
+      "start": "advocate",
+      "end": "gown",
+      "prompt": "The advocate seen from behind sweeps the edge of his black silk court gown out to the side with one arm, like a theatre curtain being drawn across a stage; the silk swings toward the camera in one slow continuous movement and fills the whole frame with deep billowing folds that catch warm gold light against the deep ultramarine blue wall, until only the moving black fabric is seen. One continuous shot, static camera."
+    },
+    {
+      "id": "bridge-strike",
+      "from": "gown-fills",
+      "to": "strike",
+      "start": "gown",
+      "end": "gavel",
+      "prompt": "The billowing black silk is drawn aside like a curtain pulled back by an unseen hand, sliding out of the frame to the left in one slow continuous movement, and reveals behind it a polished dark-walnut gavel hanging motionless above its round wooden sound block on the edge of an ivory marble table against the deep ultramarine blue wall, a cream document with a small crimson wax seal lying beside the block. The camera settles low and still. One continuous shot."
+    },
+    {
+      "id": "bridge-disclosure",
+      "from": "orchard",
+      "to": "disclosure",
+      "start": "orchard",
+      "end": "idea",
+      "prompt": "A hand in a black court-gown sleeve with a crisp white linen cuff reaches into the frame from the right, gently plucks one glowing golden medallion from a branch of the tree, and lowers it; the camera tilts down following the hand as the deep blue wall gives way to a gallery-white wall, and two cupped hands come to rest just above an ivory marble table holding the medallion, now a small glowing sphere of warm golden light, above a cream patent drawing with fine ink lines. One continuous slow movement."
+    },
+    {
+      "id": "bridge-certificate",
+      "from": "structure",
+      "to": "certificate",
+      "start": "structure",
+      "end": "trademark",
+      "prompt": "One sculptor sets down his mallet; the camera tilts slowly down past the carved marble column and the wooden scaffolding to an ivory marble table below, where a hand emerging from a black court-gown sleeve with a crisp white linen cuff lowers a heavy brass seal toward molten crimson wax on a cream parchment document, against the gallery-white wall in warm daylight from the upper left. One continuous slow movement."
+    },
+    {
+      "id": "bridge-water",
+      "from": "constellation",
+      "to": "water",
+      "start": "legal-world",
+      "end": "water-still",
+      "prompt": "The advocate walking toward the tall bright window slows and stops beside a young tree growing from the marble floor; loose cream papers settle; a young woman in plain modern clothes with a notebook under her arm walks into the frame from the left carrying a small brass jug and comes to stand beside him at the tree, ready to pour. Gold daylight streams in from the right. One continuous slow movement, static camera."
+    }
   ]
 }
