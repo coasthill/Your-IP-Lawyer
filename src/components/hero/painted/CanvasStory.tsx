@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { dprCap, snapTime, wantsSmallArt, wantsSmallVideo, wantsVideo } from "../capabilities";
+import { dprCap, snapTime, wantsBridges, wantsSmallArt, wantsSmallVideo, wantsVideo } from "../capabilities";
 import { filmEvents } from "../film-events";
 import { progressStore } from "../progress-store";
 import { frameAt } from "../story";
-import { loadMedia, videoDebug, type FrameDebug, type MediaSet, type Source } from "./media";
+import { cameraAt, cameraMoving, loadMedia, videoDebug, type FrameDebug, type MediaSet, type Source } from "./media";
 
 /** The gavel's flash: 1 on the `impact` event, gone this many milliseconds later. */
 const FLASH_MS = 600;
@@ -16,8 +16,11 @@ const SETTLE_MS = 150;
  * The 2D fallback (no WebGL): the same film and the same timeline on a canvas. Stills drift,
  * clips play as video (drawn straight from the element every frame while they run), the dissolve
  * and the ripple are cross-fades, the curtain is a dark cloth with a wavy edge, the gavel's flash
- * follows the film's `impact` event. Portrait viewports contain the whole picture over a blurred,
- * darkened copy of itself. `?snap` / `?t=` work as in the WebGL renderer (QA captures).
+ * follows the film's `impact` event. A bridged junction is a cut (`set.cuts` → `frameAt`) and the
+ * beat's slot then draws the bridge into it, without drift (`cameraAt` eases the camera across the
+ * bridge's start and end); the rules themselves live in media.ts, shared with the WebGL renderer.
+ * Portrait viewports contain the whole picture over a blurred, darkened copy of itself.
+ * `?snap` / `?t=` work as in the WebGL renderer (QA captures).
  * Deliberately simple — it exists so nobody sees a blank stage.
  */
 export function CanvasStory({ revealed, onReady }: { revealed: boolean; onReady: () => void }) {
@@ -44,6 +47,7 @@ export function CanvasStory({ revealed, onReady }: { revealed: boolean; onReady:
       small: wantsSmallArt(),
       smallVideo: wantsSmallVideo(),
       video: wantsVideo(),
+      bridges: wantsBridges(),
       holdAt: snapTime(),
       host: canvas.parentElement,
       onUpdate: () => {
@@ -151,7 +155,7 @@ export function CanvasStory({ revealed, onReady }: { revealed: boolean; onReady:
       const target = progressStore.get().value;
       if (snap) p = target;
       else p += (target - p) * Math.min(1, dt / 90);
-      const frame = frameAt(p);
+      const frame = frameAt(p, set.cuts);
       set.update(frame.a.beat, frame.b ? frame.b.beat : null, frame.mix);
       // QA (`?snap`): a jump in progress that has come to rest replays (or holds) the clips on screen.
       if (snap) {
@@ -165,24 +169,27 @@ export function CanvasStory({ revealed, onReady }: { revealed: boolean; onReady:
           set.settle();
         }
       }
+      const reelA = set.reels[frame.a.beat];
+      const reelB = frame.b ? set.reels[frame.b.beat] : reelA;
+      const a = reelA.source();
+      const b = frame.b ? reelB.source() : a;
       const flash = Math.max(0, 1 - (now - flashAt) / FLASH_MS);
-      const moving = p !== lastP || Math.abs(target - p) > 0.00005 || frame.b !== null || flash > 0 || set.playing();
+      const moving = p !== lastP || Math.abs(target - p) > 0.00005 || frame.b !== null || flash > 0 || set.playing() || cameraMoving(a, now) || cameraMoving(b, now);
       lastP = p;
       if (!visible || (!moving && !dirty)) return;
       dirty = false;
 
-      const reelA = set.reels[frame.a.beat];
-      const reelB = frame.b ? set.reels[frame.b.beat] : reelA;
-      const a = reelA.source();
+      // The camera: each slot's drift, or none on a bridge (eased across its start and its end).
+      const camA = cameraAt(frame.a, a, now);
+      const camB = frame.b ? cameraAt(frame.b, b, now) : camA;
       ctx.fillStyle = "#1b5ad6";
       ctx.fillRect(0, 0, width, height);
       if (!frame.b || frame.mix <= 0) {
-        draw(a, frame.a.drift, 1);
+        draw(a, camA, 1);
       } else if (frame.kind === "curtain") {
-        const b = reelB.source();
         const t = frame.mix;
-        if (t < 0.5) draw(a, frame.a.drift, 1);
-        else draw(b, frame.b.drift, 1);
+        if (t < 0.5) draw(a, camA, 1);
+        else draw(b, camB, 1);
         const e = (t < 0.5 ? 1.15 - t * 2.3 : 1.15 - (t - 0.5) * 2.3) * width;
         ctx.fillStyle = "#0a0a0d";
         ctx.beginPath();
@@ -209,11 +216,10 @@ export function CanvasStory({ revealed, onReady }: { revealed: boolean; onReady:
         ctx.stroke();
       } else {
         // dissolve (with a little vertical smear) and ripple: a cross-fade
-        const b = reelB.source();
         const bell = Math.sin(frame.mix * Math.PI);
         const smear = frame.kind === "dissolve" ? bell * height * 0.03 : 0;
-        draw(a, frame.a.drift, 1, -smear * frame.mix);
-        draw(b, frame.b.drift, frame.mix, smear * (1 - frame.mix));
+        draw(a, camA, 1, -smear * frame.mix);
+        draw(b, camB, frame.mix, smear * (1 - frame.mix));
       }
       if (flash > 0) {
         ctx.fillStyle = `rgba(255,250,235,${(flash * flash * 0.85).toFixed(3)})`;

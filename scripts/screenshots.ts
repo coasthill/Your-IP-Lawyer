@@ -7,7 +7,9 @@
  * Output: ./screenshots/<viewport>/<page>.png (and homepage scroll frames).
  * The homepage frames use `?snap` (no easing) and, for a few beats, `?t=<seconds>` so the clips
  * are captured mid-motion (the strike after the gavel has landed, the sapling grown, the water
- * pouring) instead of on their first frame.
+ * pouring) instead of on their first frame. Arriving at a bridged beat forward plays the bridge
+ * into it first (about four seconds), so the scroll frames wait it out before capturing the beat;
+ * one frame (p = 0.11, `t=2`) captures a bridge itself, mid-motion.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -53,10 +55,11 @@ async function shoot(browser: Browser, name: keyof typeof VIEWPORTS) {
   // Homepage scroll frames (forces the tier appropriate for the viewport)
   const tier = "webgl"; // the painted stage runs in WebGL on every device; ?render=canvas|static exercises the fallbacks
   try {
-    // `t` freezes the clips on screen at that second (the strike after the impact, the sapling grown, the water pouring).
+    // `t` freezes the clips on screen at that second (the bridge from the advocate into the gown, the strike after the impact, the sapling grown, the water pouring).
     const steps: Array<{ p: number; t?: number }> = [
       { p: 0 },
       { p: 0.05 },
+      { p: 0.11, t: 2 },
       { p: 0.15 },
       { p: 0.22 },
       { p: 0.3 },
@@ -80,12 +83,18 @@ async function shoot(browser: Browser, name: keyof typeof VIEWPORTS) {
       }, y);
       await page.waitForTimeout(900);
     };
+    /** A forward arrival at a bridged beat shows its bridge first: wait until the beat's own clip has taken over. */
+    const pastBridge = () =>
+      page
+        .waitForFunction(() => !(window as unknown as { __yilFrame?: { video: { bridge: boolean } | null } }).__yilFrame?.video?.bridge, null, { timeout: 10_000 })
+        .catch(() => undefined);
     const shot = (p: number) => page.screenshot({ path: path.join(dir, `home_scroll_${String(Math.round(p * 100)).padStart(3, "0")}.png`) });
 
     await page.goto(`${BASE}/?render=${tier}&snap`, { waitUntil: "networkidle", timeout: 60_000 });
     await page.waitForTimeout(4500);
     for (const step of steps.filter((s) => s.t === undefined)) {
       await scrollTo(step.p);
+      await pastBridge();
       await shot(step.p);
     }
     // Each held frame is its own page load: `t` applies to whatever is on screen once it settles.

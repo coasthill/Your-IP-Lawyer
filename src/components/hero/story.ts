@@ -11,7 +11,9 @@
  *            drift or a CLIP, a short generated video that plays by itself while its beat is on
  *            screen; the scroll only carries the visitor from beat to beat. A clip that has not
  *            been encoded yet plays as its fallback still, so the story never depends on the
- *            pipeline having run.
+ *            pipeline having run. Some beats also name a BRIDGE: a clip that carries the beat
+ *            before them into them through one continuous motion, played first — as a hard cut,
+ *            in place of the transition at that junction — when the visitor arrives forward.
  * Ranges are deliberately generous: each beat has room for the caption to be read and the picture
  * to settle.
  */
@@ -174,6 +176,12 @@ export const STAGE_HEIGHT_VH = { desktop: 1000, mobile: 760 };
    Every beat names a `fallback` still (a chain is allowed): the picture shown while the clip has
    not been encoded yet or the still has not been painted yet. Sizes, focal points, durations and
    the gavel's impact time come from art-manifest.json (written by scripts/fetch-artwork.mjs).
+   A beat may also name a `bridge`: a clip generated from the last frame of the beat before it to
+   its own first frame. Arriving at the beat forward, the film cuts to the bridge and plays it
+   through, then the beat's own clip starts from its first frame — the same picture, so the
+   junction reads as one continuous motion (painted/media.ts holds the rules). A bridge that has
+   not been encoded simply does not exist: the junction keeps its transition. Bridges are not
+   beats: the frame counter, tones, captions and annotations know nothing of them.
    ------------------------------------------------------------------------------------------------ */
 export type Drift = { from: [scale: number, x: number, y: number]; to: [scale: number, x: number, y: number] };
 
@@ -206,6 +214,12 @@ export type Beat = {
   /** Dominant surface of the picture: captions and annotations adapt their colours. */
   tone: "lapis" | "paper";
   alt: string;
+  /**
+   * The clip that leads INTO this beat from the one before it (its first frame is the previous
+   * beat's last, its last frame this beat's first), in content/artwork/manifest.json →
+   * public/art/film/<clip>/. Played on a forward arrival, before the beat's own clip.
+   */
+  bridge?: { clip: string };
 };
 
 export const FILM: Beat[] = [
@@ -225,6 +239,7 @@ export const FILM: Beat[] = [
     end: 0.34,
     tone: "lapis",
     media: { kind: "clip", clip: "gown-fills", fallback: "gown" },
+    bridge: { clip: "bridge-gown" },
     alt: "Black silk gown fabric billows and fills the frame against a deep blue wall.",
   },
   {
@@ -234,6 +249,7 @@ export const FILM: Beat[] = [
     end: 0.42,
     tone: "lapis",
     media: { kind: "clip", clip: "strike", fallback: "gavel" },
+    bridge: { clip: "bridge-strike" },
     alt: "A wooden gavel with a brass band is raised above its sound block on a marble table and comes down.",
   },
   {
@@ -252,6 +268,7 @@ export const FILM: Beat[] = [
     end: 0.56,
     tone: "paper",
     media: { kind: "clip", clip: "disclosure", fallback: "patent" },
+    bridge: { clip: "bridge-disclosure" },
     alt: "Two hands in black sleeves with white cuffs hold a glowing golden sphere above a patent drawing; the sphere splits open and a glowing sheet of diagrams unfolds between the halves.",
   },
   {
@@ -270,6 +287,7 @@ export const FILM: Beat[] = [
     end: 0.78,
     tone: "paper",
     media: { kind: "clip", clip: "certificate", fallback: "trademark" },
+    bridge: { clip: "bridge-certificate" },
     alt: "A hand in a black sleeve with a white cuff presses a brass seal into crimson wax on a certificate.",
   },
   {
@@ -297,6 +315,7 @@ export const FILM: Beat[] = [
     end: 1,
     tone: "lapis",
     media: { kind: "clip", clip: "water", fallback: ["water-still", "legal-world"] },
+    bridge: { clip: "bridge-water" },
     alt: "In a bright marble hall a young woman waters a young tree from a brass jug while the advocate stands beside it; loose papers drift through the sunlight.",
   },
 ];
@@ -329,6 +348,9 @@ export function beatFor(scene: SceneId): Beat {
      curtain  — a dark cloth is drawn across the picture and pulled away with an outward ripple,
                 revealing the next (the raised gavel)
      ripple   — a wave spreads from the centre of the frame; the next picture follows the wavefront
+   A junction whose second beat has an encoded bridge is a CUT instead (`cuts` in `frameAt`): a
+   dissolve of negligible width, so the renderers' two-slot blend still works and the swap into
+   the bridge reads as a hard cut. Junctions without a bridge keep their transitions exactly.
    ------------------------------------------------------------------------------------------------ */
 export type TransitionKind = "dissolve" | "curtain" | "ripple";
 export type Transition = { from: string; to: string; at: number; width: number; kind: TransitionKind };
@@ -364,14 +386,23 @@ export type Frame = {
   kind: TransitionKind;
 };
 
-/** Resolves scroll progress into the beat(s) on screen and how far the blend between them has gone. */
-export function frameAt(p: number): Frame {
+/** Width, in progress, of the cut at a bridged junction: a dissolve far too narrow to read as one. */
+export const CUT_WIDTH = 0.003;
+
+/**
+ * Resolves scroll progress into the beat(s) on screen and how far the blend between them has gone.
+ * `cuts` names the beats (by id) whose incoming junction is a cut into a bridge; without it every
+ * junction keeps its authored transition.
+ */
+export function frameAt(p: number, cuts?: ReadonlySet<string> | null): Frame {
   for (const t of TRANSITIONS) {
-    const start = t.at - t.width / 2;
-    const end = t.at + t.width / 2;
+    const cut = cuts?.has(t.to) ?? false;
+    const width = cut ? CUT_WIDTH : t.width;
+    const start = t.at - width / 2;
+    const end = t.at + width / 2;
     if (p >= start && p < end) {
       const mix = smoothstep((p - start) / (end - start));
-      return { a: frameRef(beatIndex(t.from), p), b: frameRef(beatIndex(t.to), p), mix, kind: t.kind };
+      return { a: frameRef(beatIndex(t.from), p), b: frameRef(beatIndex(t.to), p), mix, kind: cut ? "dissolve" : t.kind };
     }
   }
   return { a: frameRef(beatIndexAt(p), p), b: null, mix: 0, kind: "dissolve" };

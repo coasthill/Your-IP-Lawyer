@@ -8,6 +8,8 @@
  *   canvas → 2D canvas cross-fades (no WebGL, software GL, or save-data)
  *   static → no animation (prefers-reduced-motion, or explicitly requested)
  * Video is switched off (posters and stills only) on save-data connections and with `?video=0`.
+ * The bridges (the clips that carry one beat into the next) go with video, and `?bridge=0`
+ * switches them off alone so the old transitions can be compared at those junctions.
  */
 export type RenderTier = "webgl" | "canvas" | "static";
 
@@ -75,6 +77,12 @@ export function wantsVideo(): boolean {
   if (typeof window === "undefined") return false;
   if (new URLSearchParams(window.location.search).get("video") === "0") return false;
   return !saveData();
+}
+
+/** Whether the bridges may play: off with `?bridge=0`, and never without video. */
+export function wantsBridges(): boolean {
+  if (!wantsVideo()) return false;
+  return new URLSearchParams(window.location.search).get("bridge") !== "0";
 }
 
 /** QA: `?t=<seconds>` freezes the clips on screen at that second once the page has settled (see media.ts). */

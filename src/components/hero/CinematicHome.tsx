@@ -4,7 +4,8 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { detectTier, type RenderTier } from "./capabilities";
+import { bridgedBeats } from "./art";
+import { detectTier, wantsBridges, type RenderTier } from "./capabilities";
 import { progressStore } from "./progress-store";
 import { filmEvents } from "./film-events";
 import { FILM, STAGE_HEIGHT_VH, frameAt } from "./story";
@@ -25,6 +26,9 @@ const noopSubscribe = () => () => {};
 const getClientTier = () => (cachedTier ??= detectTier());
 const getServerTier = () => null;
 
+/** The beats whose incoming junction is a cut into a bridge (none when the bridges are off). */
+const filmCuts = () => (wantsBridges() ? bridgedBeats() : null);
+
 const PaintedStory = dynamic(() => import("./painted/PaintedStory").then((m) => m.PaintedStory), { ssr: false });
 const CanvasStory = dynamic(() => import("./painted/CanvasStory").then((m) => m.CanvasStory), { ssr: false });
 
@@ -34,7 +38,8 @@ const CanvasStory = dynamic(() => import("./painted/CanvasStory").then((m) => m.
  * Nothing here scroll-jacks: the user scrolls normally, the painting follows.
  *
  * The stage switches between the lapis and paper surfaces as the beats of the film change, so
- * captions, annotations and controls always sit on the right colours. The gavel's sound follows
+ * captions, annotations and controls always sit on the right colours (at a bridged junction the
+ * film cuts, so `frameAt` is given the same `cuts` the renderer uses). The gavel's sound follows
  * the strike clip itself: the engine emits `impact` when the clip crosses its impact frame.
  */
 export function CinematicHome() {
@@ -72,9 +77,10 @@ export function CinematicHome() {
   useEffect(() => {
     const el = stickyRef.current;
     if (!el || !tier || tier === "static") return;
+    const cuts = filmCuts();
     let current = "";
     const apply = (p: number) => {
-      const f = frameAt(p);
+      const f = frameAt(p, cuts);
       const tone = FILM[f.b && f.mix > 0.5 ? f.b.beat : f.a.beat].tone;
       if (tone === current) return;
       current = tone;
@@ -158,9 +164,10 @@ function FrameMarks() {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    const cuts = filmCuts();
     let last = "";
     const apply = (p: number) => {
-      const f = frameAt(p);
+      const f = frameAt(p, cuts);
       const i = f.b && f.mix > 0.5 ? f.b.beat : f.a.beat;
       const label = `${String(i + 1).padStart(2, "0")} / ${String(FILM.length).padStart(2, "0")}`;
       if (label !== last) {

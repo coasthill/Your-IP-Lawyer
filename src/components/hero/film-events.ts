@@ -2,18 +2,22 @@
 
 /**
  * A tiny event bus for the moments of the film that are decided by the media rather than by the
- * scroll. Today there is one: `impact` — the strike clip's clock has crossed the second at which
- * the gavel meets the block (`impactAt` in art-manifest.json). The renderers start their flash on
- * it and CinematicHome plays the sound; media.ts emits it once per play of the clip.
- * `window.__yilImpacts` counts the emissions for QA scripts.
+ * scroll:
+ *   `impact` — the strike clip's clock has crossed the second at which the gavel meets the block
+ *              (`impactAt` in art-manifest.json). The renderers start their flash on it and
+ *              CinematicHome plays the sound; media.ts emits it once per play of the clip (never
+ *              during the bridge into the strike).
+ *   `bridge` — a bridge has started: the visitor arrived at a beat forward and the clip that
+ *              carries the previous beat into it is playing. Nothing hangs off it yet.
+ * `window.__yilImpacts` and `window.__yilBridges` count the emissions for QA scripts.
  */
-export type FilmEvent = "impact";
+export type FilmEvent = "impact" | "bridge";
 
 type Listener = () => void;
 
-const listeners: Record<FilmEvent, Set<Listener>> = { impact: new Set() };
+const listeners: Record<FilmEvent, Set<Listener>> = { impact: new Set(), bridge: new Set() };
 
-type Counted = { __yilImpacts?: number };
+type Counted = { __yilImpacts?: number; __yilBridges?: number };
 
 export const filmEvents = {
   on(event: FilmEvent, listener: Listener): () => void {
@@ -23,9 +27,10 @@ export const filmEvents = {
     };
   },
   emit(event: FilmEvent): void {
-    if (event === "impact" && typeof window !== "undefined") {
+    if (typeof window !== "undefined") {
       const w = window as unknown as Counted;
-      w.__yilImpacts = (w.__yilImpacts ?? 0) + 1;
+      if (event === "impact") w.__yilImpacts = (w.__yilImpacts ?? 0) + 1;
+      else w.__yilBridges = (w.__yilBridges ?? 0) + 1;
     }
     for (const listener of listeners[event]) listener();
   },
@@ -34,4 +39,5 @@ export const filmEvents = {
 if (typeof window !== "undefined") {
   const w = window as unknown as Counted;
   w.__yilImpacts ??= 0;
+  w.__yilBridges ??= 0;
 }

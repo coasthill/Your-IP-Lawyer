@@ -6,7 +6,10 @@ import { FILM, PALETTE, fallbacksOf, type Beat, type Drift, type SceneId } from 
  * scripts/fetch-artwork.mjs (run by the "Fetch artwork" GitHub Action) and may contain
  *   scenes — the painted stills (public/art/scenes/<id>.webp)
  *   clips  — the encoded film clips (public/art/film/<id>/clip.webm and clip.mp4, the ≤1280-wide
- *            clip-sm.* variants for phones, and poster.webp / poster-sm.webp: the first frame)
+ *            clip-sm.* variants for phones, and poster.webp / poster-sm.webp: the first frame).
+ *            The bridges — the clips that carry one beat into the next (story.ts `bridge`) — are
+ *            ordinary entries here; `bridgeFor` resolves a beat's, and a bridge that is missing
+ *            simply does not exist for the film.
  * Either key may be missing. Until a still has been painted or a clip has been encoded, the beat
  * plays its fallback still; until even that exists, a painted placeholder — a lit lapis or paper
  * wall — stands in so the site still runs.
@@ -156,6 +159,16 @@ export function clipAsset(id: string): ClipAsset | null {
     posterSmall: c.posterSmall ?? c.poster ?? null,
     lqip: c.lqip ?? null,
   };
+}
+
+/** The bridge that leads into a beat, when it has been encoded; null for beats without one. */
+export function bridgeFor(beat: Beat): ClipAsset | null {
+  return beat.bridge ? clipAsset(beat.bridge.clip) : null;
+}
+
+/** Ids of the beats whose incoming junction is a cut into an encoded bridge: what `frameAt` takes as `cuts`. */
+export function bridgedBeats(): Set<string> {
+  return new Set(FILM.filter((b, i) => i > 0 && bridgeFor(b) !== null).map((b) => b.id));
 }
 
 /** Every clip that has been encoded. */

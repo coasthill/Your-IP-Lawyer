@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { dprCap, snapTime, wantsSmallArt, wantsSmallVideo, wantsVideo } from "../capabilities";
+import { dprCap, snapTime, wantsBridges, wantsSmallArt, wantsSmallVideo, wantsVideo } from "../capabilities";
 import { filmEvents } from "../film-events";
 import { progressStore } from "../progress-store";
 import { frameAt } from "../story";
 import { createContext, createFullscreenTriangle, createProgram, createTexture, uniformLocations, uploadTexture } from "./gl";
-import { loadMedia, videoDebug, type FrameDebug, type MediaSet, type Source } from "./media";
+import { cameraAt, cameraMoving, loadMedia, videoDebug, type FrameDebug, type MediaSet, type Source } from "./media";
 import { FRAG, VERT } from "./shaders";
 
 const UNIFORMS = ["uTexA", "uTexB", "uSizeA", "uSizeB", "uFocalA", "uFocalB", "uDriftA", "uDriftB", "uRes", "uMix", "uKind", "uFit", "uTime", "uVel", "uFlash", "uSeed", "uHasB", "uBlurA", "uBlurB"] as const;
@@ -27,8 +27,11 @@ const SETTLE_MS = 150;
  * Two texture slots (A on screen, B being revealed) hold whatever each side draws: a picture is
  * uploaded once and moved between the slots as the film advances or rewinds; a video is
  * re-uploaded whenever it has presented a new frame — with no mipmaps, so the shader is told
- * (`uBlurA/B`) to blur the ambient surround with taps instead. The loop runs continuously while a
- * clip plays or the flash decays, otherwise only when something changed.
+ * (`uBlurA/B`) to blur the ambient surround with taps instead. A bridged junction is a cut
+ * (`set.cuts` → `frameAt`): the beat's slot then holds the bridge into it, drawn without drift
+ * (`cameraAt` eases the camera out of the previous beat's drift and, after the handoff, back into
+ * the beat's). The loop runs continuously while a clip plays, the camera eases or the flash
+ * decays, otherwise only when something changed.
  */
 export function PaintedStory({ revealed, onReady, onFail }: { revealed: boolean; onReady: () => void; onFail: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -72,6 +75,7 @@ export function PaintedStory({ revealed, onReady, onFail }: { revealed: boolean;
       small: wantsSmallArt(),
       smallVideo: wantsSmallVideo(),
       video: wantsVideo(),
+      bridges: wantsBridges(),
       holdAt: snapTime(),
       host: canvas.parentElement,
       onUpdate: () => {
@@ -187,7 +191,7 @@ export function PaintedStory({ revealed, onReady, onFail }: { revealed: boolean;
       vel = vel * 0.85 + Math.min(1, inst * 900) * 0.15;
       lastP = p;
 
-      const frame = frameAt(p);
+      const frame = frameAt(p, set.cuts);
       set.update(frame.a.beat, frame.b ? frame.b.beat : null, frame.mix);
       // QA (`?snap`): a jump in progress that has come to rest replays (or holds) the clips on screen.
       if (snap) {
@@ -201,18 +205,18 @@ export function PaintedStory({ revealed, onReady, onFail }: { revealed: boolean;
           set.settle();
         }
       }
+      const reelA = set.reels[frame.a.beat];
+      const reelB = frame.b ? set.reels[frame.b.beat] : reelA;
+      const a = reelA.source();
+      const b = frame.b ? reelB.source() : a;
       const flash = Math.max(0, 1 - (now - flashAt) / FLASH_MS);
-      const moving = Math.abs(target - p) > 0.00005 || frame.b !== null || vel > 0.002 || flash > 0 || set.playing();
+      const moving = Math.abs(target - p) > 0.00005 || frame.b !== null || vel > 0.002 || flash > 0 || set.playing() || cameraMoving(a, now) || cameraMoving(b, now);
       // At rest, refresh the grain at ~20fps; skip entirely when not visible.
       if (!visible) return;
       if (!moving && !dirty && now - lastRender < 50) return;
       lastRender = now;
       dirty = false;
 
-      const reelA = set.reels[frame.a.beat];
-      const reelB = frame.b ? set.reels[frame.b.beat] : reelA;
-      const a = reelA.source();
-      const b = frame.b ? reelB.source() : a;
       const slotB = assign(a, b);
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, slots[0].tex);
@@ -224,9 +228,11 @@ export function PaintedStory({ revealed, onReady, onFail }: { revealed: boolean;
       gl.uniform2f(u.uFocalB, b.focal[0], b.focal[1]);
       gl.uniform1f(u.uBlurA, slots[0].mip ? 0 : 1);
       gl.uniform1f(u.uBlurB, slotB.mip ? 0 : 1);
-      const driftB = frame.b ? frame.b.drift : frame.a.drift;
-      gl.uniform3f(u.uDriftA, frame.a.drift[0], frame.a.drift[1], frame.a.drift[2]);
-      gl.uniform3f(u.uDriftB, driftB[0], driftB[1], driftB[2]);
+      // The camera: each slot's drift, or none on a bridge (eased across its start and its end).
+      const camA = cameraAt(frame.a, a, now);
+      const camB = frame.b ? cameraAt(frame.b, b, now) : camA;
+      gl.uniform3f(u.uDriftA, camA[0], camA[1], camA[2]);
+      gl.uniform3f(u.uDriftB, camB[0], camB[1], camB[2]);
       gl.uniform1f(u.uMix, frame.mix);
       gl.uniform1f(u.uKind, KIND[frame.kind]);
       gl.uniform1f(u.uHasB, frame.b ? 1 : 0);
